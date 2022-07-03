@@ -43,6 +43,10 @@ interface SelectOption extends OptionBase {
     image: string;
 }
 
+interface NationalityOption extends SelectOption {
+    countryCode: string;
+}
+
 type PlayerVersion = "other" | "icon" | "hero";
 
 interface AddPlayerValues {
@@ -153,6 +157,8 @@ const AddPlayer = () => {
                                     </RadioGroup>
                                 </FormControl>
 
+                                <span className="fi fi-gr"></span>
+
                                 <FormControl>
                                     <FormLabel htmlFor="playerNationalityId">
                                         Nationality (Selected:{" "}
@@ -207,24 +213,27 @@ const AddPlayer = () => {
 };
 
 const customSelectComponents = {
-    Option: ({ children, ...props }: OptionProps<SelectOption, false>) => (
-        <chakraComponents.Option {...props}>
-            <Box mr={5}>
-                <CustomImage
-                    src={props.data.image}
-                    fallbackSrc="/assets/img/nations/placeholder.svg"
-                    alt={props.data.label}
-                    width={SELECT_IMG_WIDTH}
-                    ratio={FLAG_IMG_RATIO}
-                />
-            </Box>
-            {children}
-        </chakraComponents.Option>
-    ),
+    Option: ({ children, ...props }: OptionProps<NationalityOption, false>) => {
+        return (
+            <chakraComponents.Option {...props}>
+                <Box mr={5}>
+                    {/* <CustomImage
+                        src={props.data.image}
+                        fallbackSrc="/assets/img/nations/placeholder.svg"
+                        alt={props.data.label}
+                        width={SELECT_IMG_WIDTH}
+                        ratio={FLAG_IMG_RATIO}
+                    /> */}
+                    <span className={`fi fi-${props.data.countryCode}`}></span>
+                </Box>
+                {children}
+            </chakraComponents.Option>
+        );
+    },
     ValueContainer: ({
         children,
         ...props
-    }: ValueContainerProps<SelectOption>) => {
+    }: ValueContainerProps<NationalityOption>) => {
         const { getValue, hasValue } = props;
         const flagSrc = getValue().at(0)?.image || "";
 
@@ -285,11 +294,12 @@ const CustomImage = ({
     );
 };
 
-const NATIONALITY_OPTIONS: SelectOption[] = Nations.map((nation) => ({
+const NATIONALITY_OPTIONS: NationalityOption[] = Nations.map((nation) => ({
     label: nation.displayName,
     value: nation.id,
+    countryCode: nation.countryCode.toLowerCase(),
     image: `/assets/img/nations/${nation.id}.png`
-})).slice(0, 20);
+}));
 const LEAGUE_OPTIONS: SelectOption[] = Leagues.map((league) => ({
     label: league.displayName,
     value: league.id,

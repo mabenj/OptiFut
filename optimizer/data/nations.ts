@@ -1,850 +1,1057 @@
 export const Nations = [
     {
         displayName: "Afghanistan",
-        id: 1
+        id: 1,
+        countryCode: "AF"
     },
     {
         displayName: "Albania",
-        id: 2
+        id: 2,
+        countryCode: "AL"
     },
     {
         displayName: "Algeria",
-        id: 3
+        id: 3,
+        countryCode: "DZ"
     },
     {
         displayName: "American Samoa",
-        id: 4
+        id: 4,
+        countryCode: "AS"
     },
     {
         displayName: "Angola",
-        id: 5
+        id: 5,
+        countryCode: "AO"
     },
     {
         displayName: "Anguilla",
-        id: 6
+        id: 6,
+        countryCode: "AI"
     },
     {
         displayName: "Antigua and Barbuda",
-        id: 7
+        id: 7,
+        countryCode: "AG"
     },
     {
         displayName: "Argentina",
-        id: 8
+        id: 8,
+        countryCode: "AR"
     },
     {
         displayName: "Armenia",
-        id: 9
+        id: 9,
+        countryCode: "AM"
     },
     {
         displayName: "Aruba",
-        id: 10
+        id: 10,
+        countryCode: "AW"
     },
     {
         displayName: "Australia",
-        id: 11
+        id: 11,
+        countryCode: "AU"
     },
     {
         displayName: "Austria",
-        id: 12
+        id: 12,
+        countryCode: "AT"
     },
     {
         displayName: "Azerbaijan",
-        id: 13
+        id: 13,
+        countryCode: "AZ"
     },
     {
         displayName: "Bahamas",
-        id: 14
+        id: 14,
+        countryCode: "BS"
     },
     {
         displayName: "Bahrain",
-        id: 15
+        id: 15,
+        countryCode: "BH"
     },
     {
         displayName: "Bangladesh",
-        id: 16
+        id: 16,
+        countryCode: "BD"
     },
     {
         displayName: "Barbados",
-        id: 17
+        id: 17,
+        countryCode: "BB"
     },
     {
         displayName: "Belarus",
-        id: 18
+        id: 18,
+        countryCode: "BY"
     },
     {
         displayName: "Belgium",
-        id: 19
+        id: 19,
+        countryCode: "BE"
     },
     {
         displayName: "Belize",
-        id: 20
+        id: 20,
+        countryCode: "BZ"
     },
     {
         displayName: "Benin",
-        id: 21
+        id: 21,
+        countryCode: "BJ"
     },
     {
         displayName: "Bermuda",
-        id: 22
+        id: 22,
+        countryCode: "BM"
     },
     {
         displayName: "Bhutan",
-        id: 23
+        id: 23,
+        countryCode: "BT"
     },
     {
         displayName: "Bolivia",
-        id: 24
+        id: 24,
+        countryCode: "BO"
     },
     {
         displayName: "Bosnia and Herzegovina",
-        id: 25
+        id: 25,
+        countryCode: "BA"
     },
     {
         displayName: "Botswana",
-        id: 26
+        id: 26,
+        countryCode: "BW"
     },
     {
         displayName: "Brazil",
-        id: 27
+        id: 27,
+        countryCode: "BR"
     },
     {
         displayName: "British Virgin Islands",
-        id: 28
+        id: 28,
+        countryCode: "VG"
     },
     {
         displayName: "Brunei Darussalam",
-        id: 29
+        id: 29,
+        countryCode: "BN"
     },
     {
         displayName: "Bulgaria",
-        id: 30
+        id: 30,
+        countryCode: "BG"
     },
     {
         displayName: "Burkina Faso",
-        id: 31
+        id: 31,
+        countryCode: "BF"
     },
     {
         displayName: "Burundi",
-        id: 32
+        id: 32,
+        countryCode: "BI"
     },
     {
         displayName: "Cambodia",
-        id: 33
+        id: 33,
+        countryCode: "KH"
     },
     {
         displayName: "Cameroon",
-        id: 34
+        id: 34,
+        countryCode: "CM"
     },
     {
         displayName: "Canada",
-        id: 35
+        id: 35,
+        countryCode: "CA"
     },
     {
         displayName: "Cape Verde Islands",
-        id: 36
+        id: 36,
+        countryCode: "CV"
     },
     {
         displayName: "Cayman Islands",
-        id: 37
+        id: 37,
+        countryCode: "KY"
     },
     {
         displayName: "Central African Republic",
-        id: 38
+        id: 38,
+        countryCode: "CF"
     },
     {
         displayName: "Chad",
-        id: 39
+        id: 39,
+        countryCode: "TD"
     },
     {
         displayName: "Chile",
-        id: 40
+        id: 40,
+        countryCode: "CL"
     },
     {
         displayName: "China PR",
-        id: 41
+        id: 41,
+        countryCode: "CN"
     },
     {
         displayName: "Chinese Taipei",
-        id: 42
+        id: 42,
+        countryCode: "TW"
     },
     {
         displayName: "Colombia",
-        id: 43
+        id: 43,
+        countryCode: "CO"
     },
     {
         displayName: "Comoros",
-        id: 44
+        id: 44,
+        countryCode: "KM"
     },
     {
         displayName: "Congo",
-        id: 45
+        id: 45,
+        countryCode: "CD"
     },
     {
         displayName: "Congo DR",
-        id: 46
+        id: 46,
+        countryCode: "CD"
     },
     {
         displayName: "Cook Islands",
-        id: 47
+        id: 47,
+        countryCode: "CK"
     },
     {
         displayName: "Costa Rica",
-        id: 48
+        id: 48,
+        countryCode: "CR"
     },
     {
         displayName: "Croatia",
-        id: 49
+        id: 49,
+        countryCode: "HR"
     },
     {
         displayName: "Cuba",
-        id: 50
+        id: 50,
+        countryCode: "CU"
     },
     {
         displayName: "Curaçao",
-        id: 51
+        id: 51,
+        countryCode: "CW"
     },
     {
         displayName: "Cyprus",
-        id: 52
+        id: 52,
+        countryCode: "CY"
     },
     {
         displayName: "Czech Republic",
-        id: 53
+        id: 53,
+        countryCode: "CZ"
     },
     {
         displayName: "Côte d'Ivoire",
-        id: 54
+        id: 54,
+        countryCode: "CI"
     },
     {
         displayName: "Denmark",
-        id: 55
+        id: 55,
+        countryCode: "DK"
     },
     {
         displayName: "Djibouti",
-        id: 56
+        id: 56,
+        countryCode: "DJ"
     },
     {
         displayName: "Dominica",
-        id: 57
+        id: 57,
+        countryCode: "DM"
     },
     {
         displayName: "Dominican Republic",
-        id: 58
+        id: 58,
+        countryCode: "DO"
     },
     {
         displayName: "Ecuador",
-        id: 59
+        id: 59,
+        countryCode: "EC"
     },
     {
         displayName: "Egypt",
-        id: 60
+        id: 60,
+        countryCode: "EG"
     },
     {
         displayName: "El Salvador",
-        id: 61
+        id: 61,
+        countryCode: "SV"
     },
     {
         displayName: "England",
-        id: 62
+        id: 62,
+        countryCode: "GB-ENG"
     },
     {
         displayName: "Equatorial Guinea",
-        id: 63
+        id: 63,
+        countryCode: "GQ"
     },
     {
         displayName: "Eritrea",
-        id: 64
+        id: 64,
+        countryCode: "ER"
     },
     {
         displayName: "Estonia",
-        id: 65
+        id: 65,
+        countryCode: "EE"
     },
     {
         displayName: "Eswatini",
-        id: 66
+        id: 66,
+        countryCode: "SZ"
     },
     {
         displayName: "Ethiopia",
-        id: 67
+        id: 67,
+        countryCode: "ET"
     },
     {
         displayName: "FYR Macedonia",
-        id: 68
+        id: 68,
+        countryCode: "MK"
     },
     {
         displayName: "Faroe Islands",
-        id: 69
+        id: 69,
+        countryCode: "FO"
     },
     {
         displayName: "Fiji",
-        id: 70
+        id: 70,
+        countryCode: "FJ"
     },
     {
         displayName: "Finland",
-        id: 71
+        id: 71,
+        countryCode: "FI"
     },
     {
         displayName: "France",
-        id: 72
+        id: 72,
+        countryCode: "FR"
     },
     {
         displayName: "Gabon",
-        id: 73
+        id: 73,
+        countryCode: "GA"
     },
     {
         displayName: "Gambia",
-        id: 74
+        id: 74,
+        countryCode: "GM"
     },
     {
         displayName: "Georgia",
-        id: 75
+        id: 75,
+        countryCode: "GE"
     },
     {
         displayName: "Germany",
-        id: 76
+        id: 76,
+        countryCode: "DE"
     },
     {
         displayName: "Ghana",
-        id: 77
+        id: 77,
+        countryCode: "GH"
     },
     {
         displayName: "Gibraltar",
-        id: 78
+        id: 78,
+        countryCode: "GI"
     },
     {
         displayName: "Greece",
-        id: 79
+        id: 79,
+        countryCode: "GR"
     },
     {
         displayName: "Greenland",
-        id: 80
+        id: 80,
+        countryCode: "GL"
     },
     {
         displayName: "Grenada",
-        id: 81
+        id: 81,
+        countryCode: "GD"
     },
     {
         displayName: "Guam",
-        id: 82
+        id: 82,
+        countryCode: "GU"
     },
     {
         displayName: "Guatemala",
-        id: 83
+        id: 83,
+        countryCode: "GT"
     },
     {
         displayName: "Guinea",
-        id: 84
+        id: 84,
+        countryCode: "GN"
     },
     {
         displayName: "Guinea-Bissau",
-        id: 85
+        id: 85,
+        countryCode: "GW"
     },
     {
         displayName: "Guyana",
-        id: 86
+        id: 86,
+        countryCode: "GY"
     },
     {
         displayName: "Haiti",
-        id: 87
+        id: 87,
+        countryCode: "HT"
     },
     {
         displayName: "Honduras",
-        id: 88
+        id: 88,
+        countryCode: "HN"
     },
     {
         displayName: "Hong Kong",
-        id: 89
+        id: 89,
+        countryCode: "HK"
     },
     {
         displayName: "Hungary",
-        id: 90
+        id: 90,
+        countryCode: "HU"
     },
     {
         displayName: "Iceland",
-        id: 91
+        id: 91,
+        countryCode: "IS"
     },
     {
         displayName: "India",
-        id: 92
+        id: 92,
+        countryCode: "IN"
     },
     {
         displayName: "Indonesia",
-        id: 93
-    },
-    {
-        displayName: "International",
-        id: 94
+        id: 93,
+        countryCode: "ID"
     },
     {
         displayName: "Iran",
-        id: 95
+        id: 94,
+        countryCode: "IR"
     },
     {
         displayName: "Iraq",
-        id: 96
+        id: 95,
+        countryCode: "IQ"
     },
     {
         displayName: "Israel",
-        id: 97
+        id: 96,
+        countryCode: "IL"
     },
     {
         displayName: "Italy",
-        id: 98
+        id: 97,
+        countryCode: "IT"
     },
     {
         displayName: "Jamaica",
-        id: 99
+        id: 98,
+        countryCode: "JM"
     },
     {
         displayName: "Japan",
-        id: 100
+        id: 99,
+        countryCode: "JP"
     },
     {
         displayName: "Jordan",
-        id: 101
+        id: 100,
+        countryCode: "JO"
     },
     {
         displayName: "Kazakhstan",
-        id: 102
+        id: 101,
+        countryCode: "KZ"
     },
     {
         displayName: "Kenya",
-        id: 103
+        id: 102,
+        countryCode: "KE"
     },
     {
         displayName: "Korea DPR",
-        id: 104
+        id: 103,
+        countryCode: "KP"
     },
     {
         displayName: "Korea Republic",
-        id: 105
+        id: 104,
+        countryCode: "KR"
     },
     {
         displayName: "Kosovo",
-        id: 106
+        id: 105,
+        countryCode: "XK"
     },
     {
         displayName: "Kuwait",
-        id: 107
+        id: 106,
+        countryCode: "KW"
     },
     {
         displayName: "Kyrgyzstan",
-        id: 108
+        id: 107,
+        countryCode: "KG"
     },
     {
         displayName: "Laos",
-        id: 109
+        id: 108,
+        countryCode: "LA"
     },
     {
         displayName: "Latvia",
-        id: 110
+        id: 109,
+        countryCode: "LV"
     },
     {
         displayName: "Lebanon",
-        id: 111
+        id: 110,
+        countryCode: "LB"
     },
     {
         displayName: "Lesotho",
-        id: 112
+        id: 111,
+        countryCode: "LS"
     },
     {
         displayName: "Liberia",
-        id: 113
+        id: 112,
+        countryCode: "LR"
     },
     {
         displayName: "Libya",
-        id: 114
+        id: 113,
+        countryCode: "LY"
     },
     {
         displayName: "Liechtenstein",
-        id: 115
+        id: 114,
+        countryCode: "LI"
     },
     {
         displayName: "Lithuania",
-        id: 116
+        id: 115,
+        countryCode: "LT"
     },
     {
         displayName: "Luxembourg",
-        id: 117
+        id: 116,
+        countryCode: "LU"
     },
     {
         displayName: "Macau",
-        id: 118
+        id: 117,
+        countryCode: "MO"
     },
     {
         displayName: "Madagascar",
-        id: 119
+        id: 118,
+        countryCode: "MG"
     },
     {
         displayName: "Malawi",
-        id: 120
+        id: 119,
+        countryCode: "MW"
     },
     {
         displayName: "Malaysia",
-        id: 121
+        id: 120,
+        countryCode: "MY"
     },
     {
         displayName: "Maldives",
-        id: 122
+        id: 121,
+        countryCode: "MV"
     },
     {
         displayName: "Mali",
-        id: 123
+        id: 122,
+        countryCode: "ML"
     },
     {
         displayName: "Malta",
-        id: 124
+        id: 123,
+        countryCode: "MT"
     },
     {
         displayName: "Mauritania",
-        id: 125
+        id: 124,
+        countryCode: "MR"
     },
     {
         displayName: "Mauritius",
-        id: 126
+        id: 125,
+        countryCode: "MU"
     },
     {
         displayName: "Mexico",
-        id: 127
+        id: 126,
+        countryCode: "MX"
     },
     {
         displayName: "Moldova",
-        id: 128
+        id: 127,
+        countryCode: "MD"
     },
     {
         displayName: "Mongolia",
-        id: 129
+        id: 128,
+        countryCode: "MN"
     },
     {
         displayName: "Montenegro",
-        id: 130
+        id: 129,
+        countryCode: "ME"
     },
     {
         displayName: "Montserrat",
-        id: 131
+        id: 130,
+        countryCode: "MS"
     },
     {
         displayName: "Morocco",
-        id: 132
+        id: 131,
+        countryCode: "MA"
     },
     {
         displayName: "Mozambique",
-        id: 133
+        id: 132,
+        countryCode: "MZ"
     },
     {
         displayName: "Myanmar",
-        id: 134
+        id: 133,
+        countryCode: "MM"
     },
     {
         displayName: "Namibia",
-        id: 135
+        id: 134,
+        countryCode: "NA"
     },
     {
         displayName: "Nepal",
-        id: 136
+        id: 135,
+        countryCode: "NP"
     },
     {
         displayName: "Netherlands",
-        id: 137
+        id: 136,
+        countryCode: "NL"
     },
     {
         displayName: "New Caledonia",
-        id: 138
+        id: 137,
+        countryCode: "NC"
     },
     {
         displayName: "New Zealand",
-        id: 139
+        id: 138,
+        countryCode: "NZ"
     },
     {
         displayName: "Nicaragua",
-        id: 140
+        id: 139,
+        countryCode: "NI"
     },
     {
         displayName: "Niger",
-        id: 141
+        id: 140,
+        countryCode: "NE"
     },
     {
         displayName: "Nigeria",
-        id: 142
+        id: 141,
+        countryCode: "NG"
     },
     {
         displayName: "Northern Ireland",
-        id: 143
+        id: 142,
+        countryCode: "GB-NIR"
     },
     {
         displayName: "Norway",
-        id: 144
+        id: 143,
+        countryCode: "NO"
     },
     {
         displayName: "Oman",
-        id: 145
+        id: 144,
+        countryCode: "OM"
     },
     {
         displayName: "Pakistan",
-        id: 146
+        id: 145,
+        countryCode: "PK"
     },
     {
         displayName: "Palestine",
-        id: 147
+        id: 146,
+        countryCode: "PS"
     },
     {
         displayName: "Panama",
-        id: 148
+        id: 147,
+        countryCode: "PA"
     },
     {
         displayName: "Papua New Guinea",
-        id: 149
+        id: 148,
+        countryCode: "PG"
     },
     {
         displayName: "Paraguay",
-        id: 150
+        id: 149,
+        countryCode: "PY"
     },
     {
         displayName: "Peru",
-        id: 151
+        id: 150,
+        countryCode: "PE"
     },
     {
         displayName: "Philippines",
-        id: 152
+        id: 151,
+        countryCode: "PH"
     },
     {
         displayName: "Poland",
-        id: 153
+        id: 152,
+        countryCode: "PL"
     },
     {
         displayName: "Portugal",
-        id: 154
+        id: 153,
+        countryCode: "PT"
     },
     {
         displayName: "Puerto Rico",
-        id: 155
+        id: 154,
+        countryCode: "PR"
     },
     {
         displayName: "Qatar",
-        id: 156
+        id: 155,
+        countryCode: "QA"
     },
     {
         displayName: "Republic of Ireland",
-        id: 157
+        id: 156,
+        countryCode: "IE"
     },
     {
         displayName: "Romania",
-        id: 158
+        id: 157,
+        countryCode: "RO"
     },
     {
         displayName: "Russia",
-        id: 159
+        id: 158,
+        countryCode: "RU"
     },
     {
         displayName: "Rwanda",
-        id: 160
+        id: 159,
+        countryCode: "RW"
     },
     {
         displayName: "Samoa",
-        id: 161
+        id: 160,
+        countryCode: "WS"
     },
     {
         displayName: "San Marino",
-        id: 162
+        id: 161,
+        countryCode: "SM"
     },
     {
         displayName: "Saudi Arabia",
-        id: 163
+        id: 162,
+        countryCode: "SA"
     },
     {
         displayName: "Scotland",
-        id: 164
+        id: 163,
+        countryCode: "GB-SCT"
     },
     {
         displayName: "Senegal",
-        id: 165
+        id: 164,
+        countryCode: "SN"
     },
     {
         displayName: "Serbia",
-        id: 166
+        id: 165,
+        countryCode: "RS"
     },
     {
         displayName: "Seychelles",
-        id: 167
+        id: 166,
+        countryCode: "SC"
     },
     {
         displayName: "Sierra Leone",
-        id: 168
+        id: 167,
+        countryCode: "SL"
     },
     {
         displayName: "Singapore",
-        id: 169
+        id: 168,
+        countryCode: "SG"
     },
     {
         displayName: "Slovakia",
-        id: 170
+        id: 169,
+        countryCode: "SK"
     },
     {
         displayName: "Slovenia",
-        id: 171
+        id: 170,
+        countryCode: "SI"
     },
     {
         displayName: "Solomon Islands",
-        id: 172
+        id: 171,
+        countryCode: "SB"
     },
     {
         displayName: "Somalia",
-        id: 173
+        id: 172,
+        countryCode: "SO"
     },
     {
         displayName: "South Africa",
-        id: 174
+        id: 173,
+        countryCode: "ZA"
     },
     {
         displayName: "South Sudan",
-        id: 175
+        id: 174,
+        countryCode: "SS"
     },
     {
         displayName: "Spain",
-        id: 176
+        id: 175,
+        countryCode: "ES"
     },
     {
         displayName: "Sri Lanka",
-        id: 177
+        id: 176,
+        countryCode: "LK"
     },
     {
         displayName: "St. Kitts and Nevis",
-        id: 178
+        id: 177,
+        countryCode: "KN"
     },
     {
         displayName: "St. Lucia",
-        id: 179
+        id: 178,
+        countryCode: "LC"
     },
     {
         displayName: "St. Vincent and the Grenadines",
-        id: 180
+        id: 179,
+        countryCode: "VC"
     },
     {
         displayName: "Sudan",
-        id: 181
+        id: 180,
+        countryCode: "SD"
     },
     {
         displayName: "Suriname",
-        id: 182
+        id: 181,
+        countryCode: "SR"
     },
     {
         displayName: "Sweden",
-        id: 183
+        id: 182,
+        countryCode: "SE"
     },
     {
         displayName: "Switzerland",
-        id: 184
+        id: 183,
+        countryCode: "CH"
     },
     {
         displayName: "Syria",
-        id: 185
+        id: 184,
+        countryCode: "SY"
     },
     {
         displayName: "São Tomé e Príncipe",
-        id: 186
+        id: 185,
+        countryCode: "ST"
     },
     {
         displayName: "Tahiti",
-        id: 187
+        id: 186,
+        countryCode: "PF"
     },
     {
         displayName: "Tajikistan",
-        id: 188
+        id: 187,
+        countryCode: "TJ"
     },
     {
         displayName: "Tanzania",
-        id: 189
+        id: 188,
+        countryCode: "TZ"
     },
     {
         displayName: "Thailand",
-        id: 190
+        id: 189,
+        countryCode: "TH"
     },
     {
         displayName: "Timor-Leste",
-        id: 191
+        id: 190,
+        countryCode: "TL"
     },
     {
         displayName: "Togo",
-        id: 192
+        id: 191,
+        countryCode: "TG"
     },
     {
         displayName: "Tonga",
-        id: 193
+        id: 192,
+        countryCode: "TO"
     },
     {
         displayName: "Trinidad and Tobago",
-        id: 194
+        id: 193,
+        countryCode: "TT"
     },
     {
         displayName: "Tunisia",
-        id: 195
+        id: 194,
+        countryCode: "TN"
     },
     {
         displayName: "Turkey",
-        id: 196
+        id: 195,
+        countryCode: "TR"
     },
     {
         displayName: "Turkmenistan",
-        id: 197
+        id: 196,
+        countryCode: "TM"
     },
     {
         displayName: "Turks and Caicos Islands",
-        id: 198
+        id: 197,
+        countryCode: "TC"
     },
     {
         displayName: "US Virgin Islands",
-        id: 199
+        id: 198,
+        countryCode: "VI"
     },
     {
         displayName: "Uganda",
-        id: 200
+        id: 199,
+        countryCode: "UG"
     },
     {
         displayName: "Ukraine",
-        id: 201
+        id: 200,
+        countryCode: "UA"
     },
     {
         displayName: "United Arab Emirates",
-        id: 202
+        id: 201,
+        countryCode: "AE"
     },
     {
         displayName: "United States",
-        id: 203
+        id: 202,
+        countryCode: "UM"
     },
     {
         displayName: "Uruguay",
-        id: 204
+        id: 203,
+        countryCode: "UY"
     },
     {
         displayName: "Uzbekistan",
-        id: 205
+        id: 204,
+        countryCode: "UZ"
     },
     {
         displayName: "Vanuatu",
-        id: 206
+        id: 205,
+        countryCode: "VU"
     },
     {
         displayName: "Venezuela",
-        id: 207
+        id: 206,
+        countryCode: "VE"
     },
     {
         displayName: "Vietnam",
-        id: 208
+        id: 207,
+        countryCode: "VN"
     },
     {
         displayName: "Wales",
-        id: 209
+        id: 208,
+        countryCode: "GB-WLS"
     },
     {
         displayName: "Yemen",
-        id: 210
+        id: 209,
+        countryCode: "YE"
     },
     {
         displayName: "Zambia",
-        id: 211
+        id: 210,
+        countryCode: "ZM"
     },
     {
         displayName: "Zimbabwe",
-        id: 212
+        id: 211,
+        countryCode: "ZW"
     }
 ];
