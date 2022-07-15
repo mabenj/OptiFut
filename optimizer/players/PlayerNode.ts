@@ -1,11 +1,8 @@
-import { CLUBS } from "../constants/testData";
+import { HeroClubId, IconClubId } from "../../data/constants";
 import { Manager } from "../types/manager.interface";
 import { PositionIdentifier } from "../types/position-identifier.enum";
 import { PositionTag } from "../types/position-tag.type";
 import { Player } from "./Player";
-
-const ICON_CLUB_ID = CLUBS.Icons.id;
-const HERO_CLUB_ID = CLUBS.Hero.id;
 
 export class PlayerNode {
     private links: Player[];
@@ -97,15 +94,13 @@ export class PlayerNode {
 
     private isSameLeague(other: Player) {
         const isIcon =
-            this.player.club.id === ICON_CLUB_ID ||
-            other.club.id === ICON_CLUB_ID;
+            this.player.club.id === IconClubId || other.club.id === IconClubId;
         return isIcon || this.player.league.id === other.league.id;
     }
 
     private isSameClub(other: Player) {
         const isHero =
-            this.player.club.id === HERO_CLUB_ID ||
-            other.club.id === HERO_CLUB_ID;
+            this.player.club.id === HeroClubId || other.club.id === HeroClubId;
         if (isHero && this.player.league.id === other.league.id) {
             return true;
         }

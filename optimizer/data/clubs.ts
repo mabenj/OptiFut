@@ -1140,7 +1140,7 @@ export const Clubs = [
         id: 228
     },
     {
-        displayName: "FUT 22 ICONS",
+        displayName: "Icons",
         leagueId22: 19,
         id: 229
     },
@@ -3323,5 +3323,13 @@ export const Clubs = [
         displayName: "Śląsk Wrocław",
         leagueId22: 36,
         id: 665
+    },
+    {
+        displayName: "Heroes",
+        leagueId22: -1,
+        id: 9999
     }
 ];
+
+export const HeroClubId = 9999;
+export const IconClubId = 229;

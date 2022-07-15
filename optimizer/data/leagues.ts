@@ -196,3 +196,15 @@ export const Leagues = [
         id: 49
     }
 ];
+
+export const PopularLeagues = [
+    Leagues[5], // bundesliga
+    // Leagues[15], // eresdivisie
+    Leagues[22], // laliga
+    Leagues[28], // ligue 1
+    Leagues[36], // premier league
+    Leagues[42] // serie a
+];
+
+export const IconLeagueId = 19;
+export const HeroLeagueId = -1;

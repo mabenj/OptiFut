@@ -1055,3 +1055,22 @@ export const Nations = [
         countryCode: "ZW"
     }
 ];
+
+export const PopularNations = [
+    Nations[7], // argentina
+    Nations[18], // belgium
+    Nations[26], // brazil
+    // Nations[42], // colombia
+    // Nations[48], // croatia
+    // Nations[59], // egypt
+    Nations[61], // england
+    Nations[71], // france
+    Nations[75], // germany
+    Nations[96], // italy
+    // Nations[125], // mexico
+    Nations[135], // Netherlands
+    // Nations[151], // Poland
+    Nations[152], // Portugal
+    Nations[174] // Spain
+    // Nations[202] // Uruguay
+];

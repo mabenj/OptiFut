@@ -1,4 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
+import "bootstrap-icons/font/bootstrap-icons.scss";
+import "flag-icons/css/flag-icons.min.css";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 
