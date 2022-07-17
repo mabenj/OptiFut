@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CustomImage from "../components/CustomImage";
+import CustomImage from "../components/ui/CustomImage";
 import { PopularNationIds } from "../data/constants";
 import { SelectOption } from "../types/select-option.interface";
 import { db, Nation } from "../utils/db";
@@ -49,7 +49,7 @@ export function useNationality(initialId?: number | null) {
     return [selectedNationality, setById, nationOptions] as const;
 }
 
-const SELECT_IMG_WIDTH = 20;
+const SELECT_IMG_WIDTH = 30;
 
 function getNationOption(nation: Nation): SelectOption {
     return {

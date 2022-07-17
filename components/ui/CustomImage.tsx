@@ -20,15 +20,18 @@ export default function CustomImage({
 
     useEffect(() => setImageSrc(src), [src]);
 
+    const height = width / ratio;
+
     return (
         <Image
             src={imageSrc}
             alt={alt}
             width={width}
-            height={width / ratio}
+            height={height}
             onError={() => setImageSrc(fallbackSrc)}
-            placeholder="blur"
+            placeholder={"blur"}
             blurDataURL={src}
+            style={{ filter: "drop-shadow(0px 0px 0px black)" }}
         />
     );
 }

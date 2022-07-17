@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import CustomImage from "../components/CustomImage";
+import CustomImage from "../components/ui/CustomImage";
+import { HeroClubId, IconClubId } from "../data/constants";
 import { SelectOption } from "../types/select-option.interface";
 import { Club, db, League } from "../utils/db";
 
@@ -52,12 +53,18 @@ export function useClub(initialId?: number | null) {
     return [selectedClub, setById, clubOptions] as const;
 }
 
-const SELECT_IMG_WIDTH = 20;
+const SELECT_IMG_WIDTH = 30;
 
 function getClubOption(club: Club): SelectOption {
     return {
-        label: club.displayName,
+        label:
+            club.id === HeroClubId
+                ? "Heroes"
+                : club.id === IconClubId
+                ? "Icons"
+                : club.displayName,
         value: club.id,
+        leagueId: club.leagueId || undefined,
         icon: (
             <CustomImage
                 src={`/assets/img/clubs/${club.id}.png`}

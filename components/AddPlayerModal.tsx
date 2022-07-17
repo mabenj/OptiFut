@@ -32,14 +32,8 @@ import {
     UseRadioProps,
     VStack
 } from "@chakra-ui/react";
-import {
-    chakraComponents,
-    OptionProps,
-    Select,
-    ValueContainerProps
-} from "chakra-react-select";
 import Image from "next/image";
-import React, { ReactElement, useState } from "react";
+import React, { FormEvent, ReactElement, useState } from "react";
 import { HeroClubId, IconClubId, IconLeagueId } from "../data/constants";
 import { useClub } from "../hooks/useClub";
 import { useLeague } from "../hooks/useLeague";
@@ -47,10 +41,10 @@ import { useNationality } from "../hooks/useNationality";
 import { usePlayerPosition } from "../hooks/usePlayerPosition";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
-import { SelectOption } from "../types/select-option.interface";
 import { Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
-import PlayerNameAutocompleteInput from "./PlayerNameAutocompleteInput";
+import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
+import CustomSelect from "./ui/CustomSelect";
 
 interface AddPlayerValues {
     playerName: string;
@@ -107,7 +101,9 @@ export default function AddPlayerModal() {
         setPlayerVersion(version);
     };
 
-    const handleAddPlayer = () => {};
+    const handleAddPlayer = (e: FormEvent) => {
+        e.preventDefault();
+    };
 
     const handleReset = () => {
         setPlayerName(DEFAULT_VALUES.playerName);
@@ -136,7 +132,7 @@ export default function AddPlayerModal() {
             <Button onClick={onOpen} leftIcon={<AddIcon />}>
                 Add player
             </Button>
-            <Modal isOpen={isOpen} onClose={onClose} size="lg">
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Add Player</ModalHeader>
@@ -153,7 +149,7 @@ export default function AddPlayerModal() {
                                                 Player Name
                                             </FormLabel>
                                             <InputGroup>
-                                                <PlayerNameAutocompleteInput
+                                                <PlayerNameAutocomplete
                                                     id="playerName"
                                                     name="playerName"
                                                     placeholder="Enter name"
@@ -275,12 +271,11 @@ export default function AddPlayerModal() {
                                         textAlign="center">
                                         Nationality
                                     </FormLabel>
-                                    <Select
-                                        useBasicStyles={true}
-                                        hasStickyGroupHeaders={true}
+                                    <CustomSelect
                                         id="playerNationalityId"
                                         name="playerNationalityId"
                                         placeholder="Select nationality..."
+                                        noOptionsMessage="No nationalities found."
                                         options={nationalityOptions}
                                         value={playerNationality}
                                         onChange={(option) =>
@@ -288,8 +283,6 @@ export default function AddPlayerModal() {
                                                 option?.value
                                             )
                                         }
-                                        components={customSelectComponents}
-                                        selectedOptionColor="green"
                                     />
                                 </FormControl>
 
@@ -299,19 +292,16 @@ export default function AddPlayerModal() {
                                         textAlign="center">
                                         League
                                     </FormLabel>
-                                    <Select
-                                        useBasicStyles={true}
-                                        hasStickyGroupHeaders={true}
+                                    <CustomSelect
                                         id="playerLeagueId"
                                         name="playerLeagueId"
                                         placeholder="Select league..."
+                                        noOptionsMessage="No leagues found."
                                         options={leagueOptions}
                                         value={playerLeague}
                                         onChange={(option) =>
                                             setPlayerLeagueId(option?.value)
                                         }
-                                        components={customSelectComponents}
-                                        selectedOptionColor="green"
                                         isDisabled={playerVersion === "icon"}
                                     />
                                 </FormControl>
@@ -322,36 +312,36 @@ export default function AddPlayerModal() {
                                         textAlign="center">
                                         Club
                                     </FormLabel>
-                                    <Select
-                                        useBasicStyles={true}
-                                        hasStickyGroupHeaders={true}
+                                    <CustomSelect
                                         id="playerClubId"
                                         name="playerClubId"
                                         placeholder="Select club..."
+                                        noOptionsMessage="No clubs found."
                                         options={clubOptions}
                                         value={playerClub}
                                         onChange={(option) =>
-                                            setPlayerClubId(option?.value)
+                                            setPlayerClubId(option.value)
                                         }
-                                        components={customSelectComponents}
-                                        selectedOptionColor="green"
                                         isDisabled={
                                             playerVersion === "icon" ||
                                             playerVersion === "hero"
                                         }
                                         filterOption={(candidate, input) => {
-                                            if (!input) {
+                                            if (!input || input.length < 2) {
                                                 return (
-                                                    candidate.data
-                                                        .leagueId22 ===
+                                                    candidate.leagueId ===
                                                     playerLeague?.value
                                                 );
                                             }
-                                            return removeDiacritics(
-                                                candidate.data.label.toLowerCase()
-                                            ).includes(
+                                            const re = new RegExp(
+                                                String.raw`\b${removeDiacritics(
+                                                    input
+                                                )}`,
+                                                "i"
+                                            );
+                                            return re.test(
                                                 removeDiacritics(
-                                                    input.trim().toLowerCase()
+                                                    candidate.label
                                                 )
                                             );
                                         }}
@@ -387,56 +377,20 @@ export default function AddPlayerModal() {
     );
 }
 
-const customSelectComponents = {
-    Option: ({ children, ...props }: OptionProps<SelectOption, false>) => {
-        return (
-            <chakraComponents.Option {...props}>
-                <Box mr={4}>{props.data.icon}</Box>
-                {children}
-            </chakraComponents.Option>
-        );
-    },
-    ValueContainer: ({
-        children,
-        ...props
-    }: ValueContainerProps<SelectOption>) => {
-        const { getValue, hasValue } = props;
-        const icon = getValue().at(0)?.icon || "";
-
-        if (!hasValue) {
-            return (
-                <chakraComponents.ValueContainer {...props}>
-                    {children}
-                </chakraComponents.ValueContainer>
-            );
-        }
-
-        return (
-            <>
-                <Flex alignItems="center" justifyContent="center" p={1} ml={2}>
-                    {icon}
-                </Flex>
-                <chakraComponents.ValueContainer {...props}>
-                    {children}
-                </chakraComponents.ValueContainer>
-            </>
-        );
-    }
-};
+interface VersionRadioGroupProps {
+    name: string;
+    onChange: (version: PlayerVersion) => any;
+    value: PlayerVersion;
+}
 
 const VersionRadioGroup = ({
     name,
     onChange,
     value
-}: {
-    name: string;
-    onChange: (version: PlayerVersion) => any;
-    value: PlayerVersion;
-}) => {
-    const options = ["other", "icon", "hero"];
-
+}: VersionRadioGroupProps) => {
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: name,
+        value: value,
         defaultValue: value,
         onChange: onChange
     });
@@ -497,9 +451,9 @@ const VersionRadio = (
             size="md"
             variant="outline"
             _checked={{
-                bg: "teal.600",
+                bg: "green.600",
                 color: "white",
-                borderColor: "teal.600"
+                borderColor: "green.700"
             }}>
             {props.children}
             <input {...input} />

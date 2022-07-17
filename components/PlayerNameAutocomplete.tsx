@@ -17,7 +17,7 @@ interface AutocompleteInputProps {
     placeholder?: string;
 }
 
-export default function PlayerNameAutocompleteInput({
+export default function PlayerNameAutocomplete({
     value,
     onChange,
     onPlayerSelected,
