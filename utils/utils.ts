@@ -102,7 +102,20 @@ export function range(start: number, stop: number, step: number = 1): number[] {
     );
 }
 
+export function boldify(input: string, match: string) {
+    var re = new RegExp(match, "gi");
+    return input.replace(re, "<strong>" + match + "</strong>");
+}
+
 export function removeDiacritics(str: string) {
+    return str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
+export function isServer() {
+    return typeof window === "undefined";
+}
+
+export function removeDiacritics2(str: string) {
     const defaultDiacriticsRemovalMap = [
         {
             base: "A",

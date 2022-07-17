@@ -1,71 +1,85 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomImage from "../components/CustomImage";
-import {
-    IconLeagueId,
-    Leagues,
-    PopularLeagues
-} from "../optimizer/data/leagues";
+import { PopularLeagueIds } from "../data/constants";
 import { SelectOption } from "../types/select-option.interface";
+import { db, League, Nation } from "../utils/db";
+
+interface LeagueOption {
+    label: string;
+    options: SelectOption[];
+}
 
 export function useLeague(initialId?: number | null) {
     const [selectedLeague, setSelectedLeague] = useState<SelectOption | null>(
-        LEAGUE_OPTIONS.flatMap(({ options }) => options).find(
-            (league) => league.value === initialId
-        ) || null
+        null
     );
+    const [leagueOptions, setLeagueOptions] = useState<LeagueOption[]>([]);
 
-    const setById = (id: number | "icon" | undefined | null) => {
+    useEffect(() => {
+        async function setupLeagueOptions() {
+            const allLeagues = await db.leagues
+                .toCollection()
+                .sortBy("displayName");
+            const popularLeagues = await db.leagues
+                .where("id")
+                .anyOf(PopularLeagueIds)
+                .sortBy("displayName");
+            const initialLeague = initialId
+                ? await db.leagues.get({ id: initialId })
+                : null;
+            setSelectedLeague(
+                initialLeague ? getLeagueOption(initialLeague) : null
+            );
+            setLeagueOptions(getLeagueOptions(popularLeagues, allLeagues));
+        }
+        setupLeagueOptions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const setById = async (id: number | null | undefined) => {
         if (!id) {
             setSelectedLeague(null);
             return;
         }
-        if (id === "icon") {
-            setById(IconLeagueId);
-            return;
-        }
+        const selectedLeague = await db.leagues.get({ id: id });
         setSelectedLeague(
-            LEAGUE_OPTIONS.flatMap(({ options }) => options).find(
-                (league) => league.value === id
-            ) || null
+            selectedLeague ? getLeagueOption(selectedLeague) : null
         );
     };
 
-    return [selectedLeague, setById, LEAGUE_OPTIONS] as const;
+    return [selectedLeague, setById, leagueOptions] as const;
 }
 
 const SELECT_IMG_WIDTH = 20;
 
-const LEAGUE_OPTIONS = [
-    {
-        label: "Popular leagues",
-        options: PopularLeagues.map((league) => ({
-            label: league.displayName,
-            value: league.id,
-            icon: (
-                <CustomImage
-                    src={`/assets/img/leagues/${league.id}.png`}
-                    fallbackSrc=""
-                    alt={league.displayName}
-                    width={SELECT_IMG_WIDTH}
-                    ratio={1}
-                />
-            )
-        })) as SelectOption[]
-    },
-    {
-        label: "All leagues",
-        options: Leagues.map((league) => ({
-            label: league.displayName,
-            value: league.id,
-            icon: (
-                <CustomImage
-                    src={`/assets/img/leagues/${league.id}.png`}
-                    fallbackSrc=""
-                    alt={league.displayName}
-                    width={SELECT_IMG_WIDTH}
-                    ratio={1}
-                />
-            )
-        })) as SelectOption[]
-    }
-];
+function getLeagueOption(league: League): SelectOption {
+    return {
+        label: league.displayName,
+        value: league.id,
+        icon: (
+            <CustomImage
+                src={`/assets/img/leagues/${league.id}.png`}
+                fallbackSrc="/assets/img/nations/placeholder.svg"
+                alt={league.displayName}
+                width={SELECT_IMG_WIDTH}
+                ratio={1}
+            />
+        )
+    };
+}
+
+function getLeagueOptions(
+    popularLeagues: Nation[],
+    allLeagues: Nation[]
+): LeagueOption[] {
+    return [
+        {
+            label: "Popular leagues",
+            options: popularLeagues.map(getLeagueOption)
+        },
+        {
+            label: "All leagues",
+            options: allLeagues.map(getLeagueOption)
+        }
+    ];
+}

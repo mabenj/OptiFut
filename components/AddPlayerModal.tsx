@@ -10,7 +10,6 @@ import {
     Grid,
     GridItem,
     IconButton,
-    Input,
     InputGroup,
     InputRightAddon,
     Menu,
@@ -41,15 +40,17 @@ import {
 } from "chakra-react-select";
 import Image from "next/image";
 import React, { ReactElement, useState } from "react";
+import { HeroClubId, IconClubId, IconLeagueId } from "../data/constants";
 import { useClub } from "../hooks/useClub";
 import { useLeague } from "../hooks/useLeague";
 import { useNationality } from "../hooks/useNationality";
 import { usePlayerPosition } from "../hooks/usePlayerPosition";
-import { HeroClubId, IconClubId } from "../optimizer/data/clubs";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
 import { SelectOption } from "../types/select-option.interface";
+import { Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
+import PlayerNameAutocompleteInput from "./PlayerNameAutocompleteInput";
 
 interface AddPlayerValues {
     playerName: string;
@@ -93,12 +94,11 @@ export default function AddPlayerModal() {
 
     const handleVersionChange = (version: PlayerVersion) => {
         if (version === "icon") {
-            setPlayerLeagueId("icon");
-            setPlayerClubId("icon");
+            setPlayerLeagueId(IconLeagueId);
+            setPlayerClubId(IconClubId);
         }
         if (version === "hero") {
-            setPlayerLeagueId(null);
-            setPlayerClubId("hero");
+            setPlayerClubId(HeroClubId);
         }
         if (version === "other") {
             setPlayerLeagueId(null);
@@ -120,6 +120,15 @@ export default function AddPlayerModal() {
         } else {
             setPlayerHasLoyalty.off();
         }
+    };
+
+    const populateFieldsWith = (player: Player) => {
+        setPlayerName(player.playerName);
+        setPlayerPosition(player.position);
+        setPlayerVersion(player.version);
+        setPlayerNationalityId(player.nationId);
+        setPlayerLeagueId(player.leagueId);
+        setPlayerClubId(player.clubId);
     };
 
     return (
@@ -144,16 +153,14 @@ export default function AddPlayerModal() {
                                                 Player Name
                                             </FormLabel>
                                             <InputGroup>
-                                                <Input
+                                                <PlayerNameAutocompleteInput
                                                     id="playerName"
                                                     name="playerName"
                                                     placeholder="Enter name"
-                                                    variant="outline"
                                                     value={playerName}
-                                                    onChange={(e) =>
-                                                        setPlayerName(
-                                                            e.target.value
-                                                        )
+                                                    onChange={setPlayerName}
+                                                    onPlayerSelected={
+                                                        populateFieldsWith
                                                     }
                                                 />
                                                 <InputRightAddon

@@ -1,0 +1,21 @@
+{
+    "name": "futdb-client",
+    "version": "1.0.0",
+    "description": "",
+    "main": "script.ts",
+    "type": "module",
+    "scripts": {
+        "start": "node --loader ts-node/esm ./script.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^18.0.5",
+        "dotenv": "^16.0.1"
+    },
+    "dependencies": {
+        "axios": "^0.27.2",
+        "ts-node": "^10.9.1"
+    }
+}

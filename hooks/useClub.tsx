@@ -1,60 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomImage from "../components/CustomImage";
-import { Clubs, HeroClubId, IconClubId } from "../optimizer/data/clubs";
-import { Leagues } from "../optimizer/data/leagues";
 import { SelectOption } from "../types/select-option.interface";
+import { Club, db, League } from "../utils/db";
+
+interface ClubOption {
+    label: string; // label of league
+    options: SelectOption[]; // clubs in the league
+}
+
+interface LeagueWithClubs extends League {
+    clubs: Club[];
+}
 
 export function useClub(initialId?: number | null) {
-    const [selectedClub, setSelectedClub] = useState<SelectOption | null>(
-        CLUB_OPTIONS.flatMap(({ options }) => options).find(
-            (club) => club.value === initialId
-        ) || null
-    );
+    const [selectedClub, setSelectedClub] = useState<SelectOption | null>(null);
+    const [clubOptions, setClubOptions] = useState<ClubOption[]>([]);
 
-    const setById = (id: number | "icon" | "hero" | undefined | null) => {
+    useEffect(() => {
+        async function setupClubOptions() {
+            const leagues = await db.leagues
+                .toCollection()
+                .sortBy("displayName");
+            const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
+                leagues.map(async (league) => {
+                    const clubs = await db.clubs
+                        .where("leagueId")
+                        .equals(league.id)
+                        .sortBy("displayName");
+                    return { ...league, clubs };
+                })
+            );
+            const initialClub = initialId
+                ? await db.clubs.get({ id: initialId })
+                : null;
+            setSelectedClub(initialClub ? getClubOption(initialClub) : null);
+            setClubOptions(getClubOptions(leaguesWithClubs));
+        }
+        setupClubOptions();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const setById = async (id: number | null | undefined) => {
         if (!id) {
             setSelectedClub(null);
             return;
         }
-        if (id === "icon") {
-            setById(IconClubId);
-            return;
-        }
-        if (id === "hero") {
-            setById(HeroClubId);
-            return;
-        }
-        setSelectedClub(
-            CLUB_OPTIONS.flatMap(({ options }) => options).find(
-                (club) => club.value === id
-            ) || null
-        );
+        const selectedClub = await db.clubs.get({ id: id });
+        setSelectedClub(selectedClub ? getClubOption(selectedClub) : null);
     };
 
-    return [selectedClub, setById, CLUB_OPTIONS] as const;
+    return [selectedClub, setById, clubOptions] as const;
 }
 
 const SELECT_IMG_WIDTH = 20;
 
-const CLUB_OPTIONS = Leagues.concat({ displayName: "Heroes", id: -1 }).map(
-    (league) => ({
+function getClubOption(club: Club): SelectOption {
+    return {
+        label: club.displayName,
+        value: club.id,
+        icon: (
+            <CustomImage
+                src={`/assets/img/clubs/${club.id}.png`}
+                fallbackSrc="/assets/img/nations/placeholder.svg"
+                alt={club.displayName}
+                width={SELECT_IMG_WIDTH}
+                ratio={1}
+            />
+        )
+    };
+}
+
+function getClubOptions(leaguesWithClubs: LeagueWithClubs[]): ClubOption[] {
+    return leaguesWithClubs.map((league) => ({
         label: league.displayName,
-        leagueId: league.id,
-        options: Clubs.filter(({ leagueId22 }) => leagueId22 === league.id).map(
-            (club) => ({
-                label: club.displayName,
-                value: club.id,
-                icon: (
-                    <CustomImage
-                        src={`/assets/img/clubs/${club.id}.png`}
-                        fallbackSrc="/assets/img/club/placeholder.svg"
-                        alt={club.displayName}
-                        width={SELECT_IMG_WIDTH}
-                        ratio={1}
-                    />
-                ),
-                leagueId22: league.id
-            })
-        ) as SelectOption[]
-    })
-);
+        options: league.clubs.map(getClubOption)
+    }));
+}

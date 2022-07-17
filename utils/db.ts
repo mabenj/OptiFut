@@ -1,10 +1,8 @@
 import Dexie, { Table } from "dexie";
-import Clubs from "../data/clubs.min.json";
-import Leagues from "../data/leagues.min.json";
-import Nations from "../data/nations.min.json";
 import { PlayerPosition } from "../types/player-position.type";
+import { PlayerVersion } from "../types/player-version";
 
-interface Player {
+export interface Player {
     id: number;
     playerName: string;
     commonName: string;
@@ -12,19 +10,20 @@ interface Player {
     nationId: number;
     clubId: number;
     position: PlayerPosition;
+    version: PlayerVersion;
 }
 
-interface Nation {
+export interface Nation {
     id: number;
     displayName: string;
 }
 
-interface League {
+export interface League {
     id: number;
     displayName: string;
 }
 
-interface Club {
+export interface Club {
     id: number;
     displayName: string;
     leagueId: number | null;
@@ -44,37 +43,71 @@ export class OptiFutDexie extends Dexie {
             leagues: "&id, displayName",
             clubs: "&id, displayName, leagueId"
         });
-
-        this.on("populate", this.PrePopulateDatabase);
+        this.on("ready", (db) => populateTablesIfEmpty(db as OptiFutDexie));
     }
+}
 
-    private async PrePopulateDatabase() {
-        console.log("Populating players");
-        import("../data/players.min.json").then((module) => {
-            const playersJson = module.default;
-            console.log("players: ", playersJson.length);
-            db.players.bulkAdd(
-                playersJson.map((player) => ({
-                    id: player.id,
-                    playerName: player.playerName,
-                    commonName: player.commonName,
-                    position: player.position as PlayerPosition,
-                    nationId: player.nationId,
-                    leagueId: player.leagueId,
-                    clubId: player.clubId
-                }))
+function populateTablesIfEmpty(db: OptiFutDexie) {
+    db.players.count((count) => {
+        if (count > 0) {
+            console.log("players already populated");
+            return;
+        }
+        console.log("player db is empty");
+        return new Promise<Player[]>((resolve) => {
+            import("../data/players.min.json").then((module) =>
+                resolve(module.default as Player[])
             );
+        }).then((players) => {
+            console.log("adding players");
+            db.players.bulkAdd(players);
         });
-
-        console.log("Populating nations");
-        db.nations.bulkAdd(Nations);
-
-        console.log("Populating leagues");
-        db.leagues.bulkAdd(Leagues);
-
-        console.log("Populating clubs");
-        db.clubs.bulkAdd(Clubs);
-    }
+    });
+    db.nations.count((count) => {
+        if (count > 0) {
+            console.log("nations already populated");
+            return;
+        }
+        console.log("nation db is empty");
+        return new Promise<Nation[]>((resolve) => {
+            import("../data/nations.min.json").then((module) =>
+                resolve(module.default as Nation[])
+            );
+        }).then((nations) => {
+            console.log("adding nations");
+            db.nations.bulkAdd(nations);
+        });
+    });
+    db.leagues.count((count) => {
+        if (count > 0) {
+            console.log("leagues already populated");
+            return;
+        }
+        console.log("league db is empty");
+        return new Promise<League[]>((resolve) => {
+            import("../data/leagues.min.json").then((module) =>
+                resolve(module.default as League[])
+            );
+        }).then((leagues) => {
+            console.log("adding leagues");
+            db.leagues.bulkAdd(leagues);
+        });
+    });
+    db.clubs.count((count) => {
+        if (count > 0) {
+            console.log("clubs already populated");
+            return;
+        }
+        console.log("club db is empty");
+        return new Promise<Club[]>((resolve) => {
+            import("../data/clubs.min.json").then((module) =>
+                resolve(module.default as Club[])
+            );
+        }).then((clubs) => {
+            console.log("adding clubs");
+            db.clubs.bulkAdd(clubs);
+        });
+    });
 }
 
 export const db = new OptiFutDexie();
