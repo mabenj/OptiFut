@@ -14,16 +14,17 @@ export function useLeague(initialId?: number | null) {
     const [selectedLeague, setSelectedLeague] = useState<SelectOption | null>(
         null
     );
-    const leagueOptions = useNextLiveQuery(async () => {
-        const allLeagues = await db.leagues
-            .toCollection()
-            .sortBy("displayName");
-        const popularLeagues = await db.leagues
-            .where("id")
-            .anyOf(PopularLeagueIds)
-            .sortBy("displayName");
-        return getLeagueOptions(popularLeagues, allLeagues);
-    }, []);
+    const leagueOptions =
+        useNextLiveQuery(async () => {
+            const allLeagues = await db.leagues
+                .toCollection()
+                .sortBy("displayName");
+            const popularLeagues = await db.leagues
+                .where("id")
+                .anyOf(PopularLeagueIds)
+                .sortBy("displayName");
+            return getLeagueOptions(popularLeagues, allLeagues);
+        }, []) || [];
 
     useEffect(() => {
         if (!initialId) {

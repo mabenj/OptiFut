@@ -16,19 +16,22 @@ interface LeagueWithClubs extends League {
 
 export function useClub(initialId?: number | null) {
     const [selectedClub, setSelectedClub] = useState<SelectOption | null>(null);
-    const clubOptions = useNextLiveQuery(async () => {
-        const leagues = await db.leagues.toCollection().sortBy("displayName");
-        const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
-            leagues.map(async (league) => {
-                const clubs = await db.clubs
-                    .where("leagueId")
-                    .equals(league.id)
-                    .sortBy("displayName");
-                return { ...league, clubs };
-            })
-        );
-        return getClubOptions(leaguesWithClubs);
-    }, []);
+    const clubOptions =
+        useNextLiveQuery(async () => {
+            const leagues = await db.leagues
+                .toCollection()
+                .sortBy("displayName");
+            const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
+                leagues.map(async (league) => {
+                    const clubs = await db.clubs
+                        .where("leagueId")
+                        .equals(league.id)
+                        .sortBy("displayName");
+                    return { ...league, clubs };
+                })
+            );
+            return getClubOptions(leaguesWithClubs);
+        }, []) || [];
 
     useEffect(() => {
         if (!initialId) {

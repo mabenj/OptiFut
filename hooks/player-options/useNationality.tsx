@@ -22,7 +22,7 @@ export function useNationality(initialId?: number | null) {
             .anyOf(PopularNationIds)
             .sortBy("displayName");
         return getNationOptions(popularNations, allNations);
-    }, []);
+    }, []) || [];
 
     useEffect(() => {
         if (!initialId) {
