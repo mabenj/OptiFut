@@ -1,7 +1,9 @@
 import axios from "axios";
-import "dotenv/config";
+import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
+
+dotenv.config({ path: ".env.local" });
 
 const API_KEY = process.env.FUTDB_API_KEY || "";
 const AXIOS_CONFIG = { headers: { "X-AUTH-TOKEN": API_KEY } };
@@ -45,6 +47,7 @@ async function downloadPlayers() {
                 !player.nation ||
                 !player.club ||
                 !player.position ||
+                !isFinite(player.rating) ||
                 !isFinite(player.rarity)
             ) {
                 continue;
@@ -65,7 +68,8 @@ async function downloadPlayers() {
                         ? "icon"
                         : player.rarity === HERO_RARITY
                         ? "hero"
-                        : "other"
+                        : "other",
+                rating: player.rating
             });
             // await downloadImage(
             //     `https://futdb.app/api/players/${player.id}/image`,

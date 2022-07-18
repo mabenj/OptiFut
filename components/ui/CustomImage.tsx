@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 
 interface CustomImageProps {
     src: string;
-    fallbackSrc: string;
-    alt: string;
     width: number;
     ratio: number;
+    alt?: string;
+    fallbackSrc?: string;
+    title?: string;
 }
 
 export default function CustomImage({
@@ -15,7 +16,8 @@ export default function CustomImage({
     fallbackSrc,
     alt,
     width,
-    ratio
+    ratio,
+    title
 }: CustomImageProps) {
     const [imageSrc, setImageSrc] = useState(src);
     const [isLoaded, setIsLoaded] = useBoolean(false);
@@ -31,11 +33,12 @@ export default function CustomImage({
                 alt={alt}
                 width={width}
                 height={height}
-                onError={() => setImageSrc(fallbackSrc)}
+                onError={() => setImageSrc(fallbackSrc || "")}
                 // placeholder={"blur"}
                 blurDataURL={src}
                 style={{ filter: "drop-shadow(0px 0px 0px black)" }}
                 onLoad={setIsLoaded.on}
+                title={title}
             />
         </Skeleton>
     );

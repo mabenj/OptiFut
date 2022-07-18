@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CustomImage from "../../components/ui/CustomImage";
-import { PopularLeagueIds } from "../../data/constants";
+import { PopularLeagueIds, SelectImageWidth } from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { db, League, Nation } from "../../utils/db";
 import { useNextLiveQuery } from "../useNextLiveQuery";
@@ -17,8 +17,8 @@ export function useLeague(initialId?: number | null) {
     const leagueOptions =
         useNextLiveQuery(async () => {
             const allLeagues = await db.leagues
-                .toCollection()
-                .sortBy("displayName");
+                .orderBy("displayName")
+                .toArray();
             const popularLeagues = await db.leagues
                 .where("id")
                 .anyOf(PopularLeagueIds)
@@ -53,8 +53,6 @@ export function useLeague(initialId?: number | null) {
     return [selectedLeague, setById, leagueOptions] as const;
 }
 
-const SELECT_IMG_WIDTH = 30;
-
 function getLeagueOption(league: League): SelectOption {
     return {
         label: league.displayName,
@@ -64,7 +62,7 @@ function getLeagueOption(league: League): SelectOption {
                 src={`/assets/img/leagues/${league.id}.png`}
                 fallbackSrc="/assets/img/nations/placeholder.svg"
                 alt={league.displayName}
-                width={SELECT_IMG_WIDTH}
+                width={SelectImageWidth}
                 ratio={1}
             />
         )

@@ -132,7 +132,7 @@ export default function AddPlayerModal() {
             <Button onClick={onOpen} leftIcon={<AddIcon />}>
                 Add player
             </Button>
-            <Modal isOpen={isOpen} onClose={onClose} size="xl">
+            <Modal isOpen={isOpen} onClose={onClose} size={["full", "xl"]}>
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>Add Player</ModalHeader>

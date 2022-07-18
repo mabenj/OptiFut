@@ -11,6 +11,7 @@ export interface Player {
     clubId: number;
     position: PlayerPosition;
     version: PlayerVersion;
+    rating: number;
 }
 
 export interface Nation {
@@ -38,7 +39,7 @@ export class OptiFutDexie extends Dexie {
     constructor() {
         super("optifutDb");
         this.version(1).stores({
-            players: "&id, playerName, commonName", // Primary key and indexed props
+            players: "&id, playerName, commonName, rating", // Primary key and indexed props
             nations: "&id, displayName",
             leagues: "&id, displayName",
             clubs: "&id, displayName, leagueId"
@@ -50,61 +51,61 @@ export class OptiFutDexie extends Dexie {
 function populateTablesIfEmpty(db: OptiFutDexie) {
     db.players.count((count) => {
         if (count > 0) {
-            console.log("players already populated");
+            console.log("[players table already populated]");
             return;
         }
-        console.log("player db is empty");
+        console.log("[players table is empty]");
         return new Promise<Player[]>((resolve) => {
             import("../data/players.min.json").then((module) =>
                 resolve(module.default as Player[])
             );
         }).then((players) => {
-            console.log("adding players");
+            console.log("[populating players table]");
             db.players.bulkAdd(players);
         });
     });
     db.nations.count((count) => {
         if (count > 0) {
-            console.log("nations already populated");
+            console.log("[nations table already populated]");
             return;
         }
-        console.log("nation db is empty");
+        console.log("[nations table is empty]");
         return new Promise<Nation[]>((resolve) => {
             import("../data/nations.min.json").then((module) =>
                 resolve(module.default as Nation[])
             );
         }).then((nations) => {
-            console.log("adding nations");
+            console.log("[populating nations table]");
             db.nations.bulkAdd(nations);
         });
     });
     db.leagues.count((count) => {
         if (count > 0) {
-            console.log("leagues already populated");
+            console.log("[leagues table already populated]");
             return;
         }
-        console.log("league db is empty");
+        console.log("[leagues table is empty]");
         return new Promise<League[]>((resolve) => {
             import("../data/leagues.min.json").then((module) =>
                 resolve(module.default as League[])
             );
         }).then((leagues) => {
-            console.log("adding leagues");
+            console.log("[populating leagues table]");
             db.leagues.bulkAdd(leagues);
         });
     });
     db.clubs.count((count) => {
         if (count > 0) {
-            console.log("clubs already populated");
+            console.log("[clubs table already populated]");
             return;
         }
-        console.log("club db is empty");
+        console.log("[clubs table is empty]");
         return new Promise<Club[]>((resolve) => {
             import("../data/clubs.min.json").then((module) =>
                 resolve(module.default as Club[])
             );
         }).then((clubs) => {
-            console.log("adding clubs");
+            console.log("[populating clubs table]");
             db.clubs.bulkAdd(clubs);
         });
     });

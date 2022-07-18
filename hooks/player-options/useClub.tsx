@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import CustomImage from "../../components/ui/CustomImage";
-import { HeroClubId, IconClubId } from "../../data/constants";
+import { HeroClubId, IconClubId, SelectImageWidth } from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { Club, db, League } from "../../utils/db";
 import { useNextLiveQuery } from "../useNextLiveQuery";
@@ -18,9 +18,7 @@ export function useClub(initialId?: number | null) {
     const [selectedClub, setSelectedClub] = useState<SelectOption | null>(null);
     const clubOptions =
         useNextLiveQuery(async () => {
-            const leagues = await db.leagues
-                .toCollection()
-                .sortBy("displayName");
+            const leagues = await db.leagues.orderBy("displayName").toArray();
             const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
                 leagues.map(async (league) => {
                     const clubs = await db.clubs
@@ -56,8 +54,6 @@ export function useClub(initialId?: number | null) {
     return [selectedClub, setById, clubOptions] as const;
 }
 
-const SELECT_IMG_WIDTH = 30;
-
 function getClubOption(club: Club): SelectOption {
     return {
         label:
@@ -73,7 +69,7 @@ function getClubOption(club: Club): SelectOption {
                 src={`/assets/img/clubs/${club.id}.png`}
                 fallbackSrc="/assets/img/nations/placeholder.svg"
                 alt={club.displayName}
-                width={SELECT_IMG_WIDTH}
+                width={SelectImageWidth}
                 ratio={1}
             />
         )

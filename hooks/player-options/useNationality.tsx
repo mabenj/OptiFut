@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import CustomImage from "../../components/ui/CustomImage";
-import { PopularNationIds } from "../../data/constants";
+import {
+    NationFlagRatio,
+    PopularNationIds,
+    SelectImageWidth
+} from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { db, Nation } from "../../utils/db";
 import { useNextLiveQuery } from "../useNextLiveQuery";
@@ -13,16 +17,17 @@ interface NationOption {
 export function useNationality(initialId?: number | null) {
     const [selectedNationality, setSelectedNationality] =
         useState<SelectOption | null>(null);
-    const nationOptions = useNextLiveQuery(async () => {
-        const allNations = await db.nations
-            .toCollection()
-            .sortBy("displayName");
-        const popularNations = await db.nations
-            .where("id")
-            .anyOf(PopularNationIds)
-            .sortBy("displayName");
-        return getNationOptions(popularNations, allNations);
-    }, []) || [];
+    const nationOptions =
+        useNextLiveQuery(async () => {
+            const allNations = await db.nations
+                .orderBy("displayName")
+                .toArray();
+            const popularNations = await db.nations
+                .where("id")
+                .anyOf(PopularNationIds)
+                .sortBy("displayName");
+            return getNationOptions(popularNations, allNations);
+        }, []) || [];
 
     useEffect(() => {
         if (!initialId) {
@@ -51,8 +56,6 @@ export function useNationality(initialId?: number | null) {
     return [selectedNationality, setById, nationOptions] as const;
 }
 
-const SELECT_IMG_WIDTH = 30;
-
 function getNationOption(nation: Nation): SelectOption {
     return {
         label: nation.displayName,
@@ -62,8 +65,8 @@ function getNationOption(nation: Nation): SelectOption {
                 src={`/assets/img/nations/${nation.id}.png`}
                 fallbackSrc="/assets/img/nations/placeholder.svg"
                 alt={nation.displayName}
-                width={SELECT_IMG_WIDTH}
-                ratio={70 / 42}
+                width={SelectImageWidth}
+                ratio={NationFlagRatio}
             />
         )
     };
