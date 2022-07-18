@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PlayerPosition } from "../types/player-position.type";
+import { PlayerPosition } from "../../types/player-position.type";
 
 export function usePlayerPosition(initialValue?: PlayerPosition) {
     const [selectedPosition, setSelectedPosition] = useState<PlayerPosition>(

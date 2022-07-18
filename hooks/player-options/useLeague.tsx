@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import CustomImage from "../components/ui/CustomImage";
-import { PopularLeagueIds } from "../data/constants";
-import { SelectOption } from "../types/select-option.interface";
-import { db, League, Nation } from "../utils/db";
+import CustomImage from "../../components/ui/CustomImage";
+import { PopularLeagueIds } from "../../data/constants";
+import { SelectOption } from "../../types/select-option.interface";
+import { db, League, Nation } from "../../utils/db";
+import { useNextLiveQuery } from "../useNextLiveQuery";
 
 interface LeagueOption {
     label: string;
@@ -13,26 +14,27 @@ export function useLeague(initialId?: number | null) {
     const [selectedLeague, setSelectedLeague] = useState<SelectOption | null>(
         null
     );
-    const [leagueOptions, setLeagueOptions] = useState<LeagueOption[]>([]);
+    const leagueOptions = useNextLiveQuery(async () => {
+        const allLeagues = await db.leagues
+            .toCollection()
+            .sortBy("displayName");
+        const popularLeagues = await db.leagues
+            .where("id")
+            .anyOf(PopularLeagueIds)
+            .sortBy("displayName");
+        return getLeagueOptions(popularLeagues, allLeagues);
+    }, []);
 
     useEffect(() => {
-        async function setupLeagueOptions() {
-            const allLeagues = await db.leagues
-                .toCollection()
-                .sortBy("displayName");
-            const popularLeagues = await db.leagues
-                .where("id")
-                .anyOf(PopularLeagueIds)
-                .sortBy("displayName");
-            const initialLeague = initialId
-                ? await db.leagues.get({ id: initialId })
-                : null;
-            setSelectedLeague(
-                initialLeague ? getLeagueOption(initialLeague) : null
-            );
-            setLeagueOptions(getLeagueOptions(popularLeagues, allLeagues));
+        if (!initialId) {
+            setSelectedLeague(null);
+            return;
         }
-        setupLeagueOptions();
+        db.leagues
+            .get({ id: initialId })
+            .then((league) =>
+                setSelectedLeague(league ? getLeagueOption(league) : null)
+            );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import CustomImage from "../components/ui/CustomImage";
-import { HeroClubId, IconClubId } from "../data/constants";
-import { SelectOption } from "../types/select-option.interface";
-import { Club, db, League } from "../utils/db";
+import CustomImage from "../../components/ui/CustomImage";
+import { HeroClubId, IconClubId } from "../../data/constants";
+import { SelectOption } from "../../types/select-option.interface";
+import { Club, db, League } from "../../utils/db";
+import { useNextLiveQuery } from "../useNextLiveQuery";
 
 interface ClubOption {
     label: string; // label of league
@@ -15,29 +16,28 @@ interface LeagueWithClubs extends League {
 
 export function useClub(initialId?: number | null) {
     const [selectedClub, setSelectedClub] = useState<SelectOption | null>(null);
-    const [clubOptions, setClubOptions] = useState<ClubOption[]>([]);
+    const clubOptions = useNextLiveQuery(async () => {
+        const leagues = await db.leagues.toCollection().sortBy("displayName");
+        const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
+            leagues.map(async (league) => {
+                const clubs = await db.clubs
+                    .where("leagueId")
+                    .equals(league.id)
+                    .sortBy("displayName");
+                return { ...league, clubs };
+            })
+        );
+        return getClubOptions(leaguesWithClubs);
+    }, []);
 
     useEffect(() => {
-        async function setupClubOptions() {
-            const leagues = await db.leagues
-                .toCollection()
-                .sortBy("displayName");
-            const leaguesWithClubs: LeagueWithClubs[] = await Promise.all(
-                leagues.map(async (league) => {
-                    const clubs = await db.clubs
-                        .where("leagueId")
-                        .equals(league.id)
-                        .sortBy("displayName");
-                    return { ...league, clubs };
-                })
-            );
-            const initialClub = initialId
-                ? await db.clubs.get({ id: initialId })
-                : null;
-            setSelectedClub(initialClub ? getClubOption(initialClub) : null);
-            setClubOptions(getClubOptions(leaguesWithClubs));
+        if (!initialId) {
+            setSelectedClub(null);
+            return;
         }
-        setupClubOptions();
+        db.clubs
+            .get({ id: initialId })
+            .then((club) => setSelectedClub(club ? getClubOption(club) : null));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

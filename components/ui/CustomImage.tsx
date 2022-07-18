@@ -29,7 +29,7 @@ export default function CustomImage({
             width={width}
             height={height}
             onError={() => setImageSrc(fallbackSrc)}
-            placeholder={"blur"}
+            // placeholder={"blur"}
             blurDataURL={src}
             style={{ filter: "drop-shadow(0px 0px 0px black)" }}
         />

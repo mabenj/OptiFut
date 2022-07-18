@@ -35,10 +35,10 @@ import {
 import Image from "next/image";
 import React, { FormEvent, ReactElement, useState } from "react";
 import { HeroClubId, IconClubId, IconLeagueId } from "../data/constants";
-import { useClub } from "../hooks/useClub";
-import { useLeague } from "../hooks/useLeague";
-import { useNationality } from "../hooks/useNationality";
-import { usePlayerPosition } from "../hooks/usePlayerPosition";
+import { useClub } from "../hooks/player-options/useClub";
+import { useLeague } from "../hooks/player-options/useLeague";
+import { useNationality } from "../hooks/player-options/useNationality";
+import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
 import { Player } from "../utils/db";

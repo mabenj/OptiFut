@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import CustomImage from "../components/ui/CustomImage";
-import { PopularNationIds } from "../data/constants";
-import { SelectOption } from "../types/select-option.interface";
-import { db, Nation } from "../utils/db";
+import CustomImage from "../../components/ui/CustomImage";
+import { PopularNationIds } from "../../data/constants";
+import { SelectOption } from "../../types/select-option.interface";
+import { db, Nation } from "../../utils/db";
+import { useNextLiveQuery } from "../useNextLiveQuery";
 
 interface NationOption {
     label: string;
@@ -12,26 +13,27 @@ interface NationOption {
 export function useNationality(initialId?: number | null) {
     const [selectedNationality, setSelectedNationality] =
         useState<SelectOption | null>(null);
-    const [nationOptions, setNationOptions] = useState<NationOption[]>([]);
+    const nationOptions = useNextLiveQuery(async () => {
+        const allNations = await db.nations
+            .toCollection()
+            .sortBy("displayName");
+        const popularNations = await db.nations
+            .where("id")
+            .anyOf(PopularNationIds)
+            .sortBy("displayName");
+        return getNationOptions(popularNations, allNations);
+    }, []);
 
     useEffect(() => {
-        async function setupNationOptions() {
-            const allNations = await db.nations
-                .toCollection()
-                .sortBy("displayName");
-            const popularNations = await db.nations
-                .where("id")
-                .anyOf(PopularNationIds)
-                .sortBy("displayName");
-            const initialNation = initialId
-                ? await db.nations.get({ id: initialId })
-                : null;
-            setSelectedNationality(
-                initialNation ? getNationOption(initialNation) : null
-            );
-            setNationOptions(getNationOptions(popularNations, allNations));
+        if (!initialId) {
+            setSelectedNationality(null);
+            return;
         }
-        setupNationOptions();
+        db.nations
+            .get({ id: initialId })
+            .then((nation) =>
+                setSelectedNationality(nation ? getNationOption(nation) : null)
+            );
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
