@@ -1,12 +1,13 @@
-import { Box, Input, useBoolean } from "@chakra-ui/react";
+import { Box, Input, Skeleton, useBoolean } from "@chakra-ui/react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useDebounce } from "../hooks/useDebounce";
 import { db, Player } from "../utils/db";
-import { removeDiacritics } from "../utils/utils";
+import { getRandomInt, range, removeDiacritics } from "../utils/utils";
 
 const QUERY_DEBOUNCE_MS = 200;
+const SUGGESTIONS_LIMIT = 40;
 
 interface AutocompleteInputProps {
     value: string;
@@ -28,6 +29,7 @@ export default function PlayerNameAutocomplete({
     const [query, setQuery] = useState("");
     const debouncedQuery = useDebounce(query, QUERY_DEBOUNCE_MS);
     const [showSuggestions, setShowSuggestions] = useBoolean(false);
+    const [isQuerying, setIsQuerying] = useBoolean(false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const suggestions =
@@ -46,20 +48,21 @@ export default function PlayerNameAutocomplete({
                         re.test(removeDiacritics(player.playerName)) ||
                         re.test(removeDiacritics(player.commonName))
                 )
-                .limit(100)
+                .limit(SUGGESTIONS_LIMIT)
                 .toArray();
             console.timeEnd();
             return result;
         }, [debouncedQuery]) || [];
 
+    useEffect(() => setIsQuerying.off(), [setIsQuerying, suggestions]);
+
     const handleChange = (inputValue: string) => {
         onChange(inputValue);
         setQuery(inputValue);
+        setIsQuerying.on();
     };
 
     const handleSelectSuggestion = (suggestion: Player) => {
-        // handleChange(suggestion.playerName);
-        console.log("select suggestion");
         onPlayerSelected(suggestion);
         setShowSuggestions.off();
     };
@@ -74,8 +77,9 @@ export default function PlayerNameAutocomplete({
                 onChange={(e) => handleChange(e.target.value)}
                 autoComplete="off"
                 onFocus={setShowSuggestions.on}
+                onBlur={setShowSuggestions.off}
             />
-            {suggestions.length > 0 && showSuggestions && (
+            {showSuggestions && (suggestions.length > 0 || isQuerying) && (
                 <Box
                     mt={2}
                     position="absolute"
@@ -90,26 +94,61 @@ export default function PlayerNameAutocomplete({
                     zIndex={9999}
                     maxHeight="350px"
                     overflowY="auto">
-                    {suggestions.map((suggestion) => (
-                        <Box
-                            key={suggestion.id}
-                            px={5}
-                            py={2}
-                            cursor="pointer"
-                            onMouseDown={() =>
-                                handleSelectSuggestion(suggestion)
-                            }
-                            _hover={{ background: "gray.100" }}>
-                            <Highlighter
-                                searchWords={[debouncedQuery]}
-                                textToHighlight={suggestion.playerName}
-                                highlightTag="strong"
-                                sanitize={removeDiacritics}
+                    {!isQuerying &&
+                        suggestions.map((suggestion) => (
+                            <Suggestion
+                                key={suggestion.id}
+                                onMouseDown={() =>
+                                    handleSelectSuggestion(suggestion)
+                                }>
+                                <Highlighter
+                                    searchWords={[debouncedQuery]}
+                                    textToHighlight={suggestion.playerName}
+                                    highlightTag="strong"
+                                    sanitize={removeDiacritics}
+                                />
+                            </Suggestion>
+                        ))}
+                    {isQuerying &&
+                        range(0, SUGGESTIONS_LIMIT).map((i) => (
+                            <SkeletonSuggestion
+                                key={"skeletonSuggestion_" + i}
                             />
-                        </Box>
-                    ))}
+                        ))}
                 </Box>
             )}
         </>
     );
 }
+
+interface SuggestionProps {
+    onMouseDown?: (e: MouseEvent) => any;
+    children: React.ReactNode;
+}
+
+const Suggestion = ({ onMouseDown, children }: SuggestionProps) => {
+    return (
+        <Box
+            px={5}
+            py={2}
+            cursor="pointer"
+            onMouseDown={(e) => onMouseDown && onMouseDown(e)}
+            _hover={{ background: "gray.100" }}>
+            {children}
+        </Box>
+    );
+};
+
+const SkeletonSuggestion = () => {
+    const MIN_WIDTH_PERCENT = 50;
+    const MAX_WIDTH_PERCENT = 80;
+    return (
+        <Suggestion>
+            <Skeleton
+                h="20px"
+                my={1}
+                w={`${getRandomInt(MIN_WIDTH_PERCENT, MAX_WIDTH_PERCENT)}%`}
+            />
+        </Suggestion>
+    );
+};
