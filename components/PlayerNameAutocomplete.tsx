@@ -18,8 +18,9 @@ import { db, Player } from "../utils/db";
 import { getRandomInt, range, removeDiacritics } from "../utils/utils";
 import CustomImage from "./ui/CustomImage";
 
-const QUERY_DEBOUNCE_MS = 200;
+const QUERY_DEBOUNCE_MS = 100;
 const SUGGESTIONS_LIMIT = 40;
+const QUERY_RATING_CUTOFF = 70;
 
 interface AutocompleteInputProps {
     value: string;
@@ -43,10 +44,11 @@ export default function PlayerNameAutocomplete({
     const [showSuggestions, setShowSuggestions] = useBoolean(false);
     const [isQuerying, setIsQuerying] = useBoolean(false);
     const [suggestionIndex, setSuggestionIndex] = useState(-1);
+    const suggestionsContainerRef = useRef<HTMLDivElement>(null);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const suggestions =
-        useLiveQuery(() => {
+        useLiveQuery(async () => {
             if (debouncedQuery.length < 2) {
                 return [];
             }
@@ -54,16 +56,32 @@ export default function PlayerNameAutocomplete({
                 String.raw`\b${removeDiacritics(debouncedQuery)}`,
                 "i"
             );
-            const result = db.players
-                .orderBy("rating")
+            const result = await db.players
+                .where("rating")
+                .aboveOrEqual(QUERY_RATING_CUTOFF)
                 .filter(
                     (player) =>
                         re.test(removeDiacritics(player.playerName)) ||
                         re.test(removeDiacritics(player.commonName))
                 )
-                .reverse()
                 .limit(SUGGESTIONS_LIMIT)
-                .toArray();
+                .reverse()
+                .sortBy("rating");
+
+            if (result.length === 0) {
+                return db.players
+                    .where("rating")
+                    .below(QUERY_RATING_CUTOFF)
+                    .filter(
+                        (player) =>
+                            re.test(removeDiacritics(player.playerName)) ||
+                            re.test(removeDiacritics(player.commonName))
+                    )
+                    .limit(SUGGESTIONS_LIMIT)
+                    .reverse()
+                    .sortBy("rating");
+            }
+
             return result;
         }, [debouncedQuery]) || [];
 
@@ -71,6 +89,11 @@ export default function PlayerNameAutocomplete({
         setIsQuerying.off();
         setSuggestionIndex(-1);
     }, [setIsQuerying, suggestions, showSuggestions]);
+
+    useEffect(
+        () => scrollSuggestions(suggestionsContainerRef.current!),
+        [suggestionIndex]
+    );
 
     const handleChange = (inputValue: string) => {
         onChange(inputValue);
@@ -84,7 +107,7 @@ export default function PlayerNameAutocomplete({
         setShowSuggestions.off();
     };
 
-    const handleInputKeyPress = (e: KeyboardEvent) => {
+    const handleInputKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (!showSuggestions) {
             return;
         }
@@ -105,8 +128,11 @@ export default function PlayerNameAutocomplete({
             }
             case "Tab":
             case "Enter": {
-                e.preventDefault();
                 handleSelectSuggestion(suggestions[suggestionIndex]);
+            }
+            case "Escape": {
+                e.preventDefault();
+                e.currentTarget.blur();
                 break;
             }
             default:
@@ -127,13 +153,18 @@ export default function PlayerNameAutocomplete({
                     value={value}
                     onChange={(e) => handleChange(e.target.value)}
                     autoComplete="off"
-                    onFocus={setShowSuggestions.on}
+                    type="search"
+                    onFocus={(e) => {
+                        e.target.select();
+                        setShowSuggestions.on();
+                    }}
                     onBlur={setShowSuggestions.off}
                     onKeyDown={handleInputKeyPress}
                 />
             </InputGroup>
             {showSuggestions && (suggestions.length > 0 || isQuerying) && (
                 <Box
+                    ref={suggestionsContainerRef}
                     mt={2}
                     position="absolute"
                     top="100%"
@@ -236,6 +267,7 @@ const SuggestionContainer = ({
 }: SuggestionContainerProps) => {
     return (
         <Box
+            id={isActive ? "active-suggestion" : undefined}
             px={5}
             py={2}
             cursor="pointer"
@@ -263,3 +295,35 @@ const SkeletonSuggestion = () => {
 
     return ref.current;
 };
+
+function scrollSuggestions(suggestionsContainer: HTMLDivElement) {
+    const activeSuggestion =
+        suggestionsContainer?.querySelector<HTMLDivElement>(
+            "#active-suggestion"
+        );
+    if (!activeSuggestion) {
+        return;
+    }
+
+    const activeOptionHeight = activeSuggestion?.clientHeight || 0;
+    const activeOptionOffsetTop = activeSuggestion?.offsetTop || 0;
+    const activeOptionOffsetBottom =
+        (activeOptionOffsetTop || 0) + (activeOptionHeight || 0);
+
+    const suggestionsContainerHeight = suggestionsContainer.clientHeight;
+    const suggestionsContainerScrollTop = suggestionsContainer.scrollTop;
+
+    const isActiveOutTop =
+        activeSuggestion?.offsetTop < suggestionsContainerScrollTop;
+    const isActiveOutBottom =
+        activeOptionOffsetTop + activeOptionHeight >
+        suggestionsContainerScrollTop + suggestionsContainerHeight;
+
+    if (isActiveOutTop) {
+        suggestionsContainer.scrollTop = activeOptionOffsetTop;
+    }
+    if (isActiveOutBottom) {
+        suggestionsContainer.scrollTop =
+            activeOptionOffsetBottom - suggestionsContainerHeight;
+    }
+}

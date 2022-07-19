@@ -49,6 +49,7 @@ export default function CustomSelect({
             components={customSelectComponents}
             selectedOptionColor="green"
             isDisabled={isDisabled}
+            isClearable
             filterOption={
                 filterOption
                     ? (option, inputValue) =>
