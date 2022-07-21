@@ -11,17 +11,18 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 import { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { NationFlagRatio, SelectImageWidth } from "../data/constants";
+import { SelectImageWidth } from "../data/constants";
 import { useDebounce } from "../hooks/useDebounce";
-import { useNextLiveQuery } from "../hooks/useNextLiveQuery";
 import { db, Player } from "../utils/db";
 import { getRandomInt, range, removeDiacritics } from "../utils/utils";
-import CustomImage from "./ui/CustomImage";
+import ClubImage from "./ClubImage";
+import NationImage from "./NationImage";
 
 const QUERY_DEBOUNCE_MS = 100;
 const SUGGESTIONS_LIMIT = 40;
 const QUERY_RATING_CUTOFF = 70;
 
+// TODO: show message if suggestions truncated
 interface AutocompleteInputProps {
     value: string;
     onChange: (newValue: string) => any;
@@ -213,37 +214,14 @@ const PlayerSuggestion = ({
     currentInputValue,
     playerSuggestion
 }: PlayerSuggestionProps) => {
-    const nation = useNextLiveQuery(() =>
-        db.nations.get({ id: playerSuggestion.nationId })
-    );
-    const club = useNextLiveQuery(() =>
-        db.clubs.get({ id: playerSuggestion.clubId })
-    );
-
     return (
         <HStack width="100%" spacing={3}>
-            <CustomImage
-                alt={club?.displayName || ""}
-                title={club?.displayName || ""}
-                ratio={1}
-                src={
-                    club
-                        ? `/assets/img/clubs/${club?.id}.png`
-                        : `/assets/img/nations/placeholder.svg`
-                }
-                width={SelectImageWidth}
+            <ClubImage id={playerSuggestion.clubId} sizePx={SelectImageWidth} />
+            <NationImage
+                id={playerSuggestion.nationId}
+                sizePx={SelectImageWidth}
             />
-            <CustomImage
-                alt={nation?.displayName || ""}
-                title={nation?.displayName}
-                ratio={NationFlagRatio}
-                src={
-                    nation
-                        ? `/assets/img/nations/${nation?.id}.png`
-                        : `/assets/img/nations/placeholder.svg`
-                }
-                width={SelectImageWidth}
-            />
+
             <Highlighter
                 searchWords={[currentInputValue]}
                 textToHighlight={playerSuggestion.playerName}

@@ -53,7 +53,12 @@ export function useNationality(initialId?: number | null) {
         );
     };
 
-    return [selectedNationality, setById, nationOptions] as const;
+    return {
+        nationalityId: selectedNationality?.value,
+        setNationalityId: setById,
+        nationalityOption: selectedNationality,
+        nationalityOptions: nationOptions
+    };
 }
 
 function getNationOption(nation: Nation): SelectOption {

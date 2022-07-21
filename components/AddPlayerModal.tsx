@@ -39,12 +39,14 @@ import { useClub } from "../hooks/player-options/useClub";
 import { useLeague } from "../hooks/player-options/useLeague";
 import { useNationality } from "../hooks/player-options/useNationality";
 import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
+import { PlayerDto } from "../types/player-dto.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
 import { Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
 import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
 import CustomSelect from "./ui/CustomSelect";
+import CustomTooltip from "./ui/CustomTooltip";
 
 interface AddPlayerValues {
     playerName: string;
@@ -66,7 +68,15 @@ const DEFAULT_VALUES: AddPlayerValues = {
     playerHasLoyalty: true
 };
 
-export default function AddPlayerModal() {
+interface AddPlayerModalProps {
+    onPlayerAdded: (player: PlayerDto) => any;
+    disabled: boolean;
+}
+
+export default function AddPlayerModal({
+    onPlayerAdded,
+    disabled
+}: AddPlayerModalProps) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [playerName, setPlayerName] = useState(DEFAULT_VALUES.playerName);
     const [playerPosition, setPlayerPosition, positionOptions] =
@@ -74,47 +84,68 @@ export default function AddPlayerModal() {
     const [playerVersion, setPlayerVersion] = useState(
         DEFAULT_VALUES.playerVersion
     );
-    const [playerHasLoyalty, setPlayerHasLoyalty] = useBoolean(
+    const [hasLoyalty, setHasLoyalty] = useBoolean(
         DEFAULT_VALUES.playerHasLoyalty
     );
-    const [playerNationality, setPlayerNationalityId, nationalityOptions] =
-        useNationality(DEFAULT_VALUES.playerNationalityId);
-    const [playerLeague, setPlayerLeagueId, leagueOptions] = useLeague(
+    const {
+        nationalityId,
+        setNationalityId,
+        nationalityOption,
+        nationalityOptions
+    } = useNationality(DEFAULT_VALUES.playerNationalityId);
+    const { leagueId, setLeagueId, leagueOption, leagueOptions } = useLeague(
         DEFAULT_VALUES.playerLeagueId
     );
-    const [playerClub, setPlayerClubId, clubOptions] = useClub(
+    const { clubId, setClubId, clubOption, clubOptions } = useClub(
         DEFAULT_VALUES.playerClubId
     );
 
     const handleVersionChange = (version: PlayerVersion) => {
         if (version === "icon") {
-            setPlayerLeagueId(IconLeagueId);
-            setPlayerClubId(IconClubId);
+            setLeagueId(IconLeagueId);
+            setClubId(IconClubId);
         }
         if (version === "hero") {
-            setPlayerClubId(HeroClubId);
+            setClubId(HeroClubId);
         }
         if (version === "other") {
-            setPlayerLeagueId(null);
-            setPlayerClubId(null);
+            if (leagueId === IconLeagueId) {
+                setLeagueId(null);
+            }
+            if (clubId === IconClubId || clubId === HeroClubId) {
+                setClubId(null);
+            }
         }
         setPlayerVersion(version);
     };
 
     const handleAddPlayer = (e: FormEvent) => {
         e.preventDefault();
+        // TODO: validate, display errors etc
+        onPlayerAdded({
+            name: playerName,
+            version: playerVersion,
+            hasLoyalty: hasLoyalty,
+            position: playerPosition,
+            nationId: nationalityId!,
+            leagueId: leagueId!,
+            clubId: clubId!
+        });
+        handleReset();
+        onClose();
     };
 
     const handleReset = () => {
         setPlayerName(DEFAULT_VALUES.playerName);
         setPlayerVersion(DEFAULT_VALUES.playerVersion);
-        setPlayerNationalityId(DEFAULT_VALUES.playerNationalityId);
-        setPlayerLeagueId(DEFAULT_VALUES.playerLeagueId);
-        setPlayerClubId(DEFAULT_VALUES.playerClubId);
+        setPlayerPosition(DEFAULT_VALUES.playerPosition);
+        setNationalityId(DEFAULT_VALUES.playerNationalityId);
+        setLeagueId(DEFAULT_VALUES.playerLeagueId);
+        setClubId(DEFAULT_VALUES.playerClubId);
         if (DEFAULT_VALUES.playerHasLoyalty) {
-            setPlayerHasLoyalty.on();
+            setHasLoyalty.on();
         } else {
-            setPlayerHasLoyalty.off();
+            setHasLoyalty.off();
         }
     };
 
@@ -122,14 +153,14 @@ export default function AddPlayerModal() {
         setPlayerName(player.playerName);
         setPlayerPosition(player.position);
         setPlayerVersion(player.version);
-        setPlayerNationalityId(player.nationId);
-        setPlayerLeagueId(player.leagueId);
-        setPlayerClubId(player.clubId);
+        setNationalityId(player.nationId);
+        setLeagueId(player.leagueId);
+        setClubId(player.clubId);
     };
 
     return (
         <>
-            <Button onClick={onOpen} leftIcon={<AddIcon />}>
+            <Button onClick={onOpen} leftIcon={<AddIcon />} disabled={disabled}>
                 Add player
             </Button>
             <Modal isOpen={isOpen} onClose={onClose} size={["full", "xl"]}>
@@ -159,42 +190,43 @@ export default function AddPlayerModal() {
                                                         populateFieldsWith
                                                     }
                                                 />
-                                                <InputRightAddon
-                                                    p={0}
-                                                    title="Loyalty">
+                                                <InputRightAddon p={0}>
                                                     <Menu>
-                                                        <MenuButton
-                                                            as={IconButton}
-                                                            icon={
-                                                                playerHasLoyalty ? (
-                                                                    <Text
-                                                                        className="bi-shield-fill-check"
-                                                                        color="green.600"
-                                                                    />
-                                                                ) : (
-                                                                    <Text
-                                                                        className="bi-shield-slash-fill"
-                                                                        color="gray.600"
-                                                                    />
-                                                                )
-                                                            }
-                                                            variant="outline"
-                                                        />
+                                                        <CustomTooltip label="Loyalty">
+                                                            <MenuButton
+                                                                as={IconButton}
+                                                                icon={
+                                                                    hasLoyalty ? (
+                                                                        <Text
+                                                                            className="bi-shield-fill-check"
+                                                                            color="green.600"
+                                                                        />
+                                                                    ) : (
+                                                                        <Text
+                                                                            className="bi-shield-slash-fill"
+                                                                            color="gray.600"
+                                                                        />
+                                                                    )
+                                                                }
+                                                                variant="outline"
+                                                            />
+                                                        </CustomTooltip>
+
                                                         <MenuList>
                                                             <MenuOptionGroup
-                                                                value={playerHasLoyalty.toString()}
+                                                                value={hasLoyalty.toString()}
                                                                 type="radio">
                                                                 <MenuItemOption
                                                                     value="true"
                                                                     onClick={
-                                                                        setPlayerHasLoyalty.on
+                                                                        setHasLoyalty.on
                                                                     }>
                                                                     Has loyalty
                                                                 </MenuItemOption>
                                                                 <MenuItemOption
                                                                     value="false"
                                                                     onClick={
-                                                                        setPlayerHasLoyalty.off
+                                                                        setHasLoyalty.off
                                                                     }>
                                                                     No loyalty
                                                                 </MenuItemOption>
@@ -214,10 +246,12 @@ export default function AddPlayerModal() {
                                             </FormLabel>
                                             <Menu>
                                                 <Flex justifyContent="center">
-                                                    <MenuButton as={Button}>
-                                                        {playerPosition.toUpperCase()}{" "}
-                                                        <ChevronDownIcon />
-                                                    </MenuButton>
+                                                    <CustomTooltip label="Current position in card">
+                                                        <MenuButton as={Button}>
+                                                            {playerPosition.toUpperCase()}{" "}
+                                                            <ChevronDownIcon />
+                                                        </MenuButton>
+                                                    </CustomTooltip>
                                                     <MenuList w="50px">
                                                         <MenuOptionGroup
                                                             type="radio"
@@ -277,11 +311,9 @@ export default function AddPlayerModal() {
                                         placeholder="Select nationality..."
                                         noOptionsMessage="No nationalities found."
                                         options={nationalityOptions}
-                                        value={playerNationality}
+                                        value={nationalityOption}
                                         onChange={(option) =>
-                                            setPlayerNationalityId(
-                                                option?.value
-                                            )
+                                            setNationalityId(option?.value)
                                         }
                                     />
                                 </FormControl>
@@ -298,9 +330,9 @@ export default function AddPlayerModal() {
                                         placeholder="Select league..."
                                         noOptionsMessage="No leagues found."
                                         options={leagueOptions}
-                                        value={playerLeague}
+                                        value={leagueOption}
                                         onChange={(option) =>
-                                            setPlayerLeagueId(option?.value)
+                                            setLeagueId(option?.value)
                                         }
                                         isDisabled={playerVersion === "icon"}
                                     />
@@ -318,9 +350,9 @@ export default function AddPlayerModal() {
                                         placeholder="Select club..."
                                         noOptionsMessage="No clubs found."
                                         options={clubOptions}
-                                        value={playerClub}
+                                        value={clubOption}
                                         onChange={(option) =>
-                                            setPlayerClubId(option.value)
+                                            setClubId(option.value)
                                         }
                                         isDisabled={
                                             playerVersion === "icon" ||
@@ -330,7 +362,7 @@ export default function AddPlayerModal() {
                                             if (!input || input.length < 2) {
                                                 return (
                                                     candidate.leagueId ===
-                                                    playerLeague?.value
+                                                    leagueId
                                                 );
                                             }
                                             const re = new RegExp(

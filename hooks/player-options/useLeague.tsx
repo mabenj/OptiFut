@@ -50,7 +50,12 @@ export function useLeague(initialId?: number | null) {
         );
     };
 
-    return [selectedLeague, setById, leagueOptions] as const;
+    return {
+        leagueId: selectedLeague?.value,
+        setLeagueId: setById,
+        leagueOption: selectedLeague,
+        leagueOptions: leagueOptions
+    };
 }
 
 function getLeagueOption(league: League): SelectOption {

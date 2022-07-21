@@ -30,5 +30,7 @@ export const HeroClubId = 114605;
 export const IconClubId = 112658;
 export const IconLeagueId = 2118;
 
-export const SelectImageWidth = 20;
+export const SelectImageWidth = 30;
 export const NationFlagRatio = 70 / 42;
+export const LeagueIconRatio = 170 / 170;
+export const ClubIconRatio = 140 / 140;

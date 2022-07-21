@@ -51,7 +51,12 @@ export function useClub(initialId?: number | null) {
         setSelectedClub(selectedClub ? getClubOption(selectedClub) : null);
     };
 
-    return [selectedClub, setById, clubOptions] as const;
+    return {
+        clubId: selectedClub?.value,
+        setClubId: setById,
+        clubOption: selectedClub,
+        clubOptions: clubOptions
+    };
 }
 
 function getClubOption(club: Club): SelectOption {

@@ -1,6 +1,7 @@
-import { Skeleton, useBoolean } from "@chakra-ui/react";
+import { Box, Skeleton, Tooltip, useBoolean } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import CustomTooltip from "./CustomTooltip";
 
 interface CustomImageProps {
     src: string;
@@ -9,6 +10,7 @@ interface CustomImageProps {
     alt?: string;
     fallbackSrc?: string;
     title?: string;
+    tooltipLabel?: string;
 }
 
 export default function CustomImage({
@@ -17,7 +19,8 @@ export default function CustomImage({
     alt,
     width,
     ratio,
-    title
+    title,
+    tooltipLabel
 }: CustomImageProps) {
     const [imageSrc, setImageSrc] = useState(src);
     const [isLoaded, setIsLoaded] = useBoolean(false);
@@ -28,18 +31,25 @@ export default function CustomImage({
 
     return (
         <Skeleton isLoaded={isLoaded} fadeDuration={1}>
-            <Image
-                src={imageSrc}
-                alt={alt}
-                width={width}
-                height={height}
-                onError={() => setImageSrc(fallbackSrc || "")}
-                // placeholder={"blur"}
-                blurDataURL={src}
-                style={{ filter: "drop-shadow(0px 0px 0px black)" }}
-                onLoad={setIsLoaded.on}
-                title={title}
-            />
+            <CustomTooltip label={tooltipLabel}>
+                <Box
+                    width={`${width}px`}
+                    height={`${height}px`}
+                    position="relative">
+                    <Image
+                        src={imageSrc}
+                        alt={alt}
+                        onError={() => setImageSrc(fallbackSrc || "")}
+                        // placeholder={"blur"}
+                        blurDataURL={src}
+                        style={{ filter: "drop-shadow(0px 0px 0px black)" }}
+                        onLoad={setIsLoaded.on}
+                        title={title}
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </Box>
+            </CustomTooltip>
         </Skeleton>
     );
 }
