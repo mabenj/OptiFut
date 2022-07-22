@@ -1,11 +1,18 @@
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import {
     Box,
+    Button,
+    ButtonGroup,
     Divider,
     Flex,
     Heading,
     HStack,
     IconButton,
+    Popover,
+    PopoverArrow,
+    PopoverBody,
+    PopoverContent,
+    PopoverTrigger,
     Text,
     VStack
 } from "@chakra-ui/react";
@@ -98,17 +105,53 @@ export default function PlayerList({
                                     onClick={() => onEditPlayer(i)}
                                 />
                             </CustomTooltip>
-                            <CustomTooltip label="Remove player">
-                                {/* TODO: add popover: are you sure? */}
-                                <IconButton
-                                    variant="ghost"
-                                    aria-label="Remove player"
-                                    title="Remove player"
-                                    size="lg"
-                                    icon={<SmallCloseIcon />}
-                                    onClick={() => onRemovePlayer(i)}
-                                />
-                            </CustomTooltip>
+                            <Popover>
+                                {({  onClose }) => (
+                                    <>
+                                        <CustomTooltip label="Remove player">
+                                            <Box display="inline-block">
+                                                <PopoverTrigger>
+                                                    <IconButton
+                                                        variant="ghost"
+                                                        aria-label="Remove player"
+                                                        size="lg"
+                                                        icon={
+                                                            <SmallCloseIcon />
+                                                        }
+                                                    />
+                                                </PopoverTrigger>
+                                            </Box>
+                                        </CustomTooltip>
+                                        <PopoverContent>
+                                            <PopoverArrow />
+                                            <PopoverBody textAlign="center">
+                                                <Box mb={3}>
+                                                    Are you sure you want to
+                                                    remove{" "}
+                                                    <strong>
+                                                        {players[i].name}
+                                                    </strong>
+                                                    ?
+                                                </Box>
+                                                <ButtonGroup size="sm">
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={onClose}>
+                                                        No
+                                                    </Button>
+                                                    <Button
+                                                        colorScheme="red"
+                                                        onClick={() =>
+                                                            onRemovePlayer(i)
+                                                        }>
+                                                        Yes
+                                                    </Button>
+                                                </ButtonGroup>
+                                            </PopoverBody>
+                                        </PopoverContent>
+                                    </>
+                                )}
+                            </Popover>
                         </Box>
                     </Flex>
                 </Box>

@@ -1,4 +1,4 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -42,7 +42,6 @@ import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
 import { PlayerDto } from "../types/player-dto.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
-import { Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
 import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
 import CustomSelect from "./ui/CustomSelect";
@@ -73,7 +72,7 @@ interface AddPlayerModalProps {
     disabled: boolean;
 }
 
-export default function AddPlayerModal({
+export default function PlayerEditorModal({
     onPlayerAdded,
     disabled
 }: AddPlayerModalProps) {
@@ -149,20 +148,22 @@ export default function AddPlayerModal({
         }
     };
 
-    const populateFieldsWith = (player: Player) => {
-        setPlayerName(player.playerName);
+    const populateFieldsWith = (player: PlayerDto) => {
+        setPlayerName(player.name);
         setPlayerPosition(player.position);
         setPlayerVersion(player.version);
         setNationalityId(player.nationId);
         setLeagueId(player.leagueId);
         setClubId(player.clubId);
+        if (player.hasLoyalty) {
+            setHasLoyalty.on();
+        } else {
+            setHasLoyalty.off();
+        }
     };
 
     return (
         <>
-            <Button onClick={onOpen} leftIcon={<AddIcon />} disabled={disabled}>
-                Add player
-            </Button>
             <Modal isOpen={isOpen} onClose={onClose} size={["full", "xl"]}>
                 <ModalOverlay />
                 <ModalContent>
@@ -186,8 +187,23 @@ export default function AddPlayerModal({
                                                     placeholder="Enter name"
                                                     value={playerName}
                                                     onChange={setPlayerName}
-                                                    onPlayerSelected={
-                                                        populateFieldsWith
+                                                    onPlayerSelected={(
+                                                        player
+                                                    ) =>
+                                                        populateFieldsWith({
+                                                            name: player.playerName,
+                                                            hasLoyalty:
+                                                                DEFAULT_VALUES.playerHasLoyalty,
+                                                            version:
+                                                                player.version,
+                                                            position:
+                                                                player.position,
+                                                            nationId:
+                                                                player.nationId,
+                                                            leagueId:
+                                                                player.leagueId,
+                                                            clubId: player.clubId
+                                                        })
                                                     }
                                                 />
                                                 <InputRightAddon p={0}>

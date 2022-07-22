@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import AddPlayerModal from "../components/AddPlayerModal";
+import PlayerEditorModal from "../components/PlayerEditorModal";
 import PlayerList from "../components/PlayerList";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { PlayerDto } from "../types/player-dto.interface";
@@ -37,7 +37,7 @@ const Home: NextPage = () => {
                         onEditPlayer={editPlayerAt}
                         onRemovePlayer={deletePlayerAt}
                     />
-                    <AddPlayerModal
+                    <PlayerEditorModal
                         onPlayerAdded={addPlayer}
                         disabled={players.length >= MAX_PLAYER_COUNT}
                     />

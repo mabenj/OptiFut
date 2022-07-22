@@ -1,5 +1,7 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
+    Alert,
+    AlertIcon,
     Box,
     HStack,
     Input,
@@ -22,7 +24,6 @@ const QUERY_DEBOUNCE_MS = 100;
 const SUGGESTIONS_LIMIT = 40;
 const QUERY_RATING_CUTOFF = 70;
 
-// TODO: show message if suggestions truncated
 interface AutocompleteInputProps {
     value: string;
     onChange: (newValue: string) => any;
@@ -85,6 +86,8 @@ export default function PlayerNameAutocomplete({
 
             return result;
         }, [debouncedQuery]) || [];
+
+    const areSuggestionsTruncated = suggestions.length >= SUGGESTIONS_LIMIT;
 
     useEffect(() => {
         setIsQuerying.off();
@@ -193,7 +196,14 @@ export default function PlayerNameAutocomplete({
                                 />
                             </SuggestionContainer>
                         ))}
+                    {areSuggestionsTruncated && (
+                        <Alert status="warning" textAlign="center">
+                            <AlertIcon />
+                            Not all suggestions shown - be more specific
+                        </Alert>
+                    )}
                     {isQuerying &&
+                        query.length > 0 &&
                         range(0, SUGGESTIONS_LIMIT).map((i) => (
                             <SkeletonSuggestion
                                 key={"skeletonSuggestion_" + i}
