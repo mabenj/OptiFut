@@ -1,4 +1,5 @@
 import Dexie, { Table } from "dexie";
+import { PlayerDto } from "../types/player-dto.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
 
@@ -30,11 +31,19 @@ export interface Club {
     leagueId: number | null;
 }
 
+export interface SavedTeam {
+    id?: number;
+    name: string;
+    players: PlayerDto[];
+    useManager: boolean;
+}
+
 export class OptiFutDexie extends Dexie {
     players!: Table<Player>;
     nations!: Table<Nation>;
     leagues!: Table<League>;
     clubs!: Table<Club>;
+    savedTeams!: Table<SavedTeam>;
 
     constructor() {
         super("optifutDb");
@@ -42,7 +51,8 @@ export class OptiFutDexie extends Dexie {
             players: "&id, playerName, commonName, rating", // Primary key and indexed props
             nations: "&id, displayName",
             leagues: "&id, displayName",
-            clubs: "&id, displayName, leagueId"
+            clubs: "&id, displayName, leagueId",
+            savedTeams: "++id, name"
         });
         this.on("ready", (db) => populateTablesIfEmpty(db as OptiFutDexie));
     }

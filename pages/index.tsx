@@ -5,6 +5,7 @@ import {
     Flex,
     Heading,
     Stack,
+    Text,
     useDisclosure
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
@@ -13,11 +14,13 @@ import PlayerEditorModal from "../components/PlayerEditorModal";
 import PlayerList from "../components/PlayerList";
 import { DefaultEditorValues } from "../data/constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useSavedTeam } from "../hooks/useSavedTeam";
 import { PlayerDto } from "../types/player-dto.interface";
 import { PlayerEditorValues } from "../types/player-editor-values";
+import { getRandomInt } from "../utils/utils";
 
 const TEAM_STORAGE_KEY = "OPTIFUT_CURRENT_TEAM";
-const MAX_PLAYER_COUNT = 11;
+const TEAM_PLAYER_COUNT = 11;
 
 const Home: NextPage = () => {
     const {
@@ -31,6 +34,8 @@ const Home: NextPage = () => {
     );
     const [editorDefaults, setEditorDefaults] =
         useState<PlayerEditorValues>(DefaultEditorValues);
+
+    const { addSavedTeam } = useSavedTeam();
 
     const deletePlayerAt = (index: number) => {
         setPlayers((prev) => {
@@ -70,28 +75,62 @@ const Home: NextPage = () => {
         }
     };
 
+    const saveCurrentTeam = () => {
+        if (players.length !== TEAM_PLAYER_COUNT) {
+            return;
+        }
+        addSavedTeam({
+            name: "Team_" + getRandomInt(0, 999), // TODO
+            useManager: true, // TODO
+            players: players.map((player) => ({
+                name: player.name,
+                position: player.position,
+                version: player.version,
+                hasLoyalty: player.hasLoyalty,
+                nationId: player.nationId,
+                leagueId: player.leagueId,
+                clubId: player.clubId
+            }))
+        });
+    };
+
     return (
         <Flex justifyContent="center" height="100vh">
             <Box width={["95%", "80%", "60%", "40%"]}>
                 <Stack spacing={10}>
                     <Heading>OptiFut</Heading>
-                    <PlayerList
-                        players={players}
-                        onEditPlayer={editPlayerAt}
-                        onRemovePlayer={deletePlayerAt}
-                    />
-                    <Button
-                        leftIcon={<AddIcon />}
-                        onClick={() => editPlayerAt(-1)}
-                        disabled={players.length >= MAX_PLAYER_COUNT}>
-                        Add Player
-                    </Button>
                     <PlayerEditorModal
                         isOpen={isEditorOpen}
                         closeModal={closeEditor}
                         onPlayerAdded={addPlayer}
                         prefillValues={editorDefaults}
                     />
+                    <PlayerList
+                        players={players}
+                        onEditPlayer={editPlayerAt}
+                        onRemovePlayer={deletePlayerAt}
+                    />
+                    <Stack>
+                        <Button
+                            leftIcon={<AddIcon />}
+                            onClick={() => editPlayerAt(-1)}
+                            disabled={players.length >= TEAM_PLAYER_COUNT}>
+                            Add Player
+                        </Button>
+                        <Button
+                            leftIcon={<Text className="bi bi-save2" />}
+                            onClick={saveCurrentTeam}
+                            disabled={players.length !== TEAM_PLAYER_COUNT}>
+                            Save Team
+                        </Button>
+                        <Button
+                            colorScheme="green"
+                            leftIcon={<Text className="bi bi-cursor" />} // candidates: magic, stars,
+                            onClick={() => -1}
+                            disabled={players.length !== TEAM_PLAYER_COUNT}>
+                            Optimize Team
+                        </Button>
+                    </Stack>
                 </Stack>
             </Box>
         </Flex>

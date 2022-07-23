@@ -1,4 +1,4 @@
-import { SmallCloseIcon } from "@chakra-ui/icons";
+import { EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -34,124 +34,136 @@ export default function PlayerList({
     onRemovePlayer
 }: PlayerListProps) {
     return (
-        <VStack align="stretch" spacing={0}>
-            {players.map((player, i) => (
-                <Box key={player.name + i} _hover={{ background: "gray.50" }}>
-                    {i !== 0 && <Divider />}
-                    <Flex
-                        alignItems="center"
-                        justifyContent="space-between"
-                        py={2}>
-                        <Flex alignItems="center">
-                            <VStack>
-                                <Heading
-                                    as="h3"
-                                    size="sm"
-                                    color="gray.500"
-                                    cursor="default"
-                                    w="3rem"
-                                    textAlign="center">
-                                    {player.position}
-                                </Heading>
-                                <CustomTooltip
-                                    label={
-                                        player.hasLoyalty
-                                            ? "Has loyalty"
-                                            : "No loyalty"
-                                    }>
-                                    {player.hasLoyalty ? (
-                                        <Text
-                                            className="bi-shield-fill-check"
-                                            color="green.600"
+        <Box>
+            <Heading as="h2" size="lg" mb={3}>
+                <Text textAlign="center">Team</Text>
+            </Heading>
+            <VStack align="stretch" spacing={0}>
+                {players.map((player, i) => (
+                    <Box
+                        key={player.name + i}
+                        _hover={{ background: "gray.50" }}>
+                        {i !== 0 && <Divider />}
+                        <Flex
+                            alignItems="center"
+                            justifyContent="space-between"
+                            py={2}>
+                            <Flex alignItems="center">
+                                <VStack>
+                                    <Heading
+                                        as="h3"
+                                        size="sm"
+                                        color="gray.500"
+                                        cursor="default"
+                                        w="3rem"
+                                        textAlign="center">
+                                        {player.position}
+                                    </Heading>
+                                    <CustomTooltip
+                                        label={
+                                            player.hasLoyalty
+                                                ? "Has loyalty"
+                                                : "No loyalty"
+                                        }>
+                                        {player.hasLoyalty ? (
+                                            <Text
+                                                className="bi-shield-fill-check"
+                                                color="green.600"
+                                            />
+                                        ) : (
+                                            <Text
+                                                className="bi-shield-slash-fill"
+                                                color="gray.600"
+                                            />
+                                        )}
+                                    </CustomTooltip>
+                                </VStack>
+                                <Box ml={4}>
+                                    <Heading as="h3" size="sm">
+                                        {player.name}
+                                    </Heading>
+                                    <HStack mt={2} spacing={2}>
+                                        <NationImage
+                                            id={player.nationId}
+                                            sizePx={35}
                                         />
-                                    ) : (
-                                        <Text
-                                            className="bi-shield-slash-fill"
-                                            color="gray.600"
-                                        />
-                                    )}
-                                </CustomTooltip>
-                            </VStack>
-                            <Box ml={4}>
-                                <Heading as="h3" size="sm">
-                                    {player.name}
-                                </Heading>
-                                <HStack mt={2} spacing={2}>
-                                    <NationImage
-                                        id={player.nationId}
-                                        sizePx={35}
-                                    />
-                                    <Box>
-                                        <LeagueImage
-                                            id={player.leagueId}
+                                        <Box>
+                                            <LeagueImage
+                                                id={player.leagueId}
+                                                sizePx={25}
+                                            />
+                                        </Box>
+                                        <ClubImage
+                                            id={player.clubId}
                                             sizePx={25}
                                         />
-                                    </Box>
-                                    <ClubImage id={player.clubId} sizePx={25} />
-                                </HStack>
+                                    </HStack>
+                                </Box>
+                            </Flex>
+                            <Box>
+                                <CustomTooltip label="Edit player">
+                                    <IconButton
+                                        variant="ghost"
+                                        aria-label="Edit player"
+                                        size="lg"
+                                        icon={<EditIcon />}
+                                        onClick={() => onEditPlayer(i)}
+                                    />
+                                </CustomTooltip>
+                                <Popover>
+                                    {({ onClose }) => (
+                                        <>
+                                            <CustomTooltip label="Remove player">
+                                                <Box display="inline-block">
+                                                    <PopoverTrigger>
+                                                        <IconButton
+                                                            variant="ghost"
+                                                            aria-label="Remove player"
+                                                            size="lg"
+                                                            icon={
+                                                                <SmallCloseIcon />
+                                                            }
+                                                        />
+                                                    </PopoverTrigger>
+                                                </Box>
+                                            </CustomTooltip>
+                                            <PopoverContent>
+                                                <PopoverArrow />
+                                                <PopoverBody textAlign="center">
+                                                    <Box mb={3}>
+                                                        Are you sure you want to
+                                                        remove <br />
+                                                        <strong>
+                                                            {players[i].name}
+                                                        </strong>
+                                                        ?
+                                                    </Box>
+                                                    <ButtonGroup size="sm">
+                                                        <Button
+                                                            variant="outline"
+                                                            onClick={onClose}>
+                                                            No
+                                                        </Button>
+                                                        <Button
+                                                            colorScheme="red"
+                                                            onClick={() =>
+                                                                onRemovePlayer(
+                                                                    i
+                                                                )
+                                                            }>
+                                                            Yes
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </PopoverBody>
+                                            </PopoverContent>
+                                        </>
+                                    )}
+                                </Popover>
                             </Box>
                         </Flex>
-                        <Box>
-                            <CustomTooltip label="Edit player">
-                                <IconButton
-                                    variant="ghost"
-                                    aria-label="Edit player"
-                                    size="lg"
-                                    icon={<Text className="bi-pencil-square" />}
-                                    onClick={() => onEditPlayer(i)}
-                                />
-                            </CustomTooltip>
-                            <Popover>
-                                {({ onClose }) => (
-                                    <>
-                                        <CustomTooltip label="Remove player">
-                                            <Box display="inline-block">
-                                                <PopoverTrigger>
-                                                    <IconButton
-                                                        variant="ghost"
-                                                        aria-label="Remove player"
-                                                        size="lg"
-                                                        icon={
-                                                            <SmallCloseIcon />
-                                                        }
-                                                    />
-                                                </PopoverTrigger>
-                                            </Box>
-                                        </CustomTooltip>
-                                        <PopoverContent>
-                                            <PopoverArrow />
-                                            <PopoverBody textAlign="center">
-                                                <Box mb={3}>
-                                                    Are you sure you want to
-                                                    remove <br />
-                                                    <strong>
-                                                        {players[i].name}
-                                                    </strong>
-                                                    ?
-                                                </Box>
-                                                <ButtonGroup size="sm">
-                                                    <Button
-                                                        variant="outline"
-                                                        onClick={onClose}>
-                                                        No
-                                                    </Button>
-                                                    <Button
-                                                        colorScheme="red"
-                                                        onClick={() =>
-                                                            onRemovePlayer(i)
-                                                        }>
-                                                        Yes
-                                                    </Button>
-                                                </ButtonGroup>
-                                            </PopoverBody>
-                                        </PopoverContent>
-                                    </>
-                                )}
-                            </Popover>
-                        </Box>
-                    </Flex>
-                </Box>
-            ))}
-        </VStack>
+                    </Box>
+                ))}
+            </VStack>
+        </Box>
     );
 }
