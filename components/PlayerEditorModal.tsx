@@ -173,7 +173,10 @@ export default function PlayerEditorModal({
                 <ModalOverlay />
                 <ModalContent>
                     <ModalHeader>
-                        {isNewPlayer ? "Add Player" : "Edit Player"}
+                        <Flex gap={4}>
+                            <Text className="bi bi-person-lines-fill" />
+                            {isNewPlayer ? "Add Player" : "Edit Player"}
+                        </Flex>
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody my={5}>
@@ -417,7 +420,13 @@ export default function PlayerEditorModal({
                                     type="submit"
                                     form="addPlayer"
                                     onClick={handleAddPlayer}
-                                    leftIcon={<AddIcon />}
+                                    leftIcon={
+                                        isNewPlayer ? (
+                                            <AddIcon />
+                                        ) : (
+                                            <Text className="bi bi-save2" />
+                                        )
+                                    }
                                     mr={3}>
                                     {isNewPlayer ? "Add Player" : "Save"}
                                 </Button>

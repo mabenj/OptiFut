@@ -123,7 +123,7 @@ export default function PlayerList({
                                             <PopoverBody textAlign="center">
                                                 <Box mb={3}>
                                                     Are you sure you want to
-                                                    remove{" "}
+                                                    remove <br />
                                                     <strong>
                                                         {players[i].name}
                                                     </strong>
