@@ -1,4 +1,4 @@
-import { Box, Skeleton, Tooltip, useBoolean } from "@chakra-ui/react";
+import { Box, Skeleton, useBoolean } from "@chakra-ui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import CustomTooltip from "./CustomTooltip";

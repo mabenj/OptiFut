@@ -9,7 +9,7 @@ interface ClubImageProps {
 }
 
 export default function ClubImage({ id, sizePx }: ClubImageProps) {
-    const club = useLiveQuery(() => db.clubs.get({ id }));
+    const club = useLiveQuery(() => db.clubs.get({ id }), [id]);
     return (
         <CustomImage
             src={`/assets/img/clubs/${id}.png`}

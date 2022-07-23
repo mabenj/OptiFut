@@ -51,11 +51,7 @@ export default function PlayerList({
                                     cursor="default"
                                     w="3rem"
                                     textAlign="center">
-                                    <CustomTooltip
-                                        label="Position"
-                                        placement="top">
-                                        {player.position}
-                                    </CustomTooltip>
+                                    {player.position}
                                 </Heading>
                                 <CustomTooltip
                                     label={
@@ -106,7 +102,7 @@ export default function PlayerList({
                                 />
                             </CustomTooltip>
                             <Popover>
-                                {({  onClose }) => (
+                                {({ onClose }) => (
                                     <>
                                         <CustomTooltip label="Remove player">
                                             <Box display="inline-block">

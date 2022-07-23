@@ -1,3 +1,5 @@
+import { PlayerEditorValues } from "../types/player-editor-values";
+
 export const PopularNationIds = [
     52, // argentina
     7, // belgium
@@ -34,3 +36,14 @@ export const SelectImageWidth = 30;
 export const NationFlagRatio = 70 / 42;
 export const LeagueIconRatio = 170 / 170;
 export const ClubIconRatio = 140 / 140;
+
+export const DefaultEditorValues: PlayerEditorValues = {
+    index: -1,
+    name: "",
+    position: "ST",
+    version: "other",
+    nationId: null,
+    leagueId: null,
+    clubId: null,
+    hasLoyalty: true
+};

@@ -9,7 +9,7 @@ interface LeagueImageProps {
 }
 
 export default function LeagueImage({ id, sizePx }: LeagueImageProps) {
-    const league = useLiveQuery(() => db.leagues.get({ id }));
+    const league = useLiveQuery(() => db.leagues.get({ id }), [id]);
     return (
         <CustomImage
             src={`/assets/img/leagues/${id}.png`}

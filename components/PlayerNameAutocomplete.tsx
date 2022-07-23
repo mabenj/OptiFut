@@ -11,7 +11,7 @@ import {
     useBoolean
 } from "@chakra-ui/react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, LegacyRef, MouseEvent, useEffect, useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import { SelectImageWidth } from "../data/constants";
 import { useDebounce } from "../hooks/useDebounce";
@@ -31,6 +31,7 @@ interface AutocompleteInputProps {
     id: string;
     name: string;
     placeholder?: string;
+    inputRef?: LegacyRef<HTMLInputElement>;
 }
 
 export default function PlayerNameAutocomplete({
@@ -39,7 +40,8 @@ export default function PlayerNameAutocomplete({
     onPlayerSelected,
     id,
     name,
-    placeholder
+    placeholder,
+    inputRef
 }: AutocompleteInputProps) {
     const [query, setQuery] = useState("");
     const debouncedQuery = useDebounce(query, QUERY_DEBOUNCE_MS);
@@ -151,6 +153,7 @@ export default function PlayerNameAutocomplete({
                     <SearchIcon color="gray.300" />
                 </InputLeftElement>
                 <Input
+                    ref={inputRef}
                     id={id}
                     name={name}
                     placeholder={placeholder}

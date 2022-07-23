@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -26,20 +26,30 @@ import {
     ModalOverlay,
     Text,
     useBoolean,
-    useDisclosure,
     useRadio,
     useRadioGroup,
     UseRadioProps,
     VStack
 } from "@chakra-ui/react";
 import Image from "next/image";
-import React, { FormEvent, ReactElement, useState } from "react";
-import { HeroClubId, IconClubId, IconLeagueId } from "../data/constants";
+import React, {
+    FormEvent,
+    ReactElement,
+    useEffect,
+    useRef,
+    useState
+} from "react";
+import {
+    DefaultEditorValues,
+    HeroClubId,
+    IconClubId,
+    IconLeagueId
+} from "../data/constants";
 import { useClub } from "../hooks/player-options/useClub";
 import { useLeague } from "../hooks/player-options/useLeague";
 import { useNationality } from "../hooks/player-options/useNationality";
 import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
-import { PlayerDto } from "../types/player-dto.interface";
+import { PlayerEditorValues } from "../types/player-editor-values";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version";
 import { removeDiacritics } from "../utils/utils";
@@ -47,57 +57,46 @@ import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
 import CustomSelect from "./ui/CustomSelect";
 import CustomTooltip from "./ui/CustomTooltip";
 
-interface AddPlayerValues {
-    playerName: string;
-    playerPosition: PlayerPosition;
-    playerVersion: PlayerVersion;
-    playerNationalityId: number | null;
-    playerLeagueId: number | null;
-    playerClubId: number | null;
-    playerHasLoyalty: boolean;
-}
-
-const DEFAULT_VALUES: AddPlayerValues = {
-    playerName: "",
-    playerPosition: "CAM",
-    playerVersion: "other",
-    playerNationalityId: null,
-    playerLeagueId: null,
-    playerClubId: null,
-    playerHasLoyalty: true
-};
-
 interface AddPlayerModalProps {
-    onPlayerAdded: (player: PlayerDto) => any;
-    disabled: boolean;
+    onPlayerAdded: (player: PlayerEditorValues) => any;
+    isOpen: boolean;
+    closeModal: () => any;
+    prefillValues: PlayerEditorValues;
 }
 
 export default function PlayerEditorModal({
     onPlayerAdded,
-    disabled
+    isOpen,
+    closeModal,
+    prefillValues
 }: AddPlayerModalProps) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const [playerName, setPlayerName] = useState(DEFAULT_VALUES.playerName);
+    const [playerName, setPlayerName] = useState(prefillValues.name);
     const [playerPosition, setPlayerPosition, positionOptions] =
-        usePlayerPosition(DEFAULT_VALUES.playerPosition);
-    const [playerVersion, setPlayerVersion] = useState(
-        DEFAULT_VALUES.playerVersion
-    );
-    const [hasLoyalty, setHasLoyalty] = useBoolean(
-        DEFAULT_VALUES.playerHasLoyalty
-    );
+        usePlayerPosition(prefillValues.position);
+    const [playerVersion, setPlayerVersion] = useState(prefillValues.version);
+    const [hasLoyalty, setHasLoyalty] = useBoolean(prefillValues.hasLoyalty);
     const {
         nationalityId,
         setNationalityId,
         nationalityOption,
         nationalityOptions
-    } = useNationality(DEFAULT_VALUES.playerNationalityId);
+    } = useNationality(prefillValues.nationId);
     const { leagueId, setLeagueId, leagueOption, leagueOptions } = useLeague(
-        DEFAULT_VALUES.playerLeagueId
+        prefillValues.leagueId
     );
     const { clubId, setClubId, clubOption, clubOptions } = useClub(
-        DEFAULT_VALUES.playerClubId
+        prefillValues.clubId
     );
+
+    const initialFocusRef = useRef(null);
+    const finalFocusRef = useRef(null);
+
+    const isNewPlayer = prefillValues.index < 0;
+
+    useEffect(() => {
+        populateFieldsWith(prefillValues);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [prefillValues]);
 
     const handleVersionChange = (version: PlayerVersion) => {
         if (version === "icon") {
@@ -122,6 +121,7 @@ export default function PlayerEditorModal({
         e.preventDefault();
         // TODO: validate, display errors etc
         onPlayerAdded({
+            index: prefillValues.index,
             name: playerName,
             version: playerVersion,
             hasLoyalty: hasLoyalty,
@@ -131,43 +131,50 @@ export default function PlayerEditorModal({
             clubId: clubId!
         });
         handleReset();
-        onClose();
+        handleCloseModal();
+    };
+
+    const handleCloseModal = () => {
+        closeModal();
     };
 
     const handleReset = () => {
-        setPlayerName(DEFAULT_VALUES.playerName);
-        setPlayerVersion(DEFAULT_VALUES.playerVersion);
-        setPlayerPosition(DEFAULT_VALUES.playerPosition);
-        setNationalityId(DEFAULT_VALUES.playerNationalityId);
-        setLeagueId(DEFAULT_VALUES.playerLeagueId);
-        setClubId(DEFAULT_VALUES.playerClubId);
-        if (DEFAULT_VALUES.playerHasLoyalty) {
+        setPlayerName(DefaultEditorValues.name);
+        setPlayerVersion(DefaultEditorValues.version);
+        setPlayerPosition(DefaultEditorValues.position);
+        setNationalityId(DefaultEditorValues.nationId);
+        setLeagueId(DefaultEditorValues.leagueId);
+        setClubId(DefaultEditorValues.clubId);
+        if (DefaultEditorValues.hasLoyalty) {
             setHasLoyalty.on();
         } else {
             setHasLoyalty.off();
         }
     };
 
-    const populateFieldsWith = (player: PlayerDto) => {
-        setPlayerName(player.name);
-        setPlayerPosition(player.position);
-        setPlayerVersion(player.version);
-        setNationalityId(player.nationId);
-        setLeagueId(player.leagueId);
-        setClubId(player.clubId);
-        if (player.hasLoyalty) {
-            setHasLoyalty.on();
-        } else {
-            setHasLoyalty.off();
-        }
+    const populateFieldsWith = (values: PlayerEditorValues) => {
+        setPlayerName(values.name);
+        setPlayerPosition(values.position);
+        setPlayerVersion(values.version);
+        setNationalityId(values.nationId);
+        setLeagueId(values.leagueId);
+        setClubId(values.clubId);
+        values.hasLoyalty ? setHasLoyalty.on() : setHasLoyalty.off();
     };
 
     return (
         <>
-            <Modal isOpen={isOpen} onClose={onClose} size={["full", "xl"]}>
+            <Modal
+                initialFocusRef={initialFocusRef}
+                finalFocusRef={finalFocusRef}
+                isOpen={isOpen}
+                onClose={handleCloseModal}
+                size={["full", "xl"]}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Add Player</ModalHeader>
+                    <ModalHeader>
+                        {isNewPlayer ? "Add Player" : "Edit Player"}
+                    </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody my={5}>
                         <form id="addPlayer" onSubmit={handleAddPlayer}>
@@ -182,6 +189,7 @@ export default function PlayerEditorModal({
                                             </FormLabel>
                                             <InputGroup>
                                                 <PlayerNameAutocomplete
+                                                    inputRef={initialFocusRef}
                                                     id="playerName"
                                                     name="playerName"
                                                     placeholder="Enter name"
@@ -191,9 +199,10 @@ export default function PlayerEditorModal({
                                                         player
                                                     ) =>
                                                         populateFieldsWith({
+                                                            index: prefillValues.index,
                                                             name: player.playerName,
                                                             hasLoyalty:
-                                                                DEFAULT_VALUES.playerHasLoyalty,
+                                                                prefillValues.hasLoyalty,
                                                             version:
                                                                 player.version,
                                                             position:
@@ -405,16 +414,17 @@ export default function PlayerEditorModal({
                             </Button>
                             <Box>
                                 <Button
-                                    onClick={onClose}
-                                    variant="outline"
-                                    mr={3}>
-                                    Cancel
-                                </Button>
-                                <Button
                                     type="submit"
                                     form="addPlayer"
-                                    onClick={handleAddPlayer}>
-                                    Add
+                                    onClick={handleAddPlayer}
+                                    leftIcon={<AddIcon />}
+                                    mr={3}>
+                                    {isNewPlayer ? "Add Player" : "Save"}
+                                </Button>
+                                <Button
+                                    onClick={handleCloseModal}
+                                    variant="outline">
+                                    Cancel
                                 </Button>
                             </Box>
                         </Flex>
