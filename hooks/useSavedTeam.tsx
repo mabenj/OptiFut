@@ -1,17 +1,20 @@
-import { TeamDto } from "../types/team-dto.interface";
+import { PlayerDto } from "../types/player-dto.interface";
 import { db } from "../utils/db";
 import { useNextLiveQuery } from "./useNextLiveQuery";
 
 export function useSavedTeam() {
     const savedTeams = useNextLiveQuery(() => db.savedTeams.toArray()) || [];
 
-    const addSavedTeam = (team: TeamDto) => {
-        db.savedTeams.add({
+    const addSavedTeam = (team: { name: string; players: PlayerDto[] }) => {
+        return db.savedTeams.add({
             name: team.name,
-            players: team.players,
-            useManager: team.useManager
+            players: team.players
         });
     };
 
-    return { savedTeams, addSavedTeam };
+    const deleteSavedTeam = (teamId: number) => {
+        return db.savedTeams.delete(teamId);
+    };
+
+    return { savedTeams, addSavedTeam, deleteSavedTeam };
 }

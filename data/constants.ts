@@ -47,3 +47,5 @@ export const DefaultEditorValues: PlayerEditorValues = {
     clubId: null,
     hasLoyalty: true
 };
+
+export const TeamPlayerCount = 11;

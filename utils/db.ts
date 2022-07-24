@@ -35,7 +35,6 @@ export interface SavedTeam {
     id?: number;
     name: string;
     players: PlayerDto[];
-    useManager: boolean;
 }
 
 export class OptiFutDexie extends Dexie {

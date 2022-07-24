@@ -417,6 +417,12 @@ export default function PlayerEditorModal({
                             </Button>
                             <Box>
                                 <Button
+                                    onClick={handleCloseModal}
+                                    variant="outline"
+                                    mr={3}>
+                                    Cancel
+                                </Button>
+                                <Button
                                     type="submit"
                                     form="addPlayer"
                                     onClick={handleAddPlayer}
@@ -426,14 +432,8 @@ export default function PlayerEditorModal({
                                         ) : (
                                             <Text className="bi bi-save2" />
                                         )
-                                    }
-                                    mr={3}>
+                                    }>
                                     {isNewPlayer ? "Add Player" : "Save"}
-                                </Button>
-                                <Button
-                                    onClick={handleCloseModal}
-                                    variant="outline">
-                                    Cancel
                                 </Button>
                             </Box>
                         </Flex>

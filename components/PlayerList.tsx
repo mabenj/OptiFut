@@ -1,105 +1,82 @@
-import { EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import {
+    EditIcon,
+    ExternalLinkIcon,
+    RepeatIcon,
+    SmallCloseIcon
+} from "@chakra-ui/icons";
 import {
     Box,
     Button,
     ButtonGroup,
-    Divider,
     Flex,
     Heading,
-    HStack,
     IconButton,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
     Popover,
     PopoverArrow,
     PopoverBody,
     PopoverContent,
     PopoverTrigger,
+    StackDivider,
     Text,
     VStack
 } from "@chakra-ui/react";
-import ClubImage from "../components/ClubImage";
-import LeagueImage from "../components/LeagueImage";
-import NationImage from "../components/NationImage";
+import Link from "next/link";
 import { PlayerDto } from "../types/player-dto.interface";
+import PlayerInfo from "./PlayerInfo";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface PlayerListProps {
     players: PlayerDto[];
     onEditPlayer: (index: number) => any;
     onRemovePlayer: (index: number) => any;
+    onResetTeam: () => any;
 }
 
 export default function PlayerList({
     players,
     onEditPlayer,
-    onRemovePlayer
+    onRemovePlayer,
+    onResetTeam
 }: PlayerListProps) {
     return (
         <Box>
-            <Heading as="h2" size="lg" mb={3}>
-                <Text textAlign="center">Team</Text>
-            </Heading>
-            <VStack align="stretch" spacing={0}>
+            <Flex justifyContent="space-between">
+                <Heading as="h2" size="lg" mb={5}>
+                    <Text>Active Team</Text>
+                </Heading>
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<Text className="bi bi-three-dots-vertical" />}
+                        variant="ghost"
+                    />
+                    <MenuList>
+                        <MenuItem icon={<RepeatIcon />} onClick={onResetTeam}>
+                            Reset Team
+                        </MenuItem>
+                        <Link href="/saved-teams">
+                            <MenuItem icon={<ExternalLinkIcon />}>
+                                View Saved Teams
+                            </MenuItem>
+                        </Link>
+                    </MenuList>
+                </Menu>
+            </Flex>
+            <VStack align="stretch" spacing={0} divider={<StackDivider />}>
                 {players.map((player, i) => (
                     <Box
                         key={player.name + i}
                         _hover={{ background: "gray.50" }}>
-                        {i !== 0 && <Divider />}
                         <Flex
                             alignItems="center"
                             justifyContent="space-between"
-                            py={2}>
-                            <Flex alignItems="center">
-                                <VStack>
-                                    <Heading
-                                        as="h3"
-                                        size="sm"
-                                        color="gray.500"
-                                        cursor="default"
-                                        w="3rem"
-                                        textAlign="center">
-                                        {player.position}
-                                    </Heading>
-                                    <CustomTooltip
-                                        label={
-                                            player.hasLoyalty
-                                                ? "Has loyalty"
-                                                : "No loyalty"
-                                        }>
-                                        {player.hasLoyalty ? (
-                                            <Text
-                                                className="bi-shield-fill-check"
-                                                color="green.600"
-                                            />
-                                        ) : (
-                                            <Text
-                                                className="bi-shield-slash-fill"
-                                                color="gray.600"
-                                            />
-                                        )}
-                                    </CustomTooltip>
-                                </VStack>
-                                <Box ml={4}>
-                                    <Heading as="h3" size="sm">
-                                        {player.name}
-                                    </Heading>
-                                    <HStack mt={2} spacing={2}>
-                                        <NationImage
-                                            id={player.nationId}
-                                            sizePx={35}
-                                        />
-                                        <Box>
-                                            <LeagueImage
-                                                id={player.leagueId}
-                                                sizePx={25}
-                                            />
-                                        </Box>
-                                        <ClubImage
-                                            id={player.clubId}
-                                            sizePx={25}
-                                        />
-                                    </HStack>
-                                </Box>
-                            </Flex>
+                            py={3}>
+                            <PlayerInfo player={player} />
                             <Box>
                                 <CustomTooltip label="Edit player">
                                     <IconButton
@@ -142,7 +119,7 @@ export default function PlayerList({
                                                         <Button
                                                             variant="outline"
                                                             onClick={onClose}>
-                                                            No
+                                                            Cancel
                                                         </Button>
                                                         <Button
                                                             colorScheme="red"
@@ -151,7 +128,7 @@ export default function PlayerList({
                                                                     i
                                                                 )
                                                             }>
-                                                            Yes
+                                                            Remove
                                                         </Button>
                                                     </ButtonGroup>
                                                 </PopoverBody>
@@ -163,6 +140,11 @@ export default function PlayerList({
                         </Flex>
                     </Box>
                 ))}
+                {!players.length && (
+                    <Text as="em" textAlign="center">
+                        No players in the team.
+                    </Text>
+                )}
             </VStack>
         </Box>
     );

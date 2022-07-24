@@ -399,3 +399,8 @@ export function getRandomInt(min: number, max: number) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function getErrorMessage(error: unknown) {
+    if (error instanceof Error) return error.message;
+    return String(error);
+}
