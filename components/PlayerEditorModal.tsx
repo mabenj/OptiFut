@@ -91,7 +91,7 @@ export default function PlayerEditorModal({
     const initialFocusRef = useRef(null);
     const finalFocusRef = useRef(null);
 
-    const isNewPlayer = prefillValues.index < 0;
+    const isNewPlayer = prefillValues.name === "";
 
     useEffect(() => {
         populateFieldsWith(prefillValues);
@@ -121,7 +121,6 @@ export default function PlayerEditorModal({
         e.preventDefault();
         // TODO: validate, display errors etc
         onPlayerAdded({
-            index: prefillValues.index,
             name: playerName,
             version: playerVersion,
             hasLoyalty: hasLoyalty,
@@ -202,7 +201,6 @@ export default function PlayerEditorModal({
                                                         player
                                                     ) =>
                                                         populateFieldsWith({
-                                                            index: prefillValues.index,
                                                             name: player.playerName,
                                                             hasLoyalty:
                                                                 prefillValues.hasLoyalty,

@@ -1,4 +1,4 @@
-import { AddIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -18,70 +18,21 @@ import {
     PopoverTrigger,
     Stack,
     Text,
-    useDisclosure,
     useToast
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useState } from "react";
-import PlayerEditorModal from "../components/PlayerEditorModal";
 import PlayerList from "../components/PlayerList";
-import { DefaultEditorValues, TeamPlayerCount } from "../data/constants";
+import { TeamPlayerCount } from "../data/constants";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useSavedTeam } from "../hooks/useSavedTeam";
 import { PlayerDto } from "../types/player-dto.interface";
-import { PlayerEditorValues } from "../types/player-editor-values";
 
 const Home: NextPage = () => {
-    const {
-        isOpen: isEditorOpen,
-        onOpen: openEditor,
-        onClose: closeEditor
-    } = useDisclosure();
     const { players, setPlayers } = useActiveTeam();
-    const [editorDefaults, setEditorDefaults] =
-        useState<PlayerEditorValues>(DefaultEditorValues);
     const { addSavedTeam } = useSavedTeam();
-
     const toast = useToast();
-
-    const deletePlayerAt = (index: number) => {
-        setPlayers((prev) => {
-            prev.splice(index, 1);
-            return [...prev];
-        });
-    };
-
-    const editPlayerAt = (index: number) => {
-        if (index < 0) {
-            setEditorDefaults(DefaultEditorValues);
-        } else {
-            setEditorDefaults({ ...players[index], index });
-        }
-        openEditor();
-    };
-
-    const addPlayer = (editorValues: PlayerEditorValues) => {
-        const newPlayer: PlayerDto = {
-            name: editorValues.name,
-            version: editorValues.version,
-            position: editorValues.position,
-            hasLoyalty: editorValues.hasLoyalty,
-            nationId: editorValues.nationId!,
-            leagueId: editorValues.leagueId!,
-            clubId: editorValues.clubId!
-        };
-        if (editorValues.index < 0) {
-            // add new
-            setPlayers((prev) => [...prev, newPlayer]);
-        } else {
-            // edit existing
-            setPlayers((prev) => {
-                prev[editorValues.index] = newPlayer;
-                return [...prev];
-            });
-        }
-    };
 
     const saveCurrentTeam = (teamName: string) => {
         if (players.length !== TeamPlayerCount) {
@@ -90,13 +41,13 @@ const Home: NextPage = () => {
         addSavedTeam({
             name: teamName,
             players: players.map((player) => ({
-                name: player.name,
-                position: player.position,
-                version: player.version,
-                hasLoyalty: player.hasLoyalty,
-                nationId: player.nationId,
-                leagueId: player.leagueId,
-                clubId: player.clubId
+                name: player?.name!,
+                position: player?.position!,
+                version: player?.version!,
+                hasLoyalty: player?.hasLoyalty!,
+                nationId: player?.nationId!,
+                leagueId: player?.leagueId!,
+                clubId: player?.clubId!
             }))
         }).then(() =>
             toast({
@@ -109,32 +60,24 @@ const Home: NextPage = () => {
         );
     };
 
+    const canSaveTeam =
+        players.length == TeamPlayerCount &&
+        players.every((player) => player !== null);
+
     return (
         <Flex justifyContent="center" height="100vh">
             <Box width={["95%", "80%", "60%", "40%"]}>
                 <Stack spacing={5}>
-                    <Heading>OptiFut</Heading>
-                    <PlayerEditorModal
-                        isOpen={isEditorOpen}
-                        closeModal={closeEditor}
-                        onPlayerAdded={addPlayer}
-                        prefillValues={editorDefaults}
-                    />
-                    <PlayerList
-                        players={players}
-                        onEditPlayer={editPlayerAt}
-                        onRemovePlayer={deletePlayerAt}
-                        onResetTeam={() => setPlayers([])}
-                    />
+                    <Text textAlign="center">
+                        <Heading as="h1">OptiFut</Heading>
+                        <Text color="gray.500" mt={3}>
+                            FIFA Ultimate Team Chemistry Optimizer
+                        </Text>
+                    </Text>
+                    <PlayerList players={players} onChange={setPlayers} />
                     <Stack>
-                        <Button
-                            leftIcon={<AddIcon />}
-                            onClick={() => editPlayerAt(-1)}
-                            disabled={players.length >= TeamPlayerCount}>
-                            Add Player
-                        </Button>
                         <SaveTeamBtn
-                            disabled={players.length !== TeamPlayerCount}
+                            disabled={!canSaveTeam}
                             onSave={saveCurrentTeam}
                         />
                         <OptimizeTeamBtn
@@ -152,9 +95,12 @@ const OptimizeTeamBtn = ({
     players,
     shouldUseManager
 }: {
-    players: PlayerDto[];
+    players: (PlayerDto | null)[];
     shouldUseManager: boolean;
 }) => {
+    const isDisabled =
+        players.length !== TeamPlayerCount ||
+        players.some((player) => player === null);
     return (
         <Link
             href={{
@@ -168,7 +114,7 @@ const OptimizeTeamBtn = ({
                 colorScheme="green"
                 leftIcon={<Text className="bi bi-cursor" />} // candidates: magic, stars,
                 onClick={() => -1}
-                disabled={players.length !== TeamPlayerCount}>
+                disabled={isDisabled}>
                 Optimize Team
             </Button>
         </Link>

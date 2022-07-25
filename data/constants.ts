@@ -38,7 +38,6 @@ export const LeagueIconRatio = 170 / 170;
 export const ClubIconRatio = 140 / 140;
 
 export const DefaultEditorValues: PlayerEditorValues = {
-    index: -1,
     name: "",
     position: "ST",
     version: "other",

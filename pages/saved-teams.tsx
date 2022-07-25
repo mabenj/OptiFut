@@ -37,8 +37,9 @@ const SavedTeams: NextPage = () => {
         setPlayers(players);
         toast({
             title: `Team '${teamName}' set as active team`,
-            duration: 9000,
-            isClosable: true
+            duration: 3000,
+            isClosable: true,
+            status: "success"
         });
         router.push("/");
     };
@@ -86,6 +87,7 @@ const SavedTeams: NextPage = () => {
                                 <Button
                                     w="50%"
                                     colorScheme="green"
+                                    variant="outline"
                                     onClick={() =>
                                         setActiveTeam(team.players, team.name)
                                     }
@@ -118,6 +120,7 @@ const DeleteTeamBtn = ({
                         <Button
                             w="50%"
                             colorScheme="red"
+                            variant="outline"
                             leftIcon={<DeleteIcon />}>
                             Delete Team
                         </Button>
