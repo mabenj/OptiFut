@@ -165,6 +165,7 @@ export default function PlayerEditorModal({
             finalFocusRef={finalFocusRef}
             isOpen={isOpen}
             onClose={handleCloseModal}
+            scrollBehavior="inside"
             size={["full", "xl"]}>
             <ModalOverlay />
             <ModalContent>
@@ -175,9 +176,9 @@ export default function PlayerEditorModal({
                     </Flex>
                 </ModalHeader>
                 <ModalCloseButton />
-                <ModalBody my={5}>
+                <ModalBody my={5} overflowX="hidden">
                     <form id="addPlayer" onSubmit={handleAddPlayer}>
-                        <VStack spacing={10}>
+                        <VStack spacing={5}>
                             <Flex w="100%">
                                 <FormControl w="70%">
                                     <FormLabel
@@ -252,7 +253,6 @@ export default function PlayerEditorModal({
                                         </InputRightAddon>
                                     </InputGroup>
                                 </FormControl>
-
                                 <FormControl w="30%">
                                     <FormLabel
                                         htmlFor="playerPosition"
@@ -267,7 +267,7 @@ export default function PlayerEditorModal({
                                                     <ChevronDownIcon />
                                                 </MenuButton>
                                             </CustomTooltip>
-                                            <MenuList w="50px">
+                                            <MenuList>
                                                 <MenuOptionGroup
                                                     type="radio"
                                                     value={playerPosition}
