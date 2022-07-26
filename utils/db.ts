@@ -1,7 +1,7 @@
 import Dexie, { Table } from "dexie";
 import { PlayerDto } from "../types/player-dto.interface";
 import { PlayerPosition } from "../types/player-position.type";
-import { PlayerVersion } from "../types/player-version";
+import { PlayerVersion } from "../types/player-version.type";
 
 export interface Player {
     id: number;
@@ -47,7 +47,7 @@ export class OptiFutDexie extends Dexie {
     constructor() {
         super("optifutDb");
         this.version(1).stores({
-            players: "&id, playerName, commonName, rating", // Primary key and indexed props
+            players: "&id, playerName, commonName, rating",
             nations: "&id, displayName",
             leagues: "&id, displayName",
             clubs: "&id, displayName, leagueId",

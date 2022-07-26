@@ -1,5 +1,6 @@
 import {
     AddIcon,
+    CheckIcon,
     EditIcon,
     ExternalLinkIcon,
     RepeatIcon,
@@ -10,12 +11,24 @@ import {
     Button,
     ButtonGroup,
     Flex,
+    FormControl,
+    FormLabel,
     Heading,
     IconButton,
+    Input,
+    InputGroup,
     Menu,
     MenuButton,
+    MenuDivider,
     MenuItem,
     MenuList,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
     Popover,
     PopoverArrow,
     PopoverBody,
@@ -23,13 +36,15 @@ import {
     PopoverTrigger,
     Text,
     useDisclosure,
+    useToast,
     VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
-import { DefaultEditorValues } from "../data/constants";
+import { useRef, useState } from "react";
+import { DefaultEditorValues, TeamPlayerCount } from "../data/constants";
+import { useSavedTeam } from "../hooks/useSavedTeam";
 import { PlayerDto } from "../types/player-dto.interface";
-import { PlayerEditorValues } from "../types/player-editor-values";
+import { PlayerEditorValues } from "../types/player-editor-values.interface";
 import PlayerEditorModal from "./PlayerEditorModal";
 import PlayerInfo from "./PlayerInfo";
 import CustomTooltip from "./ui/CustomTooltip";
@@ -44,15 +59,48 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
         useState<PlayerEditorValues>(DefaultEditorValues);
     const [editIndex, setEditIndex] = useState(0);
 
+    const { addSavedTeam } = useSavedTeam();
+    const toast = useToast();
+
     const {
         isOpen: isEditorOpen,
         onOpen: openEditor,
         onClose: closeEditor
     } = useDisclosure();
 
+    const saveCurrentTeam = (teamName: string) => {
+        if (players.length !== TeamPlayerCount) {
+            return;
+        }
+        addSavedTeam({
+            name: teamName,
+            players: players.map((player) => ({
+                name: player?.name!,
+                position: player?.position!,
+                version: player?.version!,
+                hasLoyalty: player?.hasLoyalty!,
+                nationId: player?.nationId!,
+                leagueId: player?.leagueId!,
+                clubId: player?.clubId!
+            }))
+        }).then(() =>
+            toast({
+                title: "Team Saved",
+                description: `Team '${teamName}' saved successfully`,
+                duration: 9000,
+                isClosable: true,
+                status: "success"
+            })
+        );
+    };
+
     const resetTeam = () => {
         onChange(new Array(players.length).fill(null));
     };
+
+    const canSaveTeam =
+        players.length == TeamPlayerCount &&
+        players.every((player) => player !== null);
 
     const editPlayer = (index: number) => {
         const player = players[index];
@@ -115,19 +163,29 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                 <Menu>
                     <MenuButton
                         as={IconButton}
-                        aria-label="Options"
-                        icon={<Text className="bi bi-three-dots-vertical" />}
+                        icon={
+                            <Text
+                                className="bi bi-three-dots-vertical"
+                                fontSize="xl"
+                            />
+                        }
                         variant="ghost"
+                        rounded="full"
                     />
                     <MenuList>
-                        <MenuItem icon={<RepeatIcon />} onClick={resetTeam}>
-                            Reset Team
-                        </MenuItem>
+                        <SaveTeamMenuItem
+                            disabled={!canSaveTeam}
+                            onSave={saveCurrentTeam}
+                        />
                         <Link href="/saved-teams">
                             <MenuItem icon={<ExternalLinkIcon />}>
                                 View Saved Teams
                             </MenuItem>
                         </Link>
+                        <MenuDivider />
+                        <MenuItem icon={<RepeatIcon />} onClick={resetTeam}>
+                            Reset Team
+                        </MenuItem>
                     </MenuList>
                 </Menu>
             </Flex>
@@ -155,6 +213,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                                     <Box>
                                         <CustomTooltip label="Edit player">
                                             <IconButton
+                                                rounded="full"
                                                 variant="ghost"
                                                 aria-label="Edit player"
                                                 size="lg"
@@ -212,6 +271,7 @@ const RemovePlayerBtn = ({
                         <Box display="inline-block">
                             <PopoverTrigger>
                                 <IconButton
+                                    rounded="full"
                                     variant="ghost"
                                     aria-label="Remove player"
                                     size="lg"
@@ -228,7 +288,7 @@ const RemovePlayerBtn = ({
                                 <strong>{playerName}</strong>?
                             </Box>
                             <ButtonGroup size="sm">
-                                <Button variant="outline" onClick={onClose}>
+                                <Button variant="ghost" onClick={onClose}>
                                     Cancel
                                 </Button>
                                 <Button
@@ -245,5 +305,79 @@ const RemovePlayerBtn = ({
                 </>
             )}
         </Popover>
+    );
+};
+
+const SaveTeamMenuItem = ({
+    disabled,
+    onSave
+}: {
+    disabled: boolean;
+    onSave: (teamName: string) => any;
+}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [teamName, setTeamName] = useState("");
+    const initialRef = useRef(null);
+
+    return (
+        <>
+            <MenuItem
+                icon={<Text className="bi bi-save2" />}
+                disabled={disabled}
+                onClick={onOpen}>
+                Save Team
+            </MenuItem>
+            <Modal
+                isOpen={isOpen}
+                onClose={onClose}
+                initialFocusRef={initialRef}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Save Team</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                onSave(teamName);
+                                onClose();
+                            }}
+                            id="teamNameForm">
+                            <FormControl>
+                                <FormLabel htmlFor="savedTeamName" hidden>
+                                    Team Name
+                                </FormLabel>
+                                <InputGroup>
+                                    <Input
+                                        ref={initialRef}
+                                        id="savedTeamName"
+                                        name="savedTeamName"
+                                        placeholder="Enter team name"
+                                        onChange={(e) =>
+                                            setTeamName(e.target.value)
+                                        }
+                                        required
+                                        autoComplete="off"
+                                    />
+                                </InputGroup>
+                            </FormControl>
+                        </form>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button variant="ghost" mr={3} onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            colorScheme="green"
+                            leftIcon={<CheckIcon />}
+                            type="submit"
+                            form="teamNameForm">
+                            Save
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+        </>
     );
 };

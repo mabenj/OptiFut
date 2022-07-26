@@ -1,5 +1,5 @@
 import { PlayerPosition } from "./player-position.type";
-import { PlayerVersion } from "./player-version";
+import { PlayerVersion } from "./player-version.type";
 
 export interface PlayerEditorValues {
     name: string;

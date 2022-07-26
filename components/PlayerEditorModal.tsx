@@ -7,8 +7,6 @@ import {
     Flex,
     FormControl,
     FormLabel,
-    Grid,
-    GridItem,
     IconButton,
     InputGroup,
     InputRightAddon,
@@ -49,9 +47,9 @@ import { useClub } from "../hooks/player-options/useClub";
 import { useLeague } from "../hooks/player-options/useLeague";
 import { useNationality } from "../hooks/player-options/useNationality";
 import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
-import { PlayerEditorValues } from "../types/player-editor-values";
+import { PlayerEditorValues } from "../types/player-editor-values.interface";
 import { PlayerPosition } from "../types/player-position.type";
-import { PlayerVersion } from "../types/player-version";
+import { PlayerVersion } from "../types/player-version.type";
 import { removeDiacritics } from "../utils/utils";
 import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
 import CustomSelect from "./ui/CustomSelect";
@@ -162,283 +160,262 @@ export default function PlayerEditorModal({
     };
 
     return (
-        <>
-            <Modal
-                initialFocusRef={initialFocusRef}
-                finalFocusRef={finalFocusRef}
-                isOpen={isOpen}
-                onClose={handleCloseModal}
-                size={["full", "xl"]}>
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>
-                        <Flex gap={4}>
-                            <Text className="bi bi-person-lines-fill" />
-                            {isNewPlayer ? "Add Player" : "Edit Player"}
-                        </Flex>
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody my={5}>
-                        <form id="addPlayer" onSubmit={handleAddPlayer}>
-                            <VStack spacing={10}>
-                                <Grid templateColumns="5fr 2fr" w="100%">
-                                    <GridItem>
-                                        <FormControl>
-                                            <FormLabel
-                                                htmlFor="playerName"
-                                                textAlign="center">
-                                                Player Name
-                                            </FormLabel>
-                                            <InputGroup>
-                                                <PlayerNameAutocomplete
-                                                    inputRef={initialFocusRef}
-                                                    id="playerName"
-                                                    name="playerName"
-                                                    placeholder="Enter name"
-                                                    value={playerName}
-                                                    onChange={setPlayerName}
-                                                    onPlayerSelected={(
-                                                        player
-                                                    ) =>
-                                                        populateFieldsWith({
-                                                            name: player.playerName,
-                                                            hasLoyalty:
-                                                                prefillValues.hasLoyalty,
-                                                            version:
-                                                                player.version,
-                                                            position:
-                                                                player.position,
-                                                            nationId:
-                                                                player.nationId,
-                                                            leagueId:
-                                                                player.leagueId,
-                                                            clubId: player.clubId
-                                                        })
-                                                    }
-                                                />
-                                                <InputRightAddon p={0}>
-                                                    <Menu>
-                                                        <CustomTooltip label="Loyalty">
-                                                            <MenuButton
-                                                                as={IconButton}
-                                                                icon={
-                                                                    hasLoyalty ? (
-                                                                        <Text
-                                                                            className="bi-shield-fill-check"
-                                                                            color="green.600"
-                                                                        />
-                                                                    ) : (
-                                                                        <Text
-                                                                            className="bi-shield-slash-fill"
-                                                                            color="gray.600"
-                                                                        />
-                                                                    )
-                                                                }
-                                                                variant="outline"
-                                                            />
-                                                        </CustomTooltip>
-
-                                                        <MenuList>
-                                                            <MenuOptionGroup
-                                                                value={hasLoyalty.toString()}
-                                                                type="radio">
-                                                                <MenuItemOption
-                                                                    value="true"
-                                                                    onClick={
-                                                                        setHasLoyalty.on
-                                                                    }>
-                                                                    Has loyalty
-                                                                </MenuItemOption>
-                                                                <MenuItemOption
-                                                                    value="false"
-                                                                    onClick={
-                                                                        setHasLoyalty.off
-                                                                    }>
-                                                                    No loyalty
-                                                                </MenuItemOption>
-                                                            </MenuOptionGroup>
-                                                        </MenuList>
-                                                    </Menu>
-                                                </InputRightAddon>
-                                            </InputGroup>
-                                        </FormControl>
-                                    </GridItem>
-                                    <GridItem>
-                                        <FormControl>
-                                            <FormLabel
-                                                htmlFor="playerPosition"
-                                                textAlign="center">
-                                                Position
-                                            </FormLabel>
-                                            <Menu>
-                                                <Flex justifyContent="center">
-                                                    <CustomTooltip label="Current position in card">
-                                                        <MenuButton as={Button}>
-                                                            {playerPosition.toUpperCase()}{" "}
-                                                            <ChevronDownIcon />
-                                                        </MenuButton>
-                                                    </CustomTooltip>
-                                                    <MenuList w="50px">
-                                                        <MenuOptionGroup
-                                                            type="radio"
-                                                            value={
-                                                                playerPosition
-                                                            }
-                                                            onChange={(
-                                                                position
-                                                            ) =>
-                                                                setPlayerPosition(
-                                                                    position as PlayerPosition
-                                                                )
-                                                            }>
-                                                            {positionOptions.map(
-                                                                (pos) => (
-                                                                    <MenuItemOption
-                                                                        key={
-                                                                            pos
-                                                                        }
-                                                                        value={
-                                                                            pos
-                                                                        }>
-                                                                        {pos}
-                                                                    </MenuItemOption>
-                                                                )
-                                                            )}
-                                                        </MenuOptionGroup>
-                                                    </MenuList>
-                                                </Flex>
-                                            </Menu>
-                                        </FormControl>
-                                    </GridItem>
-                                </Grid>
-
-                                <FormControl>
+        <Modal
+            initialFocusRef={initialFocusRef}
+            finalFocusRef={finalFocusRef}
+            isOpen={isOpen}
+            onClose={handleCloseModal}
+            size={["full", "xl"]}>
+            <ModalOverlay />
+            <ModalContent>
+                <ModalHeader>
+                    <Flex gap={4}>
+                        <Text className="bi bi-person-lines-fill" />
+                        {isNewPlayer ? "Add Player" : "Edit Player"}
+                    </Flex>
+                </ModalHeader>
+                <ModalCloseButton />
+                <ModalBody my={5}>
+                    <form id="addPlayer" onSubmit={handleAddPlayer}>
+                        <VStack spacing={10}>
+                            <Flex w="100%">
+                                <FormControl w="70%">
                                     <FormLabel
-                                        htmlFor="playerVersion"
+                                        htmlFor="playerName"
                                         textAlign="center">
-                                        Version
+                                        Player Name
                                     </FormLabel>
-                                    <VersionRadioGroup
-                                        name="playerVersion"
-                                        value={playerVersion}
-                                        onChange={handleVersionChange}
-                                    />
-                                </FormControl>
-
-                                <FormControl>
-                                    <FormLabel
-                                        htmlFor="playerNationalityId"
-                                        textAlign="center">
-                                        Nationality
-                                    </FormLabel>
-                                    <CustomSelect
-                                        id="playerNationalityId"
-                                        name="playerNationalityId"
-                                        placeholder="Select nationality..."
-                                        noOptionsMessage="No nationalities found."
-                                        options={nationalityOptions}
-                                        value={nationalityOption}
-                                        onChange={(option) =>
-                                            setNationalityId(option?.value)
-                                        }
-                                    />
-                                </FormControl>
-
-                                <FormControl>
-                                    <FormLabel
-                                        htmlFor="playerLeagueId"
-                                        textAlign="center">
-                                        League
-                                    </FormLabel>
-                                    <CustomSelect
-                                        id="playerLeagueId"
-                                        name="playerLeagueId"
-                                        placeholder="Select league..."
-                                        noOptionsMessage="No leagues found."
-                                        options={leagueOptions}
-                                        value={leagueOption}
-                                        onChange={(option) =>
-                                            setLeagueId(option?.value)
-                                        }
-                                        isDisabled={playerVersion === "icon"}
-                                    />
-                                </FormControl>
-
-                                <FormControl>
-                                    <FormLabel
-                                        htmlFor="playerClubId"
-                                        textAlign="center">
-                                        Club
-                                    </FormLabel>
-                                    <CustomSelect
-                                        id="playerClubId"
-                                        name="playerClubId"
-                                        placeholder="Select club..."
-                                        noOptionsMessage="No clubs found."
-                                        options={clubOptions}
-                                        value={clubOption}
-                                        onChange={(option) =>
-                                            setClubId(option.value)
-                                        }
-                                        isDisabled={
-                                            playerVersion === "icon" ||
-                                            playerVersion === "hero"
-                                        }
-                                        filterOption={(candidate, input) => {
-                                            if (!input || input.length < 2) {
-                                                return (
-                                                    candidate.leagueId ===
-                                                    leagueId
-                                                );
+                                    <InputGroup>
+                                        <PlayerNameAutocomplete
+                                            inputRef={initialFocusRef}
+                                            id="playerName"
+                                            name="playerName"
+                                            placeholder="Enter name"
+                                            value={playerName}
+                                            onChange={setPlayerName}
+                                            onPlayerSelected={(player) =>
+                                                populateFieldsWith({
+                                                    name: player.playerName,
+                                                    hasLoyalty:
+                                                        prefillValues.hasLoyalty,
+                                                    version: player.version,
+                                                    position: player.position,
+                                                    nationId: player.nationId,
+                                                    leagueId: player.leagueId,
+                                                    clubId: player.clubId
+                                                })
                                             }
-                                            const re = new RegExp(
-                                                String.raw`\b${removeDiacritics(
-                                                    input
-                                                )}`,
-                                                "i"
-                                            );
-                                            return re.test(
-                                                removeDiacritics(
-                                                    candidate.label
-                                                )
-                                            );
-                                        }}
-                                    />
+                                        />
+                                        <InputRightAddon p={0}>
+                                            <Menu>
+                                                <CustomTooltip label="Loyalty">
+                                                    <MenuButton
+                                                        as={IconButton}
+                                                        icon={
+                                                            hasLoyalty ? (
+                                                                <Text
+                                                                    className="bi-shield-fill-check"
+                                                                    color="green.600"
+                                                                />
+                                                            ) : (
+                                                                <Text
+                                                                    className="bi-shield-slash-fill"
+                                                                    color="gray.600"
+                                                                />
+                                                            )
+                                                        }
+                                                        variant="outline"
+                                                    />
+                                                </CustomTooltip>
+
+                                                <MenuList>
+                                                    <MenuOptionGroup
+                                                        value={hasLoyalty.toString()}
+                                                        type="radio">
+                                                        <MenuItemOption
+                                                            value="true"
+                                                            onClick={
+                                                                setHasLoyalty.on
+                                                            }>
+                                                            Has loyalty
+                                                        </MenuItemOption>
+                                                        <MenuItemOption
+                                                            value="false"
+                                                            onClick={
+                                                                setHasLoyalty.off
+                                                            }>
+                                                            No loyalty
+                                                        </MenuItemOption>
+                                                    </MenuOptionGroup>
+                                                </MenuList>
+                                            </Menu>
+                                        </InputRightAddon>
+                                    </InputGroup>
                                 </FormControl>
-                            </VStack>
-                        </form>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Flex w="100%" justifyContent="space-between">
-                            <Button onClick={handleReset} variant="ghost">
-                                Reset
+
+                                <FormControl w="30%">
+                                    <FormLabel
+                                        htmlFor="playerPosition"
+                                        textAlign="center">
+                                        Position
+                                    </FormLabel>
+                                    <Menu>
+                                        <Flex justifyContent="center">
+                                            <CustomTooltip label="Current position in card">
+                                                <MenuButton as={Button}>
+                                                    {playerPosition.toUpperCase()}{" "}
+                                                    <ChevronDownIcon />
+                                                </MenuButton>
+                                            </CustomTooltip>
+                                            <MenuList w="50px">
+                                                <MenuOptionGroup
+                                                    type="radio"
+                                                    value={playerPosition}
+                                                    onChange={(position) =>
+                                                        setPlayerPosition(
+                                                            position as PlayerPosition
+                                                        )
+                                                    }>
+                                                    {positionOptions.map(
+                                                        (pos) => (
+                                                            <MenuItemOption
+                                                                key={pos}
+                                                                value={pos}>
+                                                                {pos}
+                                                            </MenuItemOption>
+                                                        )
+                                                    )}
+                                                </MenuOptionGroup>
+                                            </MenuList>
+                                        </Flex>
+                                    </Menu>
+                                </FormControl>
+                            </Flex>
+
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerVersion"
+                                    textAlign="center">
+                                    Version
+                                </FormLabel>
+                                <VersionRadioGroup
+                                    name="playerVersion"
+                                    value={playerVersion}
+                                    onChange={handleVersionChange}
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerNationalityId"
+                                    textAlign="center">
+                                    Nationality
+                                </FormLabel>
+                                <CustomSelect
+                                    id="playerNationalityId"
+                                    name="playerNationalityId"
+                                    placeholder="Select nationality..."
+                                    noOptionsMessage="No nationalities found."
+                                    options={nationalityOptions}
+                                    value={nationalityOption}
+                                    onChange={(option) =>
+                                        setNationalityId(option?.value)
+                                    }
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerLeagueId"
+                                    textAlign="center">
+                                    League
+                                </FormLabel>
+                                <CustomSelect
+                                    id="playerLeagueId"
+                                    name="playerLeagueId"
+                                    placeholder="Select league..."
+                                    noOptionsMessage="No leagues found."
+                                    options={leagueOptions}
+                                    value={leagueOption}
+                                    onChange={(option) =>
+                                        setLeagueId(option?.value)
+                                    }
+                                    isDisabled={playerVersion === "icon"}
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerClubId"
+                                    textAlign="center">
+                                    Club
+                                </FormLabel>
+                                <CustomSelect
+                                    id="playerClubId"
+                                    name="playerClubId"
+                                    placeholder="Select club..."
+                                    noOptionsMessage="No clubs found."
+                                    options={clubOptions}
+                                    value={clubOption}
+                                    onChange={(option) =>
+                                        setClubId(option.value)
+                                    }
+                                    isDisabled={
+                                        playerVersion === "icon" ||
+                                        playerVersion === "hero"
+                                    }
+                                    filterOption={(candidate, input) => {
+                                        if (!input || input.length < 2) {
+                                            return (
+                                                candidate.leagueId === leagueId
+                                            );
+                                        }
+                                        const re = new RegExp(
+                                            String.raw`\b${removeDiacritics(
+                                                input
+                                            )}`,
+                                            "i"
+                                        );
+                                        return re.test(
+                                            removeDiacritics(candidate.label)
+                                        );
+                                    }}
+                                />
+                            </FormControl>
+                        </VStack>
+                    </form>
+                </ModalBody>
+                <ModalFooter>
+                    <Flex w="100%" justifyContent="space-between">
+                        <Button onClick={handleReset} variant="ghost">
+                            Reset
+                        </Button>
+                        <Box>
+                            <Button
+                                onClick={handleCloseModal}
+                                variant="ghost"
+                                mr={3}>
+                                Cancel
                             </Button>
-                            <Box>
-                                <Button
-                                    onClick={handleCloseModal}
-                                    variant="outline"
-                                    mr={3}>
-                                    Cancel
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    form="addPlayer"
-                                    onClick={handleAddPlayer}
-                                    leftIcon={
-                                        isNewPlayer ? (
-                                            <AddIcon />
-                                        ) : (
-                                            <Text className="bi bi-save2" />
-                                        )
-                                    }>
-                                    {isNewPlayer ? "Add Player" : "Save"}
-                                </Button>
-                            </Box>
-                        </Flex>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-        </>
+                            <Button
+                                type="submit"
+                                form="addPlayer"
+                                colorScheme="green"
+                                onClick={handleAddPlayer}
+                                leftIcon={
+                                    isNewPlayer ? (
+                                        <AddIcon />
+                                    ) : (
+                                        <Text className="bi bi-save2" />
+                                    )
+                                }>
+                                {isNewPlayer ? "Add Player" : "Save"}
+                            </Button>
+                        </Box>
+                    </Flex>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
     );
 }
 

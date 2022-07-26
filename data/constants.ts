@@ -1,4 +1,4 @@
-import { PlayerEditorValues } from "../types/player-editor-values";
+import { PlayerEditorValues } from "../types/player-editor-values.interface";
 
 export const PopularNationIds = [
     52, // argentina
