@@ -33,9 +33,20 @@ export function useActiveTeam() {
     ) => {
         const valueToStore =
             players instanceof Function ? players(team.players) : players;
+
+        const isInvalidPlayerList = valueToStore.some(
+            (player) =>
+                !player?.name ||
+                !player?.position ||
+                !player?.version ||
+                player?.nationId == null ||
+                player?.leagueId == null ||
+                player?.clubId == null
+        );
+
         setTeam((prev) => ({
             ...prev,
-            players: valueToStore
+            players: isInvalidPlayerList ? DEFAULT_TEAM : valueToStore
         }));
     };
 

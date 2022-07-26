@@ -9,7 +9,11 @@ interface NationImageProps {
 }
 
 export default function NationImage({ id, sizePx }: NationImageProps) {
-    const nation = useLiveQuery(() => db.nations.get({ id }), [id]);
+    const nation = useLiveQuery(() => {
+        if (id) {
+            return db.nations.get({ id });
+        }
+    }, [id]);
     return (
         <CustomImage
             src={`/assets/img/nations/${id}.png`}
