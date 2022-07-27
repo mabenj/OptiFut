@@ -22,6 +22,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Portal,
     Text,
     useBoolean,
     useRadio,
@@ -165,7 +166,6 @@ export default function PlayerEditorModal({
             finalFocusRef={finalFocusRef}
             isOpen={isOpen}
             onClose={handleCloseModal}
-            scrollBehavior="inside"
             size={["full", "xl"]}>
             <ModalOverlay />
             <ModalContent>
@@ -176,7 +176,7 @@ export default function PlayerEditorModal({
                     </Flex>
                 </ModalHeader>
                 <ModalCloseButton />
-                <ModalBody my={5} overflowX="hidden">
+                <ModalBody my={5}>
                     <form id="addPlayer" onSubmit={handleAddPlayer}>
                         <VStack spacing={5}>
                             <Flex w="100%">
@@ -267,26 +267,28 @@ export default function PlayerEditorModal({
                                                     <ChevronDownIcon />
                                                 </MenuButton>
                                             </CustomTooltip>
-                                            <MenuList>
-                                                <MenuOptionGroup
-                                                    type="radio"
-                                                    value={playerPosition}
-                                                    onChange={(position) =>
-                                                        setPlayerPosition(
-                                                            position as PlayerPosition
-                                                        )
-                                                    }>
-                                                    {positionOptions.map(
-                                                        (pos) => (
-                                                            <MenuItemOption
-                                                                key={pos}
-                                                                value={pos}>
-                                                                {pos}
-                                                            </MenuItemOption>
-                                                        )
-                                                    )}
-                                                </MenuOptionGroup>
-                                            </MenuList>
+                                            <Portal>
+                                                <MenuList zIndex={"modal"}>
+                                                    <MenuOptionGroup
+                                                        type="radio"
+                                                        value={playerPosition}
+                                                        onChange={(position) =>
+                                                            setPlayerPosition(
+                                                                position as PlayerPosition
+                                                            )
+                                                        }>
+                                                        {positionOptions.map(
+                                                            (pos) => (
+                                                                <MenuItemOption
+                                                                    key={pos}
+                                                                    value={pos}>
+                                                                    {pos}
+                                                                </MenuItemOption>
+                                                            )
+                                                        )}
+                                                    </MenuOptionGroup>
+                                                </MenuList>
+                                            </Portal>
                                         </Flex>
                                     </Menu>
                                 </FormControl>
