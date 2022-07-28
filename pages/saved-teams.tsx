@@ -133,7 +133,7 @@ const DeleteTeamBtn = ({
                                 <strong>{teamName}</strong>?
                             </Box>
                             <ButtonGroup size="sm">
-                                <Button variant="outline" onClick={onClose}>
+                                <Button variant="ghost" onClick={onClose}>
                                     Cancel
                                 </Button>
                                 <Button colorScheme="red" onClick={onDelete}>

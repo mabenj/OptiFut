@@ -116,7 +116,9 @@ export default function PlayerNameAutocomplete({
     };
 
     const handleSelectSuggestion = (suggestion: Player) => {
-        onPlayerSelected(suggestion);
+        if (suggestion) {
+            onPlayerSelected(suggestion);
+        }
         setShowSuggestions.off();
     };
 

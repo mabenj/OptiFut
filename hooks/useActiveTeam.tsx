@@ -36,12 +36,13 @@ export function useActiveTeam() {
 
         const isInvalidPlayerList = valueToStore.some(
             (player) =>
-                !player?.name ||
-                !player?.position ||
-                !player?.version ||
-                player?.nationId == null ||
-                player?.leagueId == null ||
-                player?.clubId == null
+                player !== null &&
+                (!player?.name ||
+                    !player?.position ||
+                    !player?.version ||
+                    player?.nationId == null ||
+                    player?.leagueId == null ||
+                    player?.clubId == null)
         );
 
         setTeam((prev) => ({

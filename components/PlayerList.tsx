@@ -324,7 +324,10 @@ const SaveTeamMenuItem = ({
             <MenuItem
                 icon={<Text className="bi bi-save2" />}
                 disabled={disabled}
-                onClick={onOpen}>
+                pointerEvents={disabled ? "none" : undefined}
+                color={disabled ? "gray.400" : undefined}
+                title={disabled ? "Not enough players" : undefined}
+                onClick={disabled ? undefined : onOpen}>
                 Save Team
             </MenuItem>
             <Modal
