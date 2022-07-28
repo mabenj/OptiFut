@@ -1,4 +1,13 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    Flex,
+    FormLabel,
+    Heading,
+    Stack,
+    Switch,
+    Text
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Link from "next/link";
 import PlayerList from "../components/PlayerList";
@@ -7,10 +16,11 @@ import { useActiveTeam } from "../hooks/useActiveTeam";
 import { PlayerDto } from "../types/player-dto.interface";
 
 const Home: NextPage = () => {
-    const { players, setPlayers } = useActiveTeam();
+    const { players, setPlayers, shouldUseManager, setShouldUseManager } =
+        useActiveTeam();
 
     return (
-        <Flex justifyContent="center" height="100vh">
+        <Flex justifyContent="center" height="100vh" my={5}>
             <Box width={["95%", "80%", "60%", "40%"]}>
                 <Stack spacing={5}>
                     <Box textAlign="center">
@@ -20,6 +30,18 @@ const Home: NextPage = () => {
                         </Text>
                     </Box>
                     <PlayerList players={players} onChange={setPlayers} />
+                    
+                    <Flex alignItems="center" justifyContent="center" gap={4}>
+                        <FormLabel m={0}>Use manager?</FormLabel>
+                        <Switch
+                            size="lg"
+                            colorScheme="green"
+                            checked={shouldUseManager}
+                            onChange={() =>
+                                setShouldUseManager((prev) => !prev)
+                            }
+                        />
+                    </Flex>
                     <OptimizeTeamBtn
                         players={players}
                         shouldUseManager={true}

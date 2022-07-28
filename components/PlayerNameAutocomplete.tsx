@@ -7,16 +7,23 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
-    Skeleton,
+    Spinner,
     useBoolean
 } from "@chakra-ui/react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { KeyboardEvent, LegacyRef, MouseEvent, useEffect, useRef, useState } from "react";
+import {
+    KeyboardEvent,
+    LegacyRef,
+    MouseEvent,
+    useEffect,
+    useRef,
+    useState
+} from "react";
 import Highlighter from "react-highlight-words";
 import { SelectImageWidth } from "../data/constants";
 import { useDebounce } from "../hooks/useDebounce";
 import { db, Player } from "../utils/db";
-import { getRandomInt, range, removeDiacritics } from "../utils/utils";
+import { removeDiacritics } from "../utils/utils";
 import ClubImage from "./ClubImage";
 import NationImage from "./NationImage";
 
@@ -150,7 +157,11 @@ export default function PlayerNameAutocomplete({
         <>
             <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                    <SearchIcon color="gray.300" />
+                    {isQuerying ? (
+                        <Spinner size="sm" color="gray.300" />
+                    ) : (
+                        <SearchIcon color="gray.300" />
+                    )}
                 </InputLeftElement>
                 <Input
                     ref={inputRef}
@@ -169,7 +180,7 @@ export default function PlayerNameAutocomplete({
                     onKeyDown={handleInputKeyPress}
                 />
             </InputGroup>
-            {showSuggestions && (suggestions.length > 0 || isQuerying) && (
+            {showSuggestions && !!suggestions.length && !isQuerying && (
                 <Box
                     ref={suggestionsContainerRef}
                     mt={2}
@@ -182,36 +193,28 @@ export default function PlayerNameAutocomplete({
                     borderRadius="md"
                     boxShadow="xs"
                     bg="white"
-                    zIndex={9999}
+                    zIndex="modal"
                     maxHeight="350px"
                     overflowY="auto">
-                    {!isQuerying &&
-                        suggestions.map((suggestion, index) => (
-                            <SuggestionContainer
-                                key={suggestion.id}
-                                onMouseDown={() =>
-                                    handleSelectSuggestion(suggestion)
-                                }
-                                isActive={index === suggestionIndex}>
-                                <PlayerSuggestion
-                                    currentInputValue={query}
-                                    playerSuggestion={suggestion}
-                                />
-                            </SuggestionContainer>
-                        ))}
-                    {areSuggestionsTruncated && (
+                    {suggestions.map((suggestion, index) => (
+                        <SuggestionContainer
+                            key={suggestion.id}
+                            onMouseDown={() =>
+                                handleSelectSuggestion(suggestion)
+                            }
+                            isActive={index === suggestionIndex}>
+                            <PlayerSuggestion
+                                currentInputValue={query}
+                                playerSuggestion={suggestion}
+                            />
+                        </SuggestionContainer>
+                    ))}
+                    {areSuggestionsTruncated && !isQuerying && (
                         <Alert status="warning" textAlign="center">
                             <AlertIcon />
                             Not all suggestions shown - be more specific
                         </Alert>
                     )}
-                    {isQuerying &&
-                        query.length > 0 &&
-                        range(0, SUGGESTIONS_LIMIT).map((i) => (
-                            <SkeletonSuggestion
-                                key={"skeletonSuggestion_" + i}
-                            />
-                        ))}
                 </Box>
             )}
         </>
@@ -268,23 +271,6 @@ const SuggestionContainer = ({
             {children}
         </Box>
     );
-};
-
-const SkeletonSuggestion = () => {
-    const MIN_WIDTH_PERCENT = 50;
-    const MAX_WIDTH_PERCENT = 80;
-
-    const ref = useRef(
-        <SuggestionContainer>
-            <Skeleton
-                h="20px"
-                my={1}
-                w={`${getRandomInt(MIN_WIDTH_PERCENT, MAX_WIDTH_PERCENT)}%`}
-            />
-        </SuggestionContainer>
-    );
-
-    return ref.current;
 };
 
 function scrollSuggestions(suggestionsContainer: HTMLDivElement) {
