@@ -157,7 +157,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                 prefillValues={editorPrefillValues}
             />
             <Flex justifyContent="space-between">
-                <Heading as="h2" size="lg" mb={5}>
+                <Heading as="h2" size="md" mb={5}>
                     <Text>Active Team</Text>
                 </Heading>
                 <Menu>
