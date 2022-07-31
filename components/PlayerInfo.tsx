@@ -1,8 +1,8 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { PlayerDto } from "../types/player-dto.interface";
-import ClubImage from "./ClubImage";
-import LeagueImage from "./LeagueImage";
-import NationImage from "./NationImage";
+import ClubImage from "./image-icons/ClubImage";
+import LeagueImage from "./image-icons/LeagueImage";
+import NationImage from "./image-icons/NationImage";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface PlayerInfoProps {

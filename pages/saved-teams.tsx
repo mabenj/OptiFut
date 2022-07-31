@@ -5,10 +5,16 @@ import {
     AccordionIcon,
     AccordionItem,
     AccordionPanel,
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
     Box,
     Button,
     ButtonGroup,
+    Flex,
     Heading,
+    IconButton,
     Popover,
     PopoverArrow,
     PopoverBody,
@@ -45,7 +51,7 @@ const SavedTeams: NextPage = () => {
     };
 
     return (
-        <VStack>
+        <Stack>
             <Heading as="h2" size="md" mb={3}>
                 Saved Teams
             </Heading>
@@ -58,19 +64,7 @@ const SavedTeams: NextPage = () => {
                             <Heading as="h3" size="sm" py={2}>
                                 {team.name}
                             </Heading>
-                            <AccordionIcon />
-                        </AccordionButton>
-                        <AccordionPanel>
-                            <Stack
-                                spacing={3}
-                                divider={
-                                    <StackDivider borderColor="gray.200" />
-                                }>
-                                {team.players.map((player, index) => (
-                                    <PlayerInfo key={index} player={player} />
-                                ))}
-                            </Stack>
-                            <ButtonGroup mt={10} w="100%">
+                            <ButtonGroup display="flex" alignItems="center">
                                 <DeleteTeamBtn
                                     teamName={team.name}
                                     onDelete={() =>
@@ -87,19 +81,39 @@ const SavedTeams: NextPage = () => {
                                 <Button
                                     w="50%"
                                     colorScheme="green"
-                                    variant="outline"
-                                    onClick={() =>
-                                        setActiveTeam(team.players, team.name)
-                                    }
+                                    size="sm"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setActiveTeam(team.players, team.name);
+                                    }}
                                     leftIcon={<CheckIcon />}>
                                     Set Active
                                 </Button>
+                                <AccordionIcon />
                             </ButtonGroup>
+                        </AccordionButton>
+                        <AccordionPanel>
+                            <Stack
+                            mt={4}
+                                spacing={3}
+                                divider={
+                                    <StackDivider borderColor="gray.200" />
+                                }>
+                                {team.players.map((player, index) => (
+                                    <PlayerInfo key={index} player={player} />
+                                ))}
+                            </Stack>
                         </AccordionPanel>
                     </AccordionItem>
                 ))}
+                {savedTeams.length === 0 && (
+                    <Alert status="warning">
+                        <AlertIcon />
+                        No saved teams were found.
+                    </Alert>
+                )}
             </Accordion>
-        </VStack>
+        </Stack>
     );
 };
 
@@ -118,11 +132,11 @@ const DeleteTeamBtn = ({
                 <>
                     <PopoverTrigger>
                         <Button
-                            w="50%"
+                            leftIcon={<DeleteIcon />}
+                            size="sm"
                             colorScheme="red"
-                            variant="outline"
-                            leftIcon={<DeleteIcon />}>
-                            Delete Team
+                            onClick={(e) => e.stopPropagation()}>
+                            Delete
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent>
@@ -133,7 +147,12 @@ const DeleteTeamBtn = ({
                                 <strong>{teamName}</strong>?
                             </Box>
                             <ButtonGroup size="sm">
-                                <Button variant="ghost" onClick={onClose}>
+                                <Button
+                                    variant="ghost"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        onClose();
+                                    }}>
                                     Cancel
                                 </Button>
                                 <Button colorScheme="red" onClick={onDelete}>

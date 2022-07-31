@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { LeagueIconRatio } from "../data/constants";
-import { db } from "../utils/db";
-import CustomImage from "./ui/CustomImage";
+import { LeagueIconRatio } from "../../data/constants";
+import { db } from "../../utils/db";
+import CustomImage from "../ui/CustomImage";
 
 interface LeagueImageProps {
     id: number;

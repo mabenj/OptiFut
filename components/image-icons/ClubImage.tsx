@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { ClubIconRatio } from "../data/constants";
-import { db } from "../utils/db";
-import CustomImage from "./ui/CustomImage";
+import { ClubIconRatio } from "../../data/constants";
+import { db } from "../../utils/db";
+import CustomImage from "../ui/CustomImage";
 
 interface ClubImageProps {
     id: number;

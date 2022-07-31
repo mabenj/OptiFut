@@ -35,6 +35,21 @@ const Home: NextPage = () => {
         DefaultSelectedFormations
     );
 
+    const canOptimize = () => {
+        if (
+            players.length !== TeamPlayerCount ||
+            players.some((player) => player === null)
+        ) {
+            return false;
+        }
+        if (
+            Object.values(selectedFormations).every((isSelected) => !isSelected)
+        ) {
+            return false;
+        }
+        return true;
+    };
+
     return (
         <Stack spacing={5}>
             <PlayerList players={players} onChange={setPlayers} />
@@ -49,6 +64,7 @@ const Home: NextPage = () => {
             <OptimizeTeamBtn
                 players={players}
                 shouldUseManager={shouldUseManager}
+                disabled={!canOptimize()}
             />
         </Stack>
     );
@@ -56,14 +72,13 @@ const Home: NextPage = () => {
 
 const OptimizeTeamBtn = ({
     players,
-    shouldUseManager
+    shouldUseManager,
+    disabled
 }: {
     players: (PlayerDto | null)[];
     shouldUseManager: boolean;
+    disabled: boolean;
 }) => {
-    const isDisabled =
-        players.length !== TeamPlayerCount ||
-        players.some((player) => player === null);
     return (
         <Link
             href={{
@@ -77,7 +92,7 @@ const OptimizeTeamBtn = ({
                 colorScheme="green"
                 leftIcon={<Text className="bi bi-cursor" />} // candidates: magic, stars,
                 onClick={() => -1}
-                disabled={isDisabled}>
+                disabled={disabled}>
                 Optimize Team
             </Button>
         </Link>

@@ -1,7 +1,7 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { NationFlagRatio } from "../data/constants";
-import { db } from "../utils/db";
-import CustomImage from "./ui/CustomImage";
+import { NationFlagRatio } from "../../data/constants";
+import { db } from "../../utils/db";
+import CustomImage from "../ui/CustomImage";
 
 interface NationImageProps {
     id: number;

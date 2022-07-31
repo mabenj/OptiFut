@@ -24,8 +24,8 @@ import { SelectImageWidth } from "../data/constants";
 import { useDebounce } from "../hooks/useDebounce";
 import { db, Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
-import ClubImage from "./ClubImage";
-import NationImage from "./NationImage";
+import ClubImage from "./image-icons/ClubImage";
+import NationImage from "./image-icons/NationImage";
 
 const QUERY_DEBOUNCE_MS = 100;
 const SUGGESTIONS_LIMIT = 40;
