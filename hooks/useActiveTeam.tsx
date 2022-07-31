@@ -58,7 +58,7 @@ export function useActiveTeam() {
             shouldUseManager instanceof Function
                 ? shouldUseManager(team.shouldUseManager)
                 : shouldUseManager;
-        setTeam((prev) => ({ ...prev, useManager: valueToStore }));
+        setTeam((prev) => ({ ...prev, shouldUseManager: valueToStore }));
     };
 
     return {

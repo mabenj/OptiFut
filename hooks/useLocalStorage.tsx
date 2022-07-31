@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 export function useLocalStorage<T>(key: string, initialValue: T) {
     // State to store our value
     // Pass initial state function to useState so logic is only executed once
-    const [storedValue, setStoredValue] = useState<T>();
+    const [storedValue, setStoredValue] = useState<T>(initialValue);
 
     // for next.js hydration issues set initial value in useEffect
     useEffect(() => {
-        setStoredValue(() => {
+        setValue(() => {
             try {
                 // Get from local storage by key
                 const item = window.localStorage.getItem(key);

@@ -38,11 +38,7 @@ const Home: NextPage = () => {
     const canOptimize = () => {
         if (
             players.length !== TeamPlayerCount ||
-            players.some((player) => player === null)
-        ) {
-            return false;
-        }
-        if (
+            players.some((player) => player === null) ||
             Object.values(selectedFormations).every((isSelected) => !isSelected)
         ) {
             return false;
@@ -112,6 +108,7 @@ const ManagerSwitch = ({
             <Switch
                 size="lg"
                 colorScheme="green"
+                defaultChecked={isOn}
                 checked={isOn}
                 onChange={(e) => setIsOn(e.target.checked)}
             />
