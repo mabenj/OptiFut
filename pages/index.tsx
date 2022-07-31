@@ -8,6 +8,7 @@ import {
     Button,
     Checkbox,
     Flex,
+    FormControl,
     FormLabel,
     Heading,
     SimpleGrid,
@@ -103,16 +104,19 @@ const ManagerSwitch = ({
     setIsOn: (isOn: boolean) => any;
 }) => {
     return (
-        <Flex alignItems="center" justifyContent="center" gap={4}>
-            <FormLabel m={0}>Use manager</FormLabel>
-            <Switch
-                size="lg"
-                colorScheme="green"
-                defaultChecked={isOn}
-                checked={isOn}
-                onChange={(e) => setIsOn(e.target.checked)}
-            />
-        </Flex>
+        <FormControl>
+            <Flex alignItems="center" justifyContent="center" gap={4}>
+                <FormLabel m={0} cursor="pointer">
+                    Use manager
+                </FormLabel>
+                <Switch
+                    size="lg"
+                    colorScheme="green"
+                    isChecked={isOn}
+                    onChange={(e) => setIsOn(e.target.checked)}
+                />
+            </Flex>
+        </FormControl>
     );
 };
 
