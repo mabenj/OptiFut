@@ -36,31 +36,21 @@ const Home: NextPage = () => {
     );
 
     return (
-        <Flex justifyContent="center" height="100vh" my={5}>
-            <Box width={["95%", "80%", "60%", "40%"]}>
-                <Stack spacing={5}>
-                    <Box textAlign="center">
-                        <Heading as="h1">OptiFut</Heading>
-                        <Text color="gray.500" mt={3}>
-                            FIFA Ultimate Team Chemistry Optimizer
-                        </Text>
-                    </Box>
-                    <PlayerList players={players} onChange={setPlayers} />
-                    <FormationsAccordion
-                        selectedFormations={selectedFormations}
-                        onChange={setSelectedFormations}
-                    />
-                    <ManagerSwitch
-                        isOn={shouldUseManager}
-                        setIsOn={setShouldUseManager}
-                    />
-                    <OptimizeTeamBtn
-                        players={players}
-                        shouldUseManager={shouldUseManager}
-                    />
-                </Stack>
-            </Box>
-        </Flex>
+        <Stack spacing={5}>
+            <PlayerList players={players} onChange={setPlayers} />
+            <FormationsAccordion
+                selectedFormations={selectedFormations}
+                onChange={setSelectedFormations}
+            />
+            <ManagerSwitch
+                isOn={shouldUseManager}
+                setIsOn={setShouldUseManager}
+            />
+            <OptimizeTeamBtn
+                players={players}
+                shouldUseManager={shouldUseManager}
+            />
+        </Stack>
     );
 };
 
