@@ -1,8 +1,7 @@
-import { Player } from "../players/Player";
-import { PosModInfo } from "./pos-mod-info.interface";
+import { OptiPlayer } from "../OptiPlayer";
 
 export interface ChemistryResult {
     totalChemistry: number;
-    offChemPlayers: Player[];
-    posModdedPlayers: PosModInfo[];
+    offChemPlayerIds: number[];
+    positionModifications: { [playerId: number]: number };
 }

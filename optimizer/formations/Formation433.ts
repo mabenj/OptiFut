@@ -1,16 +1,30 @@
-import { Player } from "../players/Player";
-import { PlayerNode } from "../players/PlayerNode";
-import { PositionIdentifier as PosId } from "../types/position-identifier.enum";
-import { AbstractFormation } from "./AbstractFormation";
+import { FormationId } from "../../types/formation-id";
+import { OptiPlayer } from "../OptiPlayer";
+import { OptiPlayerNode } from "../OptiPlayerNode";
+import { PositionValue } from "../types/position-value.enum";
+import { Formation } from "./Formation";
 
-export class Formation433 extends AbstractFormation<Formation433> {
-    public name: string;
+export class Formation433 extends Formation {
+    formationId: FormationId = "433";
+    availablePositions: PositionValue[] = [
+        PositionValue.LW,
+        PositionValue.ST,
+        PositionValue.RW,
+        PositionValue.CM,
+        PositionValue.CM,
+        PositionValue.CM,
+        PositionValue.LB,
+        PositionValue.CB,
+        PositionValue.CB,
+        PositionValue.RB,
+        PositionValue.GK
+    ];
 
     /**
      *
      * @param squad Order: LW, ST, RW, LCM, CM, RCM, LB, LCB, RCB, RB, GK
      */
-    constructor(squad: Player[], generateManager: boolean) {
+    constructor(squad: OptiPlayer[], useManager: boolean) {
         const [LW, ST, RW, LCM, CM, RCM, LB, LCB, RCB, RB, GK] = squad;
         const LW_links = [ST, LCM];
         const ST_links = [LW, RW, CM];
@@ -25,34 +39,23 @@ export class Formation433 extends AbstractFormation<Formation433> {
         const GK_links = [LCB, RCB];
         super(
             [
-                new PlayerNode(LW, LW_links, PosId.LW, "LW"),
-                new PlayerNode(ST, ST_links, PosId.ST, "ST"),
-                new PlayerNode(RW, RW_links, PosId.RW, "RW"),
-                new PlayerNode(LCM, LCM_links, PosId.CM, "LCM"),
-                new PlayerNode(CM, CM_links, PosId.CM, "CM"),
-                new PlayerNode(RCM, RCM_links, PosId.CM, "RCM"),
-                new PlayerNode(LB, LB_links, PosId.LB, "LB"),
-                new PlayerNode(LCB, LCB_links, PosId.CB, "LCB"),
-                new PlayerNode(RCB, RCB_links, PosId.CB, "RCB"),
-                new PlayerNode(RB, RB_links, PosId.RB, "RB"),
-                new PlayerNode(GK, GK_links, PosId.GK, "GK")
+                new OptiPlayerNode(LW, LW_links, PositionValue.LW, "LW"),
+                new OptiPlayerNode(ST, ST_links, PositionValue.ST, "ST"),
+                new OptiPlayerNode(RW, RW_links, PositionValue.RW, "RW"),
+                new OptiPlayerNode(LCM, LCM_links, PositionValue.CM, "LCM"),
+                new OptiPlayerNode(CM, CM_links, PositionValue.CM, "CM"),
+                new OptiPlayerNode(RCM, RCM_links, PositionValue.CM, "RCM"),
+                new OptiPlayerNode(LB, LB_links, PositionValue.LB, "LB"),
+                new OptiPlayerNode(LCB, LCB_links, PositionValue.CB, "LCB"),
+                new OptiPlayerNode(RCB, RCB_links, PositionValue.CB, "RCB"),
+                new OptiPlayerNode(RB, RB_links, PositionValue.RB, "RB"),
+                new OptiPlayerNode(GK, GK_links, PositionValue.GK, "GK")
             ],
-            generateManager
+            useManager
         );
-        this.name = "4-3-3";
     }
 
-    mateWith(
-        mate: Formation433,
-        mutationRate: number,
-        crossoverRate: number
-    ): [child1: Formation433, child2: Formation433] {
-        return this.mateWithImpl(
-            mate,
-            mutationRate,
-            crossoverRate,
-            (players, generateManager) =>
-                new Formation433(players, generateManager)
-        );
+    createFormation(players: OptiPlayer[], useManager: boolean): Formation {
+        return new Formation433(players, useManager);
     }
 }

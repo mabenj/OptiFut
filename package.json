@@ -20,15 +20,18 @@
         "framer-motion": "^6",
         "lodash.clonedeep": "^4.5.0",
         "lodash.debounce": "^4.0.8",
+        "memoizee": "^0.4.15",
         "next": "12.2.0",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-highlight-words": "^0.18.0",
-        "sass": "^1.53.0"
+        "sass": "^1.53.0",
+        "threads": "^1.7.0"
     },
     "devDependencies": {
         "@types/lodash.clonedeep": "^4.5.7",
         "@types/lodash.debounce": "^4.0.7",
+        "@types/memoizee": "^0.4.8",
         "@types/node": "18.0.0",
         "@types/react": "18.0.14",
         "@types/react-dom": "18.0.5",

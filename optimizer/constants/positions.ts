@@ -1,100 +1,170 @@
-import { AllPositions } from "../types/all-positions.interface";
-import { PositionIdentifier as PosId } from "../types/position-identifier.enum";
+import { FifaPosition } from "../types/fifa-position.interface";
+import { PositionValue } from "../types/position-value.enum";
 
-export const POSITIONS: AllPositions = {
+interface FifaPositions {
+    ST: FifaPosition;
+    LF: FifaPosition;
+    RF: FifaPosition;
+    CF: FifaPosition;
+    LW: FifaPosition;
+    RW: FifaPosition;
+    LM: FifaPosition;
+    RM: FifaPosition;
+    CAM: FifaPosition;
+    CM: FifaPosition;
+    CDM: FifaPosition;
+    LWB: FifaPosition;
+    RWB: FifaPosition;
+    LB: FifaPosition;
+    RB: FifaPosition;
+    CB: FifaPosition;
+    GK: FifaPosition;
+}
+
+export const FifaPositions: FifaPositions = {
     ST: {
-        naturalPosition: PosId.ST,
-        relatedPositions: [PosId.LF, PosId.RF],
-        unrelatedPositions: [PosId.CF]
+        positionValue: PositionValue.ST,
+        relatedPositions: [PositionValue.LF, PositionValue.RF],
+        unrelatedPositions: [PositionValue.CF]
     },
     LF: {
-        naturalPosition: PosId.LF,
-        relatedPositions: [PosId.LM, PosId.CF, PosId.RF, PosId.ST],
-        unrelatedPositions: [PosId.LW]
+        positionValue: PositionValue.LF,
+        relatedPositions: [
+            PositionValue.LM,
+            PositionValue.CF,
+            PositionValue.RF,
+            PositionValue.ST
+        ],
+        unrelatedPositions: [PositionValue.LW]
     },
     RF: {
-        naturalPosition: PosId.RF,
-        relatedPositions: [PosId.LM, PosId.CF, PosId.RF, PosId.ST],
-        unrelatedPositions: [PosId.LW]
+        positionValue: PositionValue.RF,
+        relatedPositions: [
+            PositionValue.LM,
+            PositionValue.CF,
+            PositionValue.RF,
+            PositionValue.ST
+        ],
+        unrelatedPositions: [PositionValue.LW]
     },
     CF: {
-        naturalPosition: PosId.CF,
-        relatedPositions: [PosId.CAM, PosId.ST],
-        unrelatedPositions: [PosId.LF, PosId.RF]
+        positionValue: PositionValue.CF,
+        relatedPositions: [PositionValue.CAM, PositionValue.ST],
+        unrelatedPositions: [PositionValue.LF, PositionValue.RF]
     },
     LW: {
-        naturalPosition: PosId.LW,
-        relatedPositions: [PosId.LM, PosId.LF],
-        unrelatedPositions: [PosId.LWB, PosId.RW]
+        positionValue: PositionValue.LW,
+        relatedPositions: [PositionValue.LM, PositionValue.LF],
+        unrelatedPositions: [PositionValue.LWB, PositionValue.RW]
     },
     RW: {
-        naturalPosition: PosId.RW,
-        relatedPositions: [PosId.RM, PosId.RF],
-        unrelatedPositions: [PosId.RWB, PosId.LW]
+        positionValue: PositionValue.RW,
+        relatedPositions: [PositionValue.RM, PositionValue.RF],
+        unrelatedPositions: [PositionValue.RWB, PositionValue.LW]
     },
     LM: {
-        naturalPosition: PosId.LM,
-        relatedPositions: [PosId.LW],
-        unrelatedPositions: [PosId.LB, PosId.LWB, PosId.CM, PosId.RM, PosId.LF]
+        positionValue: PositionValue.LM,
+        relatedPositions: [PositionValue.LW],
+        unrelatedPositions: [
+            PositionValue.LB,
+            PositionValue.LWB,
+            PositionValue.CM,
+            PositionValue.RM,
+            PositionValue.LF
+        ]
     },
     RM: {
-        naturalPosition: PosId.RM,
-        relatedPositions: [PosId.RW],
-        unrelatedPositions: [PosId.RB, PosId.RWB, PosId.CM, PosId.LM, PosId.RF]
+        positionValue: PositionValue.RM,
+        relatedPositions: [PositionValue.RW],
+        unrelatedPositions: [
+            PositionValue.RB,
+            PositionValue.RWB,
+            PositionValue.CM,
+            PositionValue.LM,
+            PositionValue.RF
+        ]
     },
     CAM: {
-        naturalPosition: PosId.CAM,
-        relatedPositions: [PosId.CM, PosId.CF],
-        unrelatedPositions: [PosId.CDM]
+        positionValue: PositionValue.CAM,
+        relatedPositions: [PositionValue.CM, PositionValue.CF],
+        unrelatedPositions: [PositionValue.CDM]
     },
     CM: {
-        naturalPosition: PosId.CM,
-        relatedPositions: [PosId.CDM, PosId.CAM],
-        unrelatedPositions: [PosId.RM, PosId.LM]
+        positionValue: PositionValue.CM,
+        relatedPositions: [PositionValue.CDM, PositionValue.CAM],
+        unrelatedPositions: [PositionValue.RM, PositionValue.LM]
     },
     CDM: {
-        naturalPosition: PosId.CDM,
-        relatedPositions: [PosId.CM],
-        unrelatedPositions: [PosId.CB, PosId.CAM]
+        positionValue: PositionValue.CDM,
+        relatedPositions: [PositionValue.CM],
+        unrelatedPositions: [PositionValue.CB, PositionValue.CAM]
     },
     LWB: {
-        naturalPosition: PosId.LWB,
-        relatedPositions: [PosId.LB],
-        unrelatedPositions: [PosId.RWB, PosId.LM, PosId.LW]
+        positionValue: PositionValue.LWB,
+        relatedPositions: [PositionValue.LB],
+        unrelatedPositions: [
+            PositionValue.RWB,
+            PositionValue.LM,
+            PositionValue.LW
+        ]
     },
     RWB: {
-        naturalPosition: PosId.RWB,
-        relatedPositions: [PosId.RB],
-        unrelatedPositions: [PosId.LWB, PosId.RM, PosId.RW]
+        positionValue: PositionValue.RWB,
+        relatedPositions: [PositionValue.RB],
+        unrelatedPositions: [
+            PositionValue.LWB,
+            PositionValue.RM,
+            PositionValue.RW
+        ]
     },
     LB: {
-        naturalPosition: PosId.LB,
-        relatedPositions: [PosId.LWB],
-        unrelatedPositions: [PosId.RB, PosId.CB, PosId.LM, PosId.LW]
+        positionValue: PositionValue.LB,
+        relatedPositions: [PositionValue.LWB],
+        unrelatedPositions: [
+            PositionValue.RB,
+            PositionValue.CB,
+            PositionValue.LM,
+            PositionValue.LW
+        ]
     },
     RB: {
-        naturalPosition: PosId.RB,
-        relatedPositions: [PosId.RWB],
-        unrelatedPositions: [PosId.LB, PosId.CB, PosId.RM, PosId.RW]
+        positionValue: PositionValue.RB,
+        relatedPositions: [PositionValue.RWB],
+        unrelatedPositions: [
+            PositionValue.LB,
+            PositionValue.CB,
+            PositionValue.RM,
+            PositionValue.RW
+        ]
     },
     CB: {
-        naturalPosition: PosId.CB,
+        positionValue: PositionValue.CB,
         relatedPositions: [],
-        unrelatedPositions: [PosId.RB, PosId.LB, PosId.CDM]
+        unrelatedPositions: [
+            PositionValue.RB,
+            PositionValue.LB,
+            PositionValue.CDM
+        ]
     },
     GK: {
-        naturalPosition: PosId.GK,
+        positionValue: PositionValue.GK,
         relatedPositions: [],
         unrelatedPositions: []
     }
 };
 
-export const POSITION_MODIFIER_GROUPS = {
-    StrikersMidfielders: [PosId.ST, PosId.CF, PosId.CAM, PosId.CM, PosId.CDM],
-    LeftFielders: [PosId.LF, PosId.LW, PosId.LM],
-    RightFielders: [PosId.RF, PosId.RW, PosId.RM],
-    LeftBacks: [PosId.LWB, PosId.LB],
-    RightBacks: [PosId.RWB, PosId.RB],
-    CenterBacks: [PosId.CB],
-    Goalkeepers: [PosId.GK]
+export const PositionModifierGroups = {
+    StrikersMidfielders: [
+        PositionValue.ST,
+        PositionValue.CF,
+        PositionValue.CAM,
+        PositionValue.CM,
+        PositionValue.CDM
+    ],
+    LeftFielders: [PositionValue.LF, PositionValue.LW, PositionValue.LM],
+    RightFielders: [PositionValue.RF, PositionValue.RW, PositionValue.RM],
+    LeftBacks: [PositionValue.LWB, PositionValue.LB],
+    RightBacks: [PositionValue.RWB, PositionValue.RB],
+    CenterBacks: [PositionValue.CB],
+    Goalkeepers: [PositionValue.GK]
 };

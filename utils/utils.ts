@@ -1,5 +1,5 @@
-import { AbstractFormation } from "../optimizer/formations/AbstractFormation";
-import { PosModInfo } from "../optimizer/types/pos-mod-info.interface";
+import { Formation } from "../optimizer/formations/Formation";
+import { PosModInfo } from "../optimizer2/types/pos-mod-info.interface";
 
 //https://stackoverflow.com/a/37580979
 export function* permute<T>(permutation: T[]) {
@@ -54,10 +54,7 @@ export function choice<T>(options: T[]): T {
  * @param b Second formation
  * @returns -1 if first is worse than second, 1 if first is better than second, 0 if equal
  */
-export function compareFormations<T>(
-    a: AbstractFormation<T>,
-    b: AbstractFormation<T>
-) {
+export function compareFormations(a: Formation, b: Formation) {
     const chemA = a.calculateChemistry();
     const chemB = b.calculateChemistry();
 
@@ -68,19 +65,24 @@ export function compareFormations<T>(
         return 1;
     }
 
-    if (chemA.offChemPlayers.length > chemB.offChemPlayers.length) {
+    if (chemA.offChemPlayerIds.length > chemB.offChemPlayerIds.length) {
         return -1;
     }
-    if (chemA.offChemPlayers.length < chemB.offChemPlayers.length) {
+    if (chemA.offChemPlayerIds.length < chemB.offChemPlayerIds.length) {
         return 1;
     }
 
-    const posModsA = getPosModCount(chemA.posModdedPlayers);
-    const posModsB = getPosModCount(chemB.posModdedPlayers);
-    if (posModsA > posModsB) {
+    const posModCountA = Object.values(chemA.positionModifications)
+        .map((count) => count)
+        .reduce((acc, curr) => acc + curr, 0);
+    const posModCountB = Object.values(chemB.positionModifications)
+        .map((count) => count)
+        .reduce((acc, curr) => acc + curr, 0);
+
+    if (posModCountA > posModCountB) {
         return -1;
     }
-    if (posModsA < posModsB) {
+    if (posModCountA < posModCountB) {
         return 1;
     }
 
