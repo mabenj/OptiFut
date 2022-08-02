@@ -1,5 +1,4 @@
 import { Formation } from "../optimizer/formations/Formation";
-import { PosModInfo } from "../optimizer2/types/pos-mod-info.interface";
 
 //https://stackoverflow.com/a/37580979
 export function* permute<T>(permutation: T[]) {
@@ -87,10 +86,6 @@ export function compareFormations(a: Formation, b: Formation) {
     }
 
     return 0;
-}
-
-export function getPosModCount(posMods: PosModInfo[]) {
-    return posMods.reduce((acc, curr) => acc + curr.count, 0);
 }
 
 export function randomIntFromInterval(min: number, max: number) {

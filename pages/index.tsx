@@ -56,7 +56,8 @@ const Home: NextPage = () => {
                     shouldUseManager
                 );
                 console.timeEnd(`[optimizer ${formationId}]`);
-                console.log({ result });
+                console.log(result);
+                alert(JSON.stringify(result));
             });
         });
 
