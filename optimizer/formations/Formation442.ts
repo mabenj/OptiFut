@@ -1,7 +1,7 @@
 import { FormationId } from "../../types/formation-id";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
-import { PositionValue } from "../types/position-value.enum";
+import { PositionValue } from "../types/face-position.enum";
 import { Formation } from "./Formation";
 
 export class Formation442 extends Formation {

@@ -3,10 +3,10 @@ import { FormationId } from "../types/formation-id";
 import { PlayerDto } from "../types/player-dto.interface";
 import { choice, compareFormations, shuffle } from "../utils/utils";
 import { Formation } from "./formations/Formation";
-import { Formation433 } from "./formations/Formation433";
+import { FormationFactory } from "./formations/FormationFactory";
 import { GeneticAlgorithmConfig } from "./GeneticAlgorithmConfig";
 import { OptiPlayer } from "./OptiPlayer";
-import { PositionValue } from "./types/position-value.enum";
+import { PositionValue } from "./types/face-position.enum";
 
 export class ChemistryOptimizer {
     private readonly _playerPool: OptiPlayer[];
@@ -22,6 +22,7 @@ export class ChemistryOptimizer {
             (p, i) =>
                 new OptiPlayer(
                     i,
+                    p.name,
                     p.nationId,
                     p.leagueId,
                     p.clubId,
@@ -39,7 +40,7 @@ export class ChemistryOptimizer {
             population = this.getNextGeneration(population);
         }
         const best = population.sort(compareFormations)[population.length - 1];
-        return this.createFormationDto(best);
+        return best.toDto();
     }
 
     private generateInitialPopulation() {
@@ -68,7 +69,7 @@ export class ChemistryOptimizer {
                 // first try to find natural fit
                 const indexOfNaturalFit = shuffledPlayerPool.findIndex(
                     (player) =>
-                        player.currentFifaPosition.positionValue ===
+                        player.currentPosition.position ===
                         positionSlot.position
                 );
                 if (indexOfNaturalFit > -1) {
@@ -80,7 +81,7 @@ export class ChemistryOptimizer {
                 // then related fit
                 const indexOfRelatedFit = shuffledPlayerPool.findIndex(
                     (player) =>
-                        player.currentFifaPosition.relatedPositions.includes(
+                        player.currentPosition.relatedPositions.includes(
                             positionSlot.position
                         )
                 );
@@ -93,7 +94,7 @@ export class ChemistryOptimizer {
                 // then unrelated fit
                 const indexOfUnrelatedFit = shuffledPlayerPool.findIndex(
                     (player) =>
-                        player.currentFifaPosition.unrelatedPositions.includes(
+                        player.currentPosition.unrelatedPositions.includes(
                             positionSlot.position
                         )
                 );
@@ -168,32 +169,5 @@ export class ChemistryOptimizer {
         nextGen[populationSize - 1] = mostFit;
 
         return nextGen;
-    }
-
-    private createFormationDto(formation: Formation) {
-        const chemistryResult = formation.calculateChemistry();
-        return {
-            playerIds: formation.players.map((p) => p.id),
-            totalChemistry: chemistryResult.totalChemistry,
-            offChemPlayerIds: chemistryResult.offChemPlayerIds,
-            positionModifications: chemistryResult.positionModifications
-        };
-    }
-}
-
-class FormationFactory {
-    public static createFormation(
-        formationId: FormationId,
-        players: OptiPlayer[],
-        useManager: boolean
-    ) {
-        switch (formationId) {
-            case "433":
-                return new Formation433(players, useManager);
-            default:
-                throw new Error(
-                    `Unknown or unimplemented formation '${formationId}'`
-                );
-        }
     }
 }

@@ -5,9 +5,9 @@ import { GeneticAlgorithmConfig } from "../GeneticAlgorithmConfig";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
 import { ChemistryResult } from "../types/chemistry-result.interface";
+import { PositionValue } from "../types/face-position.enum";
 import { Manager } from "../types/manager.interface";
-import { PositionId } from "../types/position-id.type";
-import { PositionValue } from "../types/position-value.enum";
+import { PositionNodeId } from "../types/position-node-id.type";
 
 const OFFCHEM_THRESHOLD = 10;
 const FULLCHEM = 100;
@@ -60,6 +60,35 @@ export abstract class Formation {
         };
     }
 
+    public toDto() {
+        const players = this._playerNodes.map((node) => ({
+            id: node.player.id,
+            name: node.player.name,
+            chemistry: node.calculateChemistry(this.manager),
+            originalPosition: PositionValue.toString(
+                node.player.originalPosition.position
+            ),
+            newPosition: PositionValue.toString(
+                node.player.currentPosition.position
+            ),
+            positionModificationCount: Math.abs(
+                node.player.originalPosition.position -
+                    node.player.currentPosition.position
+            ),
+            positionInSquad: node.positionInSquad,
+            hasLoyalty: node.player.hasLoyalty
+        }));
+        const teamChemistry = this.calculateChemistry().totalChemistry;
+        return {
+            players,
+            teamChemistry,
+            manager: {
+                nationalityId: this.manager?.nationalityId,
+                leagueId: this.manager?.leagueId
+            }
+        };
+    }
+
     public mateWith(mate: Formation): [child1: Formation, child2: Formation] {
         const [child1Players, child2Players, child1Manager, child2Manager] =
             this.getChildrenWith(mate);
@@ -95,11 +124,11 @@ export abstract class Formation {
         let manager1: Manager | undefined;
         let manager2: Manager | undefined;
         if (Math.random() < GeneticAlgorithmConfig.crossoverRate) {
-            manager1 = this.manager;
-            manager2 = mate.manager;
+            manager1 = cloneDeep(this.manager);
+            manager2 = cloneDeep(mate.manager);
         } else {
-            manager1 = mate.manager;
-            manager2 = this.manager;
+            manager1 = cloneDeep(mate.manager);
+            manager2 = cloneDeep(this.manager);
         }
         return [playersOfChild1, playersOfChild2, manager1, manager2];
     }
@@ -125,7 +154,10 @@ export abstract class Formation {
             }
         }
 
-        if (Math.random() < GeneticAlgorithmConfig.mutationRate) {
+        if (
+            this.manager &&
+            Math.random() < GeneticAlgorithmConfig.mutationRate
+        ) {
             // mutate manager
             this.manager = this.generateManager();
         }
@@ -152,7 +184,7 @@ export abstract class Formation {
         return player;
     }
 
-    private getPlayerByPosition(positionId: PositionId) {
+    private getPlayerByPosition(positionId: PositionNodeId) {
         const player = this._playerNodes.find(
             (node) => node.positionInSquad === positionId
         )?.player;

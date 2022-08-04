@@ -1,20 +1,20 @@
 import { HeroClubId, IconClubId } from "../data/constants";
 import { OptiPlayer } from "./OptiPlayer";
+import { PositionValue } from "./types/face-position.enum";
 import { Manager } from "./types/manager.interface";
-import { PositionId } from "./types/position-id.type";
-import { PositionValue } from "./types/position-value.enum";
+import { PositionNodeId } from "./types/position-node-id.type";
 
 export class OptiPlayerNode {
     private readonly _links: OptiPlayer[];
     private readonly _positionInCard: PositionValue;
-    public readonly positionInSquad: PositionId; //TODO: currently not used
+    public readonly positionInSquad: PositionNodeId; //TODO: currently not used
     public player: OptiPlayer;
 
     constructor(
         player: OptiPlayer,
         links: OptiPlayer[],
         positionInCard: PositionValue,
-        positionInSquad: PositionId
+        positionInSquad: PositionNodeId
     ) {
         this.player = player;
         this._links = links;
@@ -74,20 +74,17 @@ export class OptiPlayerNode {
     }
 
     private isInNaturalPosition() {
-        return (
-            this.player.currentFifaPosition.positionValue ===
-            this._positionInCard
-        );
+        return this.player.currentPosition.position === this._positionInCard;
     }
 
     private isInRelatedPosition() {
-        return this.player.currentFifaPosition.relatedPositions.includes(
+        return this.player.currentPosition.relatedPositions.includes(
             this._positionInCard
         );
     }
 
     private isInUnrelatedPosition() {
-        return this.player.currentFifaPosition.unrelatedPositions.includes(
+        return this.player.currentPosition.unrelatedPositions.includes(
             this._positionInCard
         );
     }

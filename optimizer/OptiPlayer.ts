@@ -1,26 +1,28 @@
 import cloneDeep from "lodash.clonedeep";
 import { PlayerPosition } from "../types/player-position.type";
 import { choice } from "../utils/utils";
-import { FifaPositions, PositionModifierGroups } from "./constants/positions";
-import { FifaPosition } from "./types/fifa-position.interface";
-import { PositionValue } from "./types/position-value.enum";
+import { PositionInfos, PositionModifierGroups } from "./constants/positions";
+import { PositionValue } from "./types/face-position.enum";
+import { PositionInfo } from "./types/position-info.interface";
 
 export class OptiPlayer {
-    private readonly _posModGroup: PositionValue[];
-    private _currentFifaPosition: FifaPosition;
-    public readonly originalFifaPosition: FifaPosition;
+    private readonly _possibleFacePositions: PositionValue[];
+    private _currentPosition: PositionInfo;
+    public readonly originalPosition: PositionInfo;
     public readonly id: number;
+    public readonly name: string;
     public readonly nationalityId: number;
     public readonly leagueId: number;
     public readonly clubId: number;
     public readonly hasLoyalty: boolean;
 
-    public get currentFifaPosition() {
-        return this._currentFifaPosition;
+    public get currentPosition() {
+        return this._currentPosition;
     }
 
     constructor(
         id: number,
+        name: string,
         nationalityId: number,
         leagueId: number,
         clubId: number,
@@ -28,70 +30,71 @@ export class OptiPlayer {
         hasLoyalty: boolean
     ) {
         this.id = id;
+        this.name = name;
         this.nationalityId = nationalityId;
         this.leagueId = leagueId;
         this.clubId = clubId;
         this.hasLoyalty = hasLoyalty;
-        this._currentFifaPosition = FifaPosition.fromString(position);
-        this.originalFifaPosition = cloneDeep(this._currentFifaPosition);
-        this._posModGroup = getPositionModifierGroup(
-            this.currentFifaPosition.positionValue
+        this._currentPosition = PositionInfo.fromString(position);
+        this.originalPosition = cloneDeep(this._currentPosition);
+        this._possibleFacePositions = getPositionModifierGroup(
+            this.currentPosition.position
         );
     }
 
     public randomizeFifaPosition() {
-        const newPositionValue = choice(this._posModGroup);
-        switch (newPositionValue) {
-            case FifaPositions.ST.positionValue:
-                this._currentFifaPosition = FifaPositions.ST;
+        const newFacePosition = choice(this._possibleFacePositions);
+        switch (newFacePosition) {
+            case PositionInfos.ST.position:
+                this._currentPosition = PositionInfos.ST;
                 break;
-            case FifaPositions.CF.positionValue:
-                this._currentFifaPosition = FifaPositions.CF;
+            case PositionInfos.CF.position:
+                this._currentPosition = PositionInfos.CF;
                 break;
-            case FifaPositions.LF.positionValue:
-                this._currentFifaPosition = FifaPositions.LF;
+            case PositionInfos.LF.position:
+                this._currentPosition = PositionInfos.LF;
                 break;
-            case FifaPositions.RF.positionValue:
-                this._currentFifaPosition = FifaPositions.RF;
+            case PositionInfos.RF.position:
+                this._currentPosition = PositionInfos.RF;
                 break;
-            case FifaPositions.LW.positionValue:
-                this._currentFifaPosition = FifaPositions.LW;
+            case PositionInfos.LW.position:
+                this._currentPosition = PositionInfos.LW;
                 break;
-            case FifaPositions.RW.positionValue:
-                this._currentFifaPosition = FifaPositions.RW;
+            case PositionInfos.RW.position:
+                this._currentPosition = PositionInfos.RW;
                 break;
-            case FifaPositions.LM.positionValue:
-                this._currentFifaPosition = FifaPositions.LM;
+            case PositionInfos.LM.position:
+                this._currentPosition = PositionInfos.LM;
                 break;
-            case FifaPositions.RM.positionValue:
-                this._currentFifaPosition = FifaPositions.RM;
+            case PositionInfos.RM.position:
+                this._currentPosition = PositionInfos.RM;
                 break;
-            case FifaPositions.CAM.positionValue:
-                this._currentFifaPosition = FifaPositions.CAM;
+            case PositionInfos.CAM.position:
+                this._currentPosition = PositionInfos.CAM;
                 break;
-            case FifaPositions.CM.positionValue:
-                this._currentFifaPosition = FifaPositions.CM;
+            case PositionInfos.CM.position:
+                this._currentPosition = PositionInfos.CM;
                 break;
-            case FifaPositions.CDM.positionValue:
-                this._currentFifaPosition = FifaPositions.CDM;
+            case PositionInfos.CDM.position:
+                this._currentPosition = PositionInfos.CDM;
                 break;
-            case FifaPositions.LWB.positionValue:
-                this._currentFifaPosition = FifaPositions.LWB;
+            case PositionInfos.LWB.position:
+                this._currentPosition = PositionInfos.LWB;
                 break;
-            case FifaPositions.LB.positionValue:
-                this._currentFifaPosition = FifaPositions.LB;
+            case PositionInfos.LB.position:
+                this._currentPosition = PositionInfos.LB;
                 break;
-            case FifaPositions.RWB.positionValue:
-                this._currentFifaPosition = FifaPositions.RWB;
+            case PositionInfos.RWB.position:
+                this._currentPosition = PositionInfos.RWB;
                 break;
-            case FifaPositions.RB.positionValue:
-                this._currentFifaPosition = FifaPositions.RB;
+            case PositionInfos.RB.position:
+                this._currentPosition = PositionInfos.RB;
                 break;
-            case FifaPositions.CB.positionValue:
-                this._currentFifaPosition = FifaPositions.CB;
+            case PositionInfos.CB.position:
+                this._currentPosition = PositionInfos.CB;
                 break;
-            case FifaPositions.GK.positionValue:
-                this._currentFifaPosition = FifaPositions.GK;
+            case PositionInfos.GK.position:
+                this._currentPosition = PositionInfos.GK;
                 break;
             default:
                 break;
@@ -100,8 +103,7 @@ export class OptiPlayer {
 
     public getNumberOfPositionModifications() {
         return Math.abs(
-            this.currentFifaPosition.positionValue -
-                this.originalFifaPosition.positionValue
+            this.currentPosition.position - this.originalPosition.position
         );
     }
 }

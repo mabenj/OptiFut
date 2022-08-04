@@ -1,34 +1,14 @@
-import { FifaPosition } from "../types/fifa-position.interface";
-import { PositionValue } from "../types/position-value.enum";
+import { PositionValue } from "../types/face-position.enum";
+import { PositionInfo } from "../types/position-info.interface";
 
-interface FifaPositions {
-    ST: FifaPosition;
-    LF: FifaPosition;
-    RF: FifaPosition;
-    CF: FifaPosition;
-    LW: FifaPosition;
-    RW: FifaPosition;
-    LM: FifaPosition;
-    RM: FifaPosition;
-    CAM: FifaPosition;
-    CM: FifaPosition;
-    CDM: FifaPosition;
-    LWB: FifaPosition;
-    RWB: FifaPosition;
-    LB: FifaPosition;
-    RB: FifaPosition;
-    CB: FifaPosition;
-    GK: FifaPosition;
-}
-
-export const FifaPositions: FifaPositions = {
+export const PositionInfos = {
     ST: {
-        positionValue: PositionValue.ST,
+        position: PositionValue.ST,
         relatedPositions: [PositionValue.LF, PositionValue.RF],
         unrelatedPositions: [PositionValue.CF]
-    },
+    } as PositionInfo,
     LF: {
-        positionValue: PositionValue.LF,
+        position: PositionValue.LF,
         relatedPositions: [
             PositionValue.LM,
             PositionValue.CF,
@@ -36,9 +16,9 @@ export const FifaPositions: FifaPositions = {
             PositionValue.ST
         ],
         unrelatedPositions: [PositionValue.LW]
-    },
+    } as PositionInfo,
     RF: {
-        positionValue: PositionValue.RF,
+        position: PositionValue.RF,
         relatedPositions: [
             PositionValue.LM,
             PositionValue.CF,
@@ -46,24 +26,24 @@ export const FifaPositions: FifaPositions = {
             PositionValue.ST
         ],
         unrelatedPositions: [PositionValue.LW]
-    },
+    } as PositionInfo,
     CF: {
-        positionValue: PositionValue.CF,
+        position: PositionValue.CF,
         relatedPositions: [PositionValue.CAM, PositionValue.ST],
         unrelatedPositions: [PositionValue.LF, PositionValue.RF]
-    },
+    } as PositionInfo,
     LW: {
-        positionValue: PositionValue.LW,
+        position: PositionValue.LW,
         relatedPositions: [PositionValue.LM, PositionValue.LF],
         unrelatedPositions: [PositionValue.LWB, PositionValue.RW]
-    },
+    } as PositionInfo,
     RW: {
-        positionValue: PositionValue.RW,
+        position: PositionValue.RW,
         relatedPositions: [PositionValue.RM, PositionValue.RF],
         unrelatedPositions: [PositionValue.RWB, PositionValue.LW]
-    },
+    } as PositionInfo,
     LM: {
-        positionValue: PositionValue.LM,
+        position: PositionValue.LM,
         relatedPositions: [PositionValue.LW],
         unrelatedPositions: [
             PositionValue.LB,
@@ -72,9 +52,9 @@ export const FifaPositions: FifaPositions = {
             PositionValue.RM,
             PositionValue.LF
         ]
-    },
+    } as PositionInfo,
     RM: {
-        positionValue: PositionValue.RM,
+        position: PositionValue.RM,
         relatedPositions: [PositionValue.RW],
         unrelatedPositions: [
             PositionValue.RB,
@@ -83,42 +63,42 @@ export const FifaPositions: FifaPositions = {
             PositionValue.LM,
             PositionValue.RF
         ]
-    },
+    } as PositionInfo,
     CAM: {
-        positionValue: PositionValue.CAM,
+        position: PositionValue.CAM,
         relatedPositions: [PositionValue.CM, PositionValue.CF],
         unrelatedPositions: [PositionValue.CDM]
-    },
+    } as PositionInfo,
     CM: {
-        positionValue: PositionValue.CM,
+        position: PositionValue.CM,
         relatedPositions: [PositionValue.CDM, PositionValue.CAM],
         unrelatedPositions: [PositionValue.RM, PositionValue.LM]
-    },
+    } as PositionInfo,
     CDM: {
-        positionValue: PositionValue.CDM,
+        position: PositionValue.CDM,
         relatedPositions: [PositionValue.CM],
         unrelatedPositions: [PositionValue.CB, PositionValue.CAM]
-    },
+    } as PositionInfo,
     LWB: {
-        positionValue: PositionValue.LWB,
+        position: PositionValue.LWB,
         relatedPositions: [PositionValue.LB],
         unrelatedPositions: [
             PositionValue.RWB,
             PositionValue.LM,
             PositionValue.LW
         ]
-    },
+    } as PositionInfo,
     RWB: {
-        positionValue: PositionValue.RWB,
+        position: PositionValue.RWB,
         relatedPositions: [PositionValue.RB],
         unrelatedPositions: [
             PositionValue.LWB,
             PositionValue.RM,
             PositionValue.RW
         ]
-    },
+    } as PositionInfo,
     LB: {
-        positionValue: PositionValue.LB,
+        position: PositionValue.LB,
         relatedPositions: [PositionValue.LWB],
         unrelatedPositions: [
             PositionValue.RB,
@@ -126,9 +106,9 @@ export const FifaPositions: FifaPositions = {
             PositionValue.LM,
             PositionValue.LW
         ]
-    },
+    } as PositionInfo,
     RB: {
-        positionValue: PositionValue.RB,
+        position: PositionValue.RB,
         relatedPositions: [PositionValue.RWB],
         unrelatedPositions: [
             PositionValue.LB,
@@ -136,18 +116,18 @@ export const FifaPositions: FifaPositions = {
             PositionValue.RM,
             PositionValue.RW
         ]
-    },
+    } as PositionInfo,
     CB: {
-        positionValue: PositionValue.CB,
+        position: PositionValue.CB,
         relatedPositions: [],
         unrelatedPositions: [
             PositionValue.RB,
             PositionValue.LB,
             PositionValue.CDM
         ]
-    },
+    } as PositionInfo,
     GK: {
-        positionValue: PositionValue.GK,
+        position: PositionValue.GK,
         relatedPositions: [],
         unrelatedPositions: []
     }

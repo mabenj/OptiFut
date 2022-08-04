@@ -47,7 +47,7 @@ const Home: NextPage = () => {
             )
         );
 
-        ["433", "442"].forEach((formationId) => {
+        ["442"].forEach((formationId) => {
             threadPool.queue(async (optimizer) => {
                 console.time(`[optimizer ${formationId}]`);
                 const result = await optimizer.start(
@@ -56,8 +56,10 @@ const Home: NextPage = () => {
                     shouldUseManager
                 );
                 console.timeEnd(`[optimizer ${formationId}]`);
-                console.log(result);
-                alert(JSON.stringify(result));
+                console.log("manager", result.manager);
+                console.log("total chem", result.teamChemistry);
+                console.table(result.players);
+                // alert(JSON.stringify(result));
             });
         });
 

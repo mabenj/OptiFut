@@ -1,4 +1,4 @@
-export type PositionId =
+export type PositionNodeId =
     | "LST"
     | "ST"
     | "RST"

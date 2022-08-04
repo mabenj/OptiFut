@@ -8,7 +8,7 @@ const chemistryOptimizerWorker = {
         const chemOptimizer = new ChemistryOptimizer(
             players,
             useManager,
-            "433"
+            formationId
         );
         const result = chemOptimizer.optimize();
         return result;
