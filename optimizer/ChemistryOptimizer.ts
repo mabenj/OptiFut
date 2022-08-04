@@ -2,9 +2,9 @@ import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../types/formation-id";
 import { PlayerDto } from "../types/player-dto.interface";
 import { choice, compareFormations, shuffle } from "../utils/utils";
+import { GAConfig } from "./constants/ga-config";
 import { Formation } from "./formations/Formation";
 import { FormationFactory } from "./formations/FormationFactory";
-import { GeneticAlgorithmConfig } from "./GeneticAlgorithmConfig";
 import { OptiPlayer } from "./OptiPlayer";
 import { PositionValue } from "./types/face-position.enum";
 
@@ -36,7 +36,7 @@ export class ChemistryOptimizer {
 
     public optimize() {
         let population = this.generateInitialPopulation();
-        for (let gen = 1; gen < GeneticAlgorithmConfig.generations; gen++) {
+        for (let gen = 1; gen < GAConfig.generations; gen++) {
             population = this.getNextGeneration(population);
         }
         const best = population.sort(compareFormations)[population.length - 1];
@@ -58,7 +58,7 @@ export class ChemistryOptimizer {
             player: null
         }));
 
-        for (let i = 0; i < GeneticAlgorithmConfig.populationSize; i++) {
+        for (let i = 0; i < GAConfig.populationSize; i++) {
             const shuffledPlayerPool = shuffle(cloneDeep(this._playerPool));
             shuffledPlayerPool.forEach((player) =>
                 player.randomizeFifaPosition()
@@ -137,7 +137,7 @@ export class ChemistryOptimizer {
 
     private tournament(population: Formation[]) {
         const tournament: Formation[] = [];
-        for (let i = 0; i < GeneticAlgorithmConfig.tournamentSize; i++) {
+        for (let i = 0; i < GAConfig.tournamentSize; i++) {
             tournament.push(choice(population));
         }
         return tournament.sort(compareFormations)[tournament.length - 1];

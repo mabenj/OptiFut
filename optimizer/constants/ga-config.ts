@@ -1,4 +1,4 @@
-export const GeneticAlgorithmConfig = {
+export const GAConfig = {
     generations: 30,
     populationSize: 200,
     tournamentSize: 6,

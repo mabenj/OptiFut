@@ -1,7 +1,7 @@
 import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../../types/formation-id";
 import { choice } from "../../utils/utils";
-import { GeneticAlgorithmConfig } from "../GeneticAlgorithmConfig";
+import { GAConfig } from "../constants/ga-config";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
 import { ChemistryResult } from "../types/chemistry-result.interface";
@@ -113,7 +113,7 @@ export abstract class Formation {
         const playersOfChild2: OptiPlayer[] = [];
         const playerIds = this.players.map((player) => player.id);
         for (let i = 0; i < playerIds.length; i++) {
-            if (Math.random() < GeneticAlgorithmConfig.crossoverRate) {
+            if (Math.random() < GAConfig.crossoverRate) {
                 playersOfChild1.push(cloneDeep(this.getPlayer(playerIds[i])));
                 playersOfChild2.push(cloneDeep(mate.getPlayer(playerIds[i])));
             } else {
@@ -123,7 +123,7 @@ export abstract class Formation {
         }
         let manager1: Manager | undefined;
         let manager2: Manager | undefined;
-        if (Math.random() < GeneticAlgorithmConfig.crossoverRate) {
+        if (Math.random() < GAConfig.crossoverRate) {
             manager1 = cloneDeep(this.manager);
             manager2 = cloneDeep(mate.manager);
         } else {
@@ -135,7 +135,7 @@ export abstract class Formation {
 
     private mutate() {
         for (let i = 0; i < this._playerNodes.length; i++) {
-            if (Math.random() < GeneticAlgorithmConfig.mutationRate) {
+            if (Math.random() < GAConfig.mutationRate) {
                 const currentNode = this._playerNodes[i];
 
                 // new face position
@@ -154,10 +154,7 @@ export abstract class Formation {
             }
         }
 
-        if (
-            this.manager &&
-            Math.random() < GeneticAlgorithmConfig.mutationRate
-        ) {
+        if (this.manager && Math.random() < GAConfig.mutationRate) {
             // mutate manager
             this.manager = this.generateManager();
         }
