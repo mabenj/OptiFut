@@ -1,7 +1,7 @@
 import { FormationId } from "../../types/formation-id";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
-import { PositionValue } from "../types/face-position.enum";
+import { PositionValue } from "../types/position-value.enum";
 import { Formation } from "./Formation";
 
 export class Formation433 extends Formation {
@@ -39,17 +39,17 @@ export class Formation433 extends Formation {
         const GK_links = [LCB, RCB];
         super(
             [
-                new OptiPlayerNode(LW, LW_links, PositionValue.LW, "LW"),
-                new OptiPlayerNode(ST, ST_links, PositionValue.ST, "ST"),
-                new OptiPlayerNode(RW, RW_links, PositionValue.RW, "RW"),
-                new OptiPlayerNode(LCM, LCM_links, PositionValue.CM, "LCM"),
-                new OptiPlayerNode(CM, CM_links, PositionValue.CM, "CM"),
-                new OptiPlayerNode(RCM, RCM_links, PositionValue.CM, "RCM"),
-                new OptiPlayerNode(LB, LB_links, PositionValue.LB, "LB"),
-                new OptiPlayerNode(LCB, LCB_links, PositionValue.CB, "LCB"),
-                new OptiPlayerNode(RCB, RCB_links, PositionValue.CB, "RCB"),
-                new OptiPlayerNode(RB, RB_links, PositionValue.RB, "RB"),
-                new OptiPlayerNode(GK, GK_links, PositionValue.GK, "GK")
+                new OptiPlayerNode(LW, LW_links, "LW"),
+                new OptiPlayerNode(ST, ST_links, "ST"),
+                new OptiPlayerNode(RW, RW_links, "RW"),
+                new OptiPlayerNode(LCM, LCM_links, "LCM"),
+                new OptiPlayerNode(CM, CM_links, "CM"),
+                new OptiPlayerNode(RCM, RCM_links, "RCM"),
+                new OptiPlayerNode(LB, LB_links, "LB"),
+                new OptiPlayerNode(LCB, LCB_links, "LCB"),
+                new OptiPlayerNode(RCB, RCB_links, "RCB"),
+                new OptiPlayerNode(RB, RB_links, "RB"),
+                new OptiPlayerNode(GK, GK_links, "GK")
             ],
             useManager
         );

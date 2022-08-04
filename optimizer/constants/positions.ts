@@ -1,4 +1,4 @@
-import { PositionValue } from "../types/face-position.enum";
+import { PositionValue } from "../types/position-value.enum";
 import { PositionInfo } from "../types/position-info.interface";
 
 export const PositionInfos = {

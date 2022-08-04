@@ -2,7 +2,7 @@ import cloneDeep from "lodash.clonedeep";
 import { PlayerPosition } from "../types/player-position.type";
 import { choice } from "../utils/utils";
 import { PositionInfos, PositionModifierGroups } from "./constants/positions";
-import { PositionValue } from "./types/face-position.enum";
+import { PositionValue } from "./types/position-value.enum";
 import { PositionInfo } from "./types/position-info.interface";
 
 export class OptiPlayer {

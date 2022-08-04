@@ -5,9 +5,8 @@ import { GAConfig } from "../constants/ga-config";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
 import { ChemistryResult } from "../types/chemistry-result.interface";
-import { PositionValue } from "../types/face-position.enum";
 import { Manager } from "../types/manager.interface";
-import { PositionNodeId } from "../types/position-node-id.type";
+import { PositionValue } from "../types/position-value.enum";
 
 const OFFCHEM_THRESHOLD = 10;
 const FULLCHEM = 100;
@@ -75,7 +74,7 @@ export abstract class Formation {
                 node.player.originalPosition.position -
                     node.player.currentPosition.position
             ),
-            positionInSquad: node.positionInSquad,
+            positionInSquad: node.nodeId,
             hasLoyalty: node.player.hasLoyalty
         }));
         const teamChemistry = this.calculateChemistry().totalChemistry;
@@ -144,8 +143,7 @@ export abstract class Formation {
                 // swap position with another node
                 let swapTarget = choice(
                     this._playerNodes.filter(
-                        (node) =>
-                            node.positionInSquad !== currentNode.positionInSquad
+                        (node) => node.nodeId !== currentNode.nodeId
                     )
                 );
                 const tempPlayer = currentNode.player;
@@ -177,16 +175,6 @@ export abstract class Formation {
         const player = this.players.find((player) => player.id === id);
         if (!player) {
             throw new Error(`Player with id '${id}' not found`);
-        }
-        return player;
-    }
-
-    private getPlayerByPosition(positionId: PositionNodeId) {
-        const player = this._playerNodes.find(
-            (node) => node.positionInSquad === positionId
-        )?.player;
-        if (!player) {
-            throw new Error(`Player with position '${positionId}' not found`);
         }
         return player;
     }

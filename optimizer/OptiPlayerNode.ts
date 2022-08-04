@@ -1,25 +1,24 @@
 import { HeroClubId, IconClubId } from "../data/constants";
 import { OptiPlayer } from "./OptiPlayer";
-import { PositionValue } from "./types/face-position.enum";
+import { PositionValue } from "./types/position-value.enum";
 import { Manager } from "./types/manager.interface";
 import { PositionNodeId } from "./types/position-node-id.type";
 
 export class OptiPlayerNode {
     private readonly _links: OptiPlayer[];
-    private readonly _positionInCard: PositionValue;
-    public readonly positionInSquad: PositionNodeId; //TODO: currently not used
+    private readonly _positionValue: PositionValue;
+    public readonly nodeId: PositionNodeId;
     public player: OptiPlayer;
 
     constructor(
         player: OptiPlayer,
         links: OptiPlayer[],
-        positionInCard: PositionValue,
         positionInSquad: PositionNodeId
     ) {
         this.player = player;
         this._links = links;
-        this._positionInCard = positionInCard;
-        this.positionInSquad = positionInSquad;
+        this.nodeId = positionInSquad;
+        this._positionValue = PositionValue.fromNodeId(positionInSquad);
     }
 
     calculateChemistry(manager?: Manager): number {
@@ -74,18 +73,18 @@ export class OptiPlayerNode {
     }
 
     private isInNaturalPosition() {
-        return this.player.currentPosition.position === this._positionInCard;
+        return this.player.currentPosition.position === this._positionValue;
     }
 
     private isInRelatedPosition() {
         return this.player.currentPosition.relatedPositions.includes(
-            this._positionInCard
+            this._positionValue
         );
     }
 
     private isInUnrelatedPosition() {
         return this.player.currentPosition.unrelatedPositions.includes(
-            this._positionInCard
+            this._positionValue
         );
     }
 

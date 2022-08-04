@@ -6,7 +6,7 @@ import { GAConfig } from "./constants/ga-config";
 import { Formation } from "./formations/Formation";
 import { FormationFactory } from "./formations/FormationFactory";
 import { OptiPlayer } from "./OptiPlayer";
-import { PositionValue } from "./types/face-position.enum";
+import { PositionValue } from "./types/position-value.enum";
 
 export class ChemistryOptimizer {
     private readonly _playerPool: OptiPlayer[];

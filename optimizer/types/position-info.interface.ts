@@ -1,5 +1,5 @@
 import { PositionInfos } from "../constants/positions";
-import { PositionValue } from "./face-position.enum";
+import { PositionValue } from "./position-value.enum";
 
 export interface PositionInfo {
     position: PositionValue;

@@ -1,7 +1,7 @@
 import { FormationId } from "../../types/formation-id";
 import { OptiPlayer } from "../OptiPlayer";
 import { OptiPlayerNode } from "../OptiPlayerNode";
-import { PositionValue } from "../types/face-position.enum";
+import { PositionValue } from "../types/position-value.enum";
 import { Formation } from "./Formation";
 
 export class Formation442 extends Formation {
@@ -39,17 +39,17 @@ export class Formation442 extends Formation {
         const GK_links = [LCB, RCB];
         super(
             [
-                new OptiPlayerNode(LST, LST_links, PositionValue.ST, "LST"),
-                new OptiPlayerNode(RST, RST_links, PositionValue.ST, "RST"),
-                new OptiPlayerNode(LM, LM_links, PositionValue.LM, "LM"),
-                new OptiPlayerNode(LCM, LCM_links, PositionValue.CM, "LCM"),
-                new OptiPlayerNode(RCM, RCM_links, PositionValue.CM, "RCM"),
-                new OptiPlayerNode(RM, RM_links, PositionValue.RM, "RM"),
-                new OptiPlayerNode(LB, LB_links, PositionValue.LB, "LB"),
-                new OptiPlayerNode(LCB, LCB_links, PositionValue.CB, "LCB"),
-                new OptiPlayerNode(RCB, RCB_links, PositionValue.CB, "RCB"),
-                new OptiPlayerNode(RB, RB_links, PositionValue.RB, "RB"),
-                new OptiPlayerNode(GK, GK_links, PositionValue.GK, "GK")
+                new OptiPlayerNode(LST, LST_links, "LST"),
+                new OptiPlayerNode(RST, RST_links, "RST"),
+                new OptiPlayerNode(LM, LM_links, "LM"),
+                new OptiPlayerNode(LCM, LCM_links, "LCM"),
+                new OptiPlayerNode(RCM, RCM_links, "RCM"),
+                new OptiPlayerNode(RM, RM_links, "RM"),
+                new OptiPlayerNode(LB, LB_links, "LB"),
+                new OptiPlayerNode(LCB, LCB_links, "LCB"),
+                new OptiPlayerNode(RCB, RCB_links, "RCB"),
+                new OptiPlayerNode(RB, RB_links, "RB"),
+                new OptiPlayerNode(GK, GK_links, "GK")
             ],
             useManager
         );
