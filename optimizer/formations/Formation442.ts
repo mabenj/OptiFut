@@ -26,30 +26,43 @@ export class Formation442 extends Formation {
      */
     constructor(squad: OptiPlayer[], useManager: boolean) {
         const [LST, RST, LM, LCM, RCM, RM, LB, LCB, RCB, RB, GK] = squad;
-        const LST_links = [RST, LCM, LM];
-        const RST_links = [LST, RM, RCM];
-        const LM_links = [LST, LCM, LB];
-        const LCM_links = [LST, RCM, LCB, LM];
-        const RCM_links = [RST, RM, RCB, LCM];
-        const RM_links = [RST, RB, RCM];
-        const LB_links = [LM, LCB];
-        const LCB_links = [LCM, RCB, GK, LB];
-        const RCB_links = [RCM, RB, GK, LCB];
-        const RB_links = [RM, RCB];
-        const GK_links = [LCB, RCB];
+        const LST_node = new OptiPlayerNode(LST, "LST");
+        const RST_node = new OptiPlayerNode(RST, "RST");
+        const LM_node = new OptiPlayerNode(LM, "LM");
+        const LCM_node = new OptiPlayerNode(LCM, "LCM");
+        const RCM_node = new OptiPlayerNode(RCM, "RCM");
+        const RM_node = new OptiPlayerNode(RM, "RM");
+        const LB_node = new OptiPlayerNode(LB, "LB");
+        const LCB_node = new OptiPlayerNode(LCB, "LCB");
+        const RCB_node = new OptiPlayerNode(RCB, "RCB");
+        const RB_node = new OptiPlayerNode(RB, "RB");
+        const GK_node = new OptiPlayerNode(GK, "GK");
+
+        LST_node.setLinks([RST_node, LCM_node, LM_node]);
+        RST_node.setLinks([LST_node, RM_node, RCM_node]);
+        LM_node.setLinks([LST_node, LCM_node, LB_node]);
+        LCM_node.setLinks([LST_node, RCM_node, LCB_node, LM_node]);
+        RCM_node.setLinks([RST_node, RM_node, RCB_node, LCM_node]);
+        RM_node.setLinks([RST_node, RB_node, RCM_node]);
+        LB_node.setLinks([LM_node, LCB_node]);
+        LCB_node.setLinks([LCM_node, RCB_node, GK_node, LB_node]);
+        RCB_node.setLinks([RCM_node, RB_node, GK_node, LCB_node]);
+        RB_node.setLinks([RM_node, RCB_node]);
+        GK_node.setLinks([LCB_node, RCB_node]);
+
         super(
             [
-                new OptiPlayerNode(LST, LST_links, "LST"),
-                new OptiPlayerNode(RST, RST_links, "RST"),
-                new OptiPlayerNode(LM, LM_links, "LM"),
-                new OptiPlayerNode(LCM, LCM_links, "LCM"),
-                new OptiPlayerNode(RCM, RCM_links, "RCM"),
-                new OptiPlayerNode(RM, RM_links, "RM"),
-                new OptiPlayerNode(LB, LB_links, "LB"),
-                new OptiPlayerNode(LCB, LCB_links, "LCB"),
-                new OptiPlayerNode(RCB, RCB_links, "RCB"),
-                new OptiPlayerNode(RB, RB_links, "RB"),
-                new OptiPlayerNode(GK, GK_links, "GK")
+                LST_node,
+                RST_node,
+                LM_node,
+                LCM_node,
+                RCM_node,
+                RM_node,
+                LB_node,
+                LCB_node,
+                RCB_node,
+                RB_node,
+                GK_node
             ],
             useManager
         );

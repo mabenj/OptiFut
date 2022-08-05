@@ -60,9 +60,7 @@ export class ChemistryOptimizer {
 
         for (let i = 0; i < GAConfig.populationSize; i++) {
             const shuffledPlayerPool = shuffle(cloneDeep(this._playerPool));
-            shuffledPlayerPool.forEach((player) =>
-                player.randomizeFifaPosition()
-            );
+            shuffledPlayerPool.forEach((player) => player.randomizePosition());
             const positionSlots = cloneDeep(emptyPositionSlots);
 
             positionSlots.forEach((positionSlot) => {

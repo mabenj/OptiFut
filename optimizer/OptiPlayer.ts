@@ -2,8 +2,8 @@ import cloneDeep from "lodash.clonedeep";
 import { PlayerPosition } from "../types/player-position.type";
 import { choice } from "../utils/utils";
 import { PositionInfos, PositionModifierGroups } from "./constants/positions";
-import { PositionValue } from "./types/position-value.enum";
 import { PositionInfo } from "./types/position-info.interface";
+import { PositionValue } from "./types/position-value.enum";
 
 export class OptiPlayer {
     private readonly _possibleFacePositions: PositionValue[];
@@ -42,7 +42,7 @@ export class OptiPlayer {
         );
     }
 
-    public randomizeFifaPosition() {
+    public randomizePosition() {
         const newFacePosition = choice(this._possibleFacePositions);
         switch (newFacePosition) {
             case PositionInfos.ST.position:

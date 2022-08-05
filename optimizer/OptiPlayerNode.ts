@@ -1,34 +1,34 @@
 import { HeroClubId, IconClubId } from "../data/constants";
 import { OptiPlayer } from "./OptiPlayer";
-import { PositionValue } from "./types/position-value.enum";
 import { Manager } from "./types/manager.interface";
 import { PositionNodeId } from "./types/position-node-id.type";
+import { PositionValue } from "./types/position-value.enum";
 
 export class OptiPlayerNode {
-    private readonly _links: OptiPlayer[];
-    private readonly _positionValue: PositionValue;
+    private links: OptiPlayerNode[];
+    private readonly positionValue: PositionValue;
     public readonly nodeId: PositionNodeId;
     public player: OptiPlayer;
 
-    constructor(
-        player: OptiPlayer,
-        links: OptiPlayer[],
-        positionInSquad: PositionNodeId
-    ) {
+    constructor(player: OptiPlayer, nodeId: PositionNodeId) {
         this.player = player;
-        this._links = links;
-        this.nodeId = positionInSquad;
-        this._positionValue = PositionValue.fromNodeId(positionInSquad);
+        this.nodeId = nodeId;
+        this.positionValue = PositionValue.fromNodeId(nodeId);
+        this.links = [];
+    }
+
+    public setLinks(links: OptiPlayerNode[]) {
+        this.links = links;
     }
 
     calculateChemistry(manager?: Manager): number {
-        const numberOfLinks = this._links.length;
+        const numberOfLinks = this.links.length;
         let linkSum = 0;
-        for (let i = 0; i < this._links.length; i++) {
-            const linkedPlayer = this._links[i];
-            this.isSameNationality(linkedPlayer) && linkSum++;
-            this.isSameLeague(linkedPlayer) && linkSum++;
-            this.isSameClub(linkedPlayer) && linkSum++;
+        for (let i = 0; i < this.links.length; i++) {
+            const linkedNode = this.links[i];
+            this.isSameNationality(linkedNode) && linkSum++;
+            this.isSameLeague(linkedNode) && linkSum++;
+            this.isSameClub(linkedNode) && linkSum++;
         }
         const linkIntensity = linkSum / numberOfLinks;
 
@@ -73,38 +73,40 @@ export class OptiPlayerNode {
     }
 
     private isInNaturalPosition() {
-        return this.player.currentPosition.position === this._positionValue;
+        return this.player.currentPosition.position === this.positionValue;
     }
 
     private isInRelatedPosition() {
         return this.player.currentPosition.relatedPositions.includes(
-            this._positionValue
+            this.positionValue
         );
     }
 
     private isInUnrelatedPosition() {
         return this.player.currentPosition.unrelatedPositions.includes(
-            this._positionValue
+            this.positionValue
         );
     }
 
-    private isSameNationality(other: OptiPlayer) {
-        return this.player.nationalityId === other.nationalityId;
+    private isSameNationality(other: OptiPlayerNode) {
+        return this.player.nationalityId === other.player.nationalityId;
     }
 
-    private isSameLeague(other: OptiPlayer) {
+    private isSameLeague(other: OptiPlayerNode) {
         const isIcon =
-            this.player.clubId === IconClubId || other.clubId === IconClubId;
-        return isIcon || this.player.leagueId === other.leagueId;
+            this.player.clubId === IconClubId ||
+            other.player.clubId === IconClubId;
+        return isIcon || this.player.leagueId === other.player.leagueId;
     }
 
-    private isSameClub(other: OptiPlayer) {
+    private isSameClub(other: OptiPlayerNode) {
         const isHero =
-            this.player.clubId === HeroClubId || other.clubId === HeroClubId;
-        if (isHero && this.player.leagueId === other.leagueId) {
+            this.player.clubId === HeroClubId ||
+            other.player.clubId === HeroClubId;
+        if (isHero && this.player.leagueId === other.player.leagueId) {
             return true;
         }
-        return this.player.clubId === other.clubId;
+        return this.player.clubId === other.player.clubId;
     }
 
     private managerMatches(manager: Manager) {

@@ -15,7 +15,7 @@ export abstract class Formation {
     abstract readonly formationId: FormationId;
     abstract readonly availablePositions: PositionValue[];
 
-    private readonly _playerNodes: OptiPlayerNode[];
+    private _playerNodes: OptiPlayerNode[];
     public manager: Manager | undefined;
     public get players(): OptiPlayer[] {
         return this._playerNodes.map((playerNode) => playerNode.player);
@@ -134,13 +134,14 @@ export abstract class Formation {
 
     private mutate() {
         for (let i = 0; i < this._playerNodes.length; i++) {
+            const currentNode = this._playerNodes[i];
             if (Math.random() < GAConfig.mutationRate) {
-                const currentNode = this._playerNodes[i];
+                // mutate face position
+                currentNode.player.randomizePosition();
+            }
 
-                // new face position
-                currentNode.player.randomizeFifaPosition();
-
-                // swap position with another node
+            if (Math.random() < GAConfig.mutationRate) {
+                // mutate player position (swap players with another node)
                 let swapTarget = choice(
                     this._playerNodes.filter(
                         (node) => node.nodeId !== currentNode.nodeId
