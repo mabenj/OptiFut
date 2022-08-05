@@ -2,8 +2,8 @@ import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../../types/formation-id";
 import { choice } from "../../utils/utils";
 import { GAConfig } from "../constants/ga-config";
-import { OptiPlayer } from "../OptiPlayer";
-import { OptiPlayerNode } from "../OptiPlayerNode";
+import { PlayerEntity } from "../PlayerEntity";
+import { PositionNode } from "../PositionNode";
 import { ChemistryResult } from "../types/chemistry-result.interface";
 import { Manager } from "../types/manager.interface";
 import { PositionValue } from "../types/position-value.enum";
@@ -15,14 +15,14 @@ export abstract class Formation {
     abstract readonly formationId: FormationId;
     abstract readonly availablePositions: PositionValue[];
 
-    private _playerNodes: OptiPlayerNode[];
+    private positionNodes: PositionNode[];
     public manager: Manager | undefined;
-    public get players(): OptiPlayer[] {
-        return this._playerNodes.map((playerNode) => playerNode.player);
+    public get players(): PlayerEntity[] {
+        return this.positionNodes.map((positionNode) => positionNode.player);
     }
 
-    constructor(playerNodes: OptiPlayerNode[], useManager: boolean) {
-        this._playerNodes = playerNodes;
+    constructor(positionNodes: PositionNode[], useManager: boolean) {
+        this.positionNodes = positionNodes;
         if (useManager) {
             this.manager = this.generateManager();
         }
@@ -30,51 +30,45 @@ export abstract class Formation {
     }
 
     abstract createFormation(
-        players: OptiPlayer[],
+        players: PlayerEntity[],
         useManager: boolean
     ): Formation;
 
     //https://fifauteam.com/how-is-chemistry-calculated-in-fifa-19-ultimate-team/
     public calculateChemistry(): ChemistryResult {
-        let total = 0;
-        const offChemIds: number[] = [];
-        const posModded: { [playerId: number]: number } = {};
-        for (let i = 0; i < this._playerNodes.length; i++) {
-            const playerNode = this._playerNodes[i];
+        let totalChem = 0;
+        let offChemPlayersCount = 0;
+        let positionModificationsCount = 0;
+        for (let i = 0; i < this.positionNodes.length; i++) {
+            const playerNode = this.positionNodes[i];
             const playerChem = playerNode.calculateChemistry(this.manager);
             const posModCount =
                 playerNode.player.getNumberOfPositionModifications();
             if (playerChem < OFFCHEM_THRESHOLD) {
-                offChemIds.push(playerNode.player.id);
+                offChemPlayersCount++;
             }
-            if (posModCount > 0) {
-                posModded[playerNode.player.id] = posModCount;
-            }
-            total += playerChem;
+            positionModificationsCount += posModCount;
+            totalChem += playerChem;
         }
         return {
-            totalChemistry: Math.min(total, FULLCHEM),
-            offChemPlayerIds: offChemIds,
-            positionModifications: posModded
+            totalChemistry: Math.min(totalChem, FULLCHEM),
+            offChemPlayersCount: offChemPlayersCount,
+            positionModificationsCount: positionModificationsCount
         };
     }
 
     public toDto() {
-        const players = this._playerNodes.map((node) => ({
+        const players = this.positionNodes.map((node) => ({
             id: node.player.id,
             name: node.player.name,
             chemistry: node.calculateChemistry(this.manager),
             originalPosition: PositionValue.toString(
-                node.player.originalPosition.position
+                node.player.originalPosition
             ),
-            newPosition: PositionValue.toString(
-                node.player.currentPosition.position
-            ),
-            positionModificationCount: Math.abs(
-                node.player.originalPosition.position -
-                    node.player.currentPosition.position
-            ),
-            positionInSquad: node.nodeId,
+            newPosition: PositionValue.toString(node.player.currentPosition),
+            positionModificationCount:
+                node.player.getNumberOfPositionModifications(),
+            positionNode: node.nodeId,
             hasLoyalty: node.player.hasLoyalty
         }));
         const teamChemistry = this.calculateChemistry().totalChemistry;
@@ -103,13 +97,13 @@ export abstract class Formation {
     private getChildrenWith(
         mate: Formation
     ): [
-        playersOfChild1: OptiPlayer[],
-        playersOfChild2: OptiPlayer[],
+        playersOfChild1: PlayerEntity[],
+        playersOfChild2: PlayerEntity[],
         managerOfChild1: Manager | undefined,
         managerOfChild2: Manager | undefined
     ] {
-        const playersOfChild1: OptiPlayer[] = [];
-        const playersOfChild2: OptiPlayer[] = [];
+        const playersOfChild1: PlayerEntity[] = [];
+        const playersOfChild2: PlayerEntity[] = [];
         const playerIds = this.players.map((player) => player.id);
         for (let i = 0; i < playerIds.length; i++) {
             if (Math.random() < GAConfig.crossoverRate) {
@@ -133,8 +127,8 @@ export abstract class Formation {
     }
 
     private mutate() {
-        for (let i = 0; i < this._playerNodes.length; i++) {
-            const currentNode = this._playerNodes[i];
+        for (let i = 0; i < this.positionNodes.length; i++) {
+            const currentNode = this.positionNodes[i];
             if (Math.random() < GAConfig.mutationRate) {
                 // mutate face position
                 currentNode.player.randomizePosition();
@@ -143,7 +137,7 @@ export abstract class Formation {
             if (Math.random() < GAConfig.mutationRate) {
                 // mutate player position (swap players with another node)
                 let swapTarget = choice(
-                    this._playerNodes.filter(
+                    this.positionNodes.filter(
                         (node) => node.nodeId !== currentNode.nodeId
                     )
                 );
@@ -161,10 +155,10 @@ export abstract class Formation {
 
     private generateManager(): Manager {
         const nationOptions = Array.from(
-            new Set(this._playerNodes.map((node) => node.player.nationalityId))
+            new Set(this.positionNodes.map((node) => node.player.nationalityId))
         );
         const leagueOptions = Array.from(
-            new Set(this._playerNodes.map((node) => node.player.leagueId))
+            new Set(this.positionNodes.map((node) => node.player.leagueId))
         );
         return {
             nationalityId: choice(nationOptions),

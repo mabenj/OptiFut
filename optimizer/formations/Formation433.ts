@@ -1,6 +1,6 @@
 import { FormationId } from "../../types/formation-id";
-import { OptiPlayer } from "../OptiPlayer";
-import { OptiPlayerNode } from "../OptiPlayerNode";
+import { PlayerEntity } from "../PlayerEntity";
+import { PositionNode } from "../PositionNode";
 import { PositionValue } from "../types/position-value.enum";
 import { Formation } from "./Formation";
 
@@ -24,19 +24,19 @@ export class Formation433 extends Formation {
      *
      * @param squad Order: LW, ST, RW, LCM, CM, RCM, LB, LCB, RCB, RB, GK
      */
-    constructor(squad: OptiPlayer[], useManager: boolean) {
+    constructor(squad: PlayerEntity[], useManager: boolean) {
         const [LW, ST, RW, LCM, CM, RCM, LB, LCB, RCB, RB, GK] = squad;
-        const LW_node = new OptiPlayerNode(LW, "LW");
-        const ST_node = new OptiPlayerNode(ST, "ST");
-        const RW_node = new OptiPlayerNode(RW, "RW");
-        const LCM_node = new OptiPlayerNode(LCM, "LCM");
-        const CM_node = new OptiPlayerNode(CM, "CM");
-        const RCM_node = new OptiPlayerNode(RCM, "RCM");
-        const LB_node = new OptiPlayerNode(LB, "LB");
-        const LCB_node = new OptiPlayerNode(LCB, "LCB");
-        const RCB_node = new OptiPlayerNode(RCB, "RCB");
-        const RB_node = new OptiPlayerNode(RB, "RB");
-        const GK_node = new OptiPlayerNode(GK, "GK");
+        const LW_node = new PositionNode(LW, "LW");
+        const ST_node = new PositionNode(ST, "ST");
+        const RW_node = new PositionNode(RW, "RW");
+        const LCM_node = new PositionNode(LCM, "LCM");
+        const CM_node = new PositionNode(CM, "CM");
+        const RCM_node = new PositionNode(RCM, "RCM");
+        const LB_node = new PositionNode(LB, "LB");
+        const LCB_node = new PositionNode(LCB, "LCB");
+        const RCB_node = new PositionNode(RCB, "RCB");
+        const RB_node = new PositionNode(RB, "RB");
+        const GK_node = new PositionNode(GK, "GK");
 
         LW_node.setLinks([ST_node, LCM_node]);
         ST_node.setLinks([LW_node, RW_node, CM_node]);
@@ -68,7 +68,7 @@ export class Formation433 extends Formation {
         );
     }
 
-    createFormation(players: OptiPlayer[], useManager: boolean): Formation {
+    createFormation(players: PlayerEntity[], useManager: boolean): Formation {
         return new Formation433(players, useManager);
     }
 }

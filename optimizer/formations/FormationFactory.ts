@@ -1,12 +1,12 @@
 import { FormationId } from "../../types/formation-id";
-import { OptiPlayer } from "../OptiPlayer";
+import { PlayerEntity } from "../PlayerEntity";
 import { Formation433 } from "./Formation433";
 import { Formation442 } from "./Formation442";
 
 export class FormationFactory {
     public static createFormation(
         formationId: FormationId,
-        players: OptiPlayer[],
+        players: PlayerEntity[],
         useManager: boolean
     ) {
         switch (formationId) {

@@ -1,30 +1,5 @@
 import { Formation } from "../optimizer/formations/Formation";
 
-//https://stackoverflow.com/a/37580979
-export function* permute<T>(permutation: T[]) {
-    const length = permutation.length;
-    const c = Array(length).fill(0);
-    let i = 1;
-    let k;
-    let p;
-
-    yield permutation.slice();
-    while (i < length) {
-        if (c[i] < i) {
-            k = i % 2 && c[i];
-            p = permutation[i];
-            permutation[i] = permutation[k];
-            permutation[k] = p;
-            ++c[i];
-            i = 1;
-            yield permutation.slice();
-        } else {
-            c[i] = 0;
-            ++i;
-        }
-    }
-}
-
 //https://stackoverflow.com/a/2450976
 export function shuffle<T>(array: T[]): T[] {
     let currentIndex = array.length,
@@ -64,24 +39,17 @@ export function compareFormations(a: Formation, b: Formation) {
         return 1;
     }
 
-    if (chemA.offChemPlayerIds.length > chemB.offChemPlayerIds.length) {
+    if (chemA.offChemPlayersCount > chemB.offChemPlayersCount) {
         return -1;
     }
-    if (chemA.offChemPlayerIds.length < chemB.offChemPlayerIds.length) {
+    if (chemA.offChemPlayersCount < chemB.offChemPlayersCount) {
         return 1;
     }
 
-    const posModCountA = Object.values(chemA.positionModifications)
-        .map((count) => count)
-        .reduce((acc, curr) => acc + curr, 0);
-    const posModCountB = Object.values(chemB.positionModifications)
-        .map((count) => count)
-        .reduce((acc, curr) => acc + curr, 0);
-
-    if (posModCountA > posModCountB) {
+    if (chemA.positionModificationsCount > chemB.positionModificationsCount) {
         return -1;
     }
-    if (posModCountA < posModCountB) {
+    if (chemA.positionModificationsCount < chemB.positionModificationsCount) {
         return 1;
     }
 

@@ -1,30 +1,30 @@
 import { HeroClubId, IconClubId } from "../data/constants";
-import { OptiPlayer } from "./OptiPlayer";
+import { PlayerEntity } from "./PlayerEntity";
 import { Manager } from "./types/manager.interface";
 import { PositionNodeId } from "./types/position-node-id.type";
 import { PositionValue } from "./types/position-value.enum";
 
-export class OptiPlayerNode {
-    private links: OptiPlayerNode[];
+export class PositionNode {
+    private links: PositionNode[];
     private readonly positionValue: PositionValue;
     public readonly nodeId: PositionNodeId;
-    public player: OptiPlayer;
+    public player: PlayerEntity;
 
-    constructor(player: OptiPlayer, nodeId: PositionNodeId) {
+    constructor(player: PlayerEntity, nodeId: PositionNodeId) {
         this.player = player;
         this.nodeId = nodeId;
         this.positionValue = PositionValue.fromNodeId(nodeId);
         this.links = [];
     }
 
-    public setLinks(links: OptiPlayerNode[]) {
+    public setLinks(links: PositionNode[]) {
         this.links = links;
     }
 
     calculateChemistry(manager?: Manager): number {
         const numberOfLinks = this.links.length;
         let linkSum = 0;
-        for (let i = 0; i < this.links.length; i++) {
+        for (let i = 0; i < numberOfLinks; i++) {
             const linkedNode = this.links[i];
             this.isSameNationality(linkedNode) && linkSum++;
             this.isSameLeague(linkedNode) && linkSum++;
@@ -73,33 +73,29 @@ export class OptiPlayerNode {
     }
 
     private isInNaturalPosition() {
-        return this.player.currentPosition.position === this.positionValue;
+        return this.player.currentPosition === this.positionValue;
     }
 
     private isInRelatedPosition() {
-        return this.player.currentPosition.relatedPositions.includes(
-            this.positionValue
-        );
+        return this.player.relatedPositions.includes(this.positionValue);
     }
 
     private isInUnrelatedPosition() {
-        return this.player.currentPosition.unrelatedPositions.includes(
-            this.positionValue
-        );
+        return this.player.unrelatedPositions.includes(this.positionValue);
     }
 
-    private isSameNationality(other: OptiPlayerNode) {
+    private isSameNationality(other: PositionNode) {
         return this.player.nationalityId === other.player.nationalityId;
     }
 
-    private isSameLeague(other: OptiPlayerNode) {
+    private isSameLeague(other: PositionNode) {
         const isIcon =
             this.player.clubId === IconClubId ||
             other.player.clubId === IconClubId;
         return isIcon || this.player.leagueId === other.player.leagueId;
     }
 
-    private isSameClub(other: OptiPlayerNode) {
+    private isSameClub(other: PositionNode) {
         const isHero =
             this.player.clubId === HeroClubId ||
             other.player.clubId === HeroClubId;

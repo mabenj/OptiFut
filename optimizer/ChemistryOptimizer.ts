@@ -5,22 +5,22 @@ import { choice, compareFormations, shuffle } from "../utils/utils";
 import { GAConfig } from "./constants/ga-config";
 import { Formation } from "./formations/Formation";
 import { FormationFactory } from "./formations/FormationFactory";
-import { OptiPlayer } from "./OptiPlayer";
+import { PlayerEntity } from "./PlayerEntity";
 import { PositionValue } from "./types/position-value.enum";
 
 export class ChemistryOptimizer {
-    private readonly _playerPool: OptiPlayer[];
-    private readonly _useManager: boolean;
-    private readonly _formationId: FormationId;
+    private readonly playerPool: PlayerEntity[];
+    private readonly useManager: boolean;
+    private readonly formationId: FormationId;
 
     constructor(
         players: PlayerDto[],
         useManager: boolean,
         formationId: FormationId
     ) {
-        this._playerPool = players.map(
+        this.playerPool = players.map(
             (p, i) =>
-                new OptiPlayer(
+                new PlayerEntity(
                     i,
                     p.name,
                     p.nationId,
@@ -30,8 +30,8 @@ export class ChemistryOptimizer {
                     p.hasLoyalty
                 )
         );
-        this._useManager = useManager;
-        this._formationId = formationId;
+        this.useManager = useManager;
+        this.formationId = formationId;
     }
 
     public optimize() {
@@ -46,29 +46,27 @@ export class ChemistryOptimizer {
     private generateInitialPopulation() {
         const population: Formation[] = [];
         const availablePositions = FormationFactory.createFormation(
-            this._formationId,
-            this._playerPool,
-            this._useManager
+            this.formationId,
+            this.playerPool,
+            this.useManager
         ).availablePositions;
         const emptyPositionSlots: {
             position: PositionValue;
-            player: OptiPlayer | null;
+            player: PlayerEntity | null;
         }[] = availablePositions.map((availablePosition) => ({
             position: availablePosition,
             player: null
         }));
 
         for (let i = 0; i < GAConfig.populationSize; i++) {
-            const shuffledPlayerPool = shuffle(cloneDeep(this._playerPool));
+            const shuffledPlayerPool = shuffle(cloneDeep(this.playerPool));
             shuffledPlayerPool.forEach((player) => player.randomizePosition());
             const positionSlots = cloneDeep(emptyPositionSlots);
 
             positionSlots.forEach((positionSlot) => {
                 // first try to find natural fit
                 const indexOfNaturalFit = shuffledPlayerPool.findIndex(
-                    (player) =>
-                        player.currentPosition.position ===
-                        positionSlot.position
+                    (player) => player.currentPosition === positionSlot.position
                 );
                 if (indexOfNaturalFit > -1) {
                     positionSlot.player = shuffledPlayerPool[indexOfNaturalFit];
@@ -79,9 +77,7 @@ export class ChemistryOptimizer {
                 // then related fit
                 const indexOfRelatedFit = shuffledPlayerPool.findIndex(
                     (player) =>
-                        player.currentPosition.relatedPositions.includes(
-                            positionSlot.position
-                        )
+                        player.relatedPositions.includes(positionSlot.position)
                 );
                 if (indexOfRelatedFit > -1) {
                     positionSlot.player = shuffledPlayerPool[indexOfRelatedFit];
@@ -92,7 +88,7 @@ export class ChemistryOptimizer {
                 // then unrelated fit
                 const indexOfUnrelatedFit = shuffledPlayerPool.findIndex(
                     (player) =>
-                        player.currentPosition.unrelatedPositions.includes(
+                        player.unrelatedPositions.includes(
                             positionSlot.position
                         )
                 );
@@ -124,9 +120,9 @@ export class ChemistryOptimizer {
 
             population.push(
                 FormationFactory.createFormation(
-                    this._formationId,
+                    this.formationId,
                     players,
-                    this._useManager
+                    this.useManager
                 )
             );
         }
