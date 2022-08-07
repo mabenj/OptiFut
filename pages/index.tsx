@@ -47,23 +47,29 @@ const Home: NextPage = () => {
             )
         );
 
-        ["442"].forEach((formationId) => {
-            threadPool.queue(async (optimizer) => {
-                console.time(`[optimizer ${formationId}]`);
-                const result = await optimizer.start(
-                    players as PlayerDto[],
-                    formationId as FormationId,
-                    shouldUseManager
-                );
-                console.timeEnd(`[optimizer ${formationId}]`);
-                console.log("manager", result.manager);
-                console.log("total chem", result.teamChemistry);
-                console.table(result.players);
-                // alert(JSON.stringify(result));
+        Object.keys(selectedFormations)
+            .filter(
+                (formationId) => selectedFormations[formationId as FormationId]
+            )
+            .forEach((formationId) => {
+                threadPool.queue(async (optimizer) => {
+                    console.time(`[optimizer ${formationId}]`);
+                    const result = await optimizer.start(
+                        players as PlayerDto[],
+                        formationId as FormationId,
+                        shouldUseManager
+                    );
+                    console.timeEnd(`[optimizer ${formationId}]`);
+                    console.log("manager", result.manager);
+                    console.log("total chem", result.teamChemistry);
+                    // console.table(result.players);
+                    // alert(JSON.stringify(result));
+                });
             });
-        });
 
+        console.time("[optimizer total]");
         await threadPool.completed();
+        console.timeEnd("[optimizer total]");
         console.log("[terminating thread pool]");
         await threadPool.terminate();
     };

@@ -1,27 +1,54 @@
 import { HeroClubId, IconClubId } from "../data/constants";
 import { PlayerEntity } from "./PlayerEntity";
 import { Manager } from "./types/manager.interface";
+import { NodeLinkMap } from "./types/node-link-map.type";
 import { PositionNodeId } from "./types/position-node-id.type";
 import { PositionValue } from "./types/position-value.enum";
 
 export class PositionNode {
     private links: PositionNode[];
-    private readonly positionValue: PositionValue;
+    public readonly naturalPosition: PositionValue;
     public readonly nodeId: PositionNodeId;
     public player: PlayerEntity;
 
     constructor(player: PlayerEntity, nodeId: PositionNodeId) {
         this.player = player;
         this.nodeId = nodeId;
-        this.positionValue = PositionValue.fromNodeId(nodeId);
+        this.naturalPosition = PositionValue.fromNodeId(nodeId);
         this.links = [];
+    }
+
+    public static createForFormation(
+        players: PlayerEntity[],
+        linksByNodeId: NodeLinkMap
+    ): PositionNode[] {
+        const nodeIds = Object.keys(linksByNodeId) as PositionNodeId[];
+        const nodes: PositionNode[] = [];
+        for (let i = 0; i < nodeIds.length; i++) {
+            nodes.push(new PositionNode(players[i], nodeIds[i]));
+        }
+        for (let i = 0; i < nodes.length; i++) {
+            const currentNode = nodes[i];
+            const links = linksByNodeId[currentNode.nodeId]?.map((linkId) => {
+                const linkedNode = nodes.find((n) => n.nodeId === linkId);
+                if (!linkedNode) {
+                    throw new Error("Linked node not found");
+                }
+                return linkedNode;
+            });
+            if (!links) {
+                throw new Error("Could not resolve node links");
+            }
+            currentNode.setLinks(links);
+        }
+        return nodes;
     }
 
     public setLinks(links: PositionNode[]) {
         this.links = links;
     }
 
-    calculateChemistry(manager?: Manager): number {
+    public calculateChemistry(manager?: Manager): number {
         const numberOfLinks = this.links.length;
         let linkSum = 0;
         for (let i = 0; i < numberOfLinks; i++) {
@@ -73,15 +100,15 @@ export class PositionNode {
     }
 
     private isInNaturalPosition() {
-        return this.player.currentPosition === this.positionValue;
+        return this.player.currentPosition === this.naturalPosition;
     }
 
     private isInRelatedPosition() {
-        return this.player.relatedPositions.includes(this.positionValue);
+        return this.player.relatedPositions.includes(this.naturalPosition);
     }
 
     private isInUnrelatedPosition() {
-        return this.player.unrelatedPositions.includes(this.positionValue);
+        return this.player.unrelatedPositions.includes(this.naturalPosition);
     }
 
     private isSameNationality(other: PositionNode) {

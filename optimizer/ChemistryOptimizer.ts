@@ -49,7 +49,7 @@ export class ChemistryOptimizer {
             this.formationId,
             this.playerPool,
             this.useManager
-        ).availablePositions;
+        ).positions;
         const emptyPositionSlots: {
             position: PositionValue;
             player: PlayerEntity | null;

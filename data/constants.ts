@@ -57,33 +57,36 @@ export const FormationOptions: { id: FormationId; displayName: string }[] = [
     { id: "343", displayName: "3-4-3" },
     { id: "352", displayName: "3-5-2" },
     { id: "41212", displayName: "4-1-2-1-2" },
-    { id: "41212-2", displayName: "4-1-2-1-2 (2)" },
+    { id: "41212_2", displayName: "4-1-2-1-2 (2)" },
     { id: "4141", displayName: "4-1-4-1" },
     { id: "4231", displayName: "4-2-3-1" },
-    { id: "4231-2", displayName: "4-2-3-1 (2)" },
+    { id: "4231_2", displayName: "4-2-3-1 (2)" },
     { id: "4222", displayName: "4-2-2-2" },
     { id: "424", displayName: "4-2-4" },
     { id: "4312", displayName: "4-3-1-2" },
     { id: "4132", displayName: "4-1-3-2" },
     { id: "4321", displayName: "4-3-2-1" },
     { id: "433", displayName: "4-3-3" },
-    { id: "433-2", displayName: "4-3-3 (2)" },
-    { id: "433-3", displayName: "4-3-3 (3)" },
-    { id: "433-4", displayName: "4-3-3 (4)" },
-    { id: "433-5", displayName: "4-3-3 (5)" },
+    { id: "433_2", displayName: "4-3-3 (2)" },
+    { id: "433_3", displayName: "4-3-3 (3)" },
+    { id: "433_4", displayName: "4-3-3 (4)" },
+    { id: "433_5", displayName: "4-3-3 (5)" },
     { id: "4411", displayName: "4-4-1-1" },
-    { id: "4411-2", displayName: "4-4-1-1 (2)" },
+    { id: "4411_2", displayName: "4-4-1-1 (2)" },
     { id: "442", displayName: "4-4-2" },
-    { id: "442-2", displayName: "4-4-2 (2)" },
+    { id: "442_2", displayName: "4-4-2 (2)" },
     { id: "451", displayName: "4-5-1" },
-    { id: "451-2", displayName: "4-5-1 (2)" },
+    { id: "451_2", displayName: "4-5-1 (2)" },
     { id: "5212", displayName: "5-2-1-2" },
     { id: "5221", displayName: "5-2-2-1" },
     { id: "532", displayName: "5-3-2" },
     { id: "541", displayName: "5-4-1" }
 ];
 
-export const DefaultSelectedFormations = FormationOptions.reduce((acc, curr) => {
-    acc[curr.id] = true;
-    return acc;
-}, {} as Record<FormationId, boolean>)
+export const DefaultSelectedFormations = FormationOptions.reduce(
+    (acc, curr) => {
+        acc[curr.id] = true;
+        return acc;
+    },
+    {} as Record<FormationId, boolean>
+);

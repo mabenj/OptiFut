@@ -13,12 +13,18 @@ const FULLCHEM = 100;
 
 export abstract class Formation {
     abstract readonly formationId: FormationId;
-    abstract readonly availablePositions: PositionValue[];
 
     private positionNodes: PositionNode[];
     public manager: Manager | undefined;
-    public get players(): PlayerEntity[] {
+
+    public get players() {
         return this.positionNodes.map((positionNode) => positionNode.player);
+    }
+
+    public get positions() {
+        return this.positionNodes.map(
+            (positionNode) => positionNode.naturalPosition
+        );
     }
 
     constructor(positionNodes: PositionNode[], useManager: boolean) {
