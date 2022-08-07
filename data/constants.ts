@@ -51,20 +51,20 @@ export const DefaultEditorValues: PlayerEditorValues = {
 export const TeamPlayerCount = 11;
 
 export const FormationOptions: { id: FormationId; displayName: string }[] = [
+    { id: "3142", displayName: "3-1-4-2" },
     { id: "3412", displayName: "3-4-1-2" },
     { id: "3421", displayName: "3-4-2-1" },
-    { id: "3142", displayName: "3-1-4-2" },
     { id: "343", displayName: "3-4-3" },
     { id: "352", displayName: "3-5-2" },
     { id: "41212", displayName: "4-1-2-1-2" },
     { id: "41212_2", displayName: "4-1-2-1-2 (2)" },
+    { id: "4132", displayName: "4-1-3-2" },
     { id: "4141", displayName: "4-1-4-1" },
+    { id: "4222", displayName: "4-2-2-2" },
     { id: "4231", displayName: "4-2-3-1" },
     { id: "4231_2", displayName: "4-2-3-1 (2)" },
-    { id: "4222", displayName: "4-2-2-2" },
     { id: "424", displayName: "4-2-4" },
     { id: "4312", displayName: "4-3-1-2" },
-    { id: "4132", displayName: "4-1-3-2" },
     { id: "4321", displayName: "4-3-2-1" },
     { id: "433", displayName: "4-3-3" },
     { id: "433_2", displayName: "4-3-3 (2)" },
