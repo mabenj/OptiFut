@@ -1,7 +1,7 @@
 import { PlayerPosition } from "./player-position.type";
 import { PlayerVersion } from "./player-version.type";
 
-export interface PlayerDto {
+export interface PlayerInfo {
     name: string;
     version: PlayerVersion;
     hasLoyalty: boolean;

@@ -7,7 +7,7 @@ import {
 } from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { db, Nation } from "../../utils/db";
-import { useNextLiveQuery } from "../useNextLiveQuery";
+import { useNextLiveQuery } from "../common/useNextLiveQuery";
 
 interface NationOption {
     label: string;

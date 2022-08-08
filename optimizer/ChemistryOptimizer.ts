@@ -1,6 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../types/formation-id";
-import { PlayerDto } from "../types/player-dto.interface";
+import { PlayerInfo } from "../types/player-info.interface";
 import { choice, compareFormations, shuffle } from "../utils/utils";
 import { GAConfig } from "./constants/ga-config";
 import { Formation } from "./formations/Formation";
@@ -14,7 +14,7 @@ export class ChemistryOptimizer {
     private readonly formationId: FormationId;
 
     constructor(
-        players: PlayerDto[],
+        players: PlayerInfo[],
         useManager: boolean,
         formationId: FormationId
     ) {
@@ -40,7 +40,7 @@ export class ChemistryOptimizer {
             population = this.getNextGeneration(population);
         }
         const best = population.sort(compareFormations)[population.length - 1];
-        return best.toDto();
+        return best.getInfo();
     }
 
     private generateInitialPopulation() {

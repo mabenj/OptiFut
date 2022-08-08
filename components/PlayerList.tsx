@@ -43,15 +43,15 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { DefaultEditorValues, TeamPlayerCount } from "../data/constants";
 import { useSavedTeam } from "../hooks/useSavedTeam";
-import { PlayerDto } from "../types/player-dto.interface";
+import { PlayerInfo } from "../types/player-info.interface";
 import { PlayerEditorValues } from "../types/player-editor-values.interface";
 import PlayerEditorModal from "./PlayerEditorModal";
-import PlayerInfo from "./PlayerInfo";
 import CustomTooltip from "./ui/CustomTooltip";
+import PlayerInfoComponent from "./PlayerInfoComponent";
 
 interface PlayerListProps {
-    players: (PlayerDto | null)[];
-    onChange: (players: (PlayerDto | null)[]) => any;
+    players: (PlayerInfo | null)[];
+    onChange: (players: (PlayerInfo | null)[]) => any;
 }
 
 export default function PlayerList({ players, onChange }: PlayerListProps) {
@@ -209,7 +209,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                                     w="100%"
                                     py={3}
                                     px={4}>
-                                    <PlayerInfo player={player} />
+                                    <PlayerInfoComponent player={player} />
                                     <Box>
                                         <CustomTooltip label="Edit player">
                                             <IconButton

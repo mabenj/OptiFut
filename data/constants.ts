@@ -88,5 +88,5 @@ export const DefaultSelectedFormations = FormationOptions.reduce(
         acc[curr.id] = true;
         return acc;
     },
-    {} as Record<FormationId, boolean>
+    {} as { [formationId in FormationId]: boolean }
 );

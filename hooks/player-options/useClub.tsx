@@ -3,7 +3,7 @@ import CustomImage from "../../components/ui/CustomImage";
 import { HeroClubId, IconClubId, SelectImageWidth } from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { Club, db, League } from "../../utils/db";
-import { useNextLiveQuery } from "../useNextLiveQuery";
+import { useNextLiveQuery } from "../common/useNextLiveQuery";
 
 interface ClubOption {
     label: string; // label of league

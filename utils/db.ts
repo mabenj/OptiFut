@@ -1,5 +1,5 @@
 import Dexie, { Table } from "dexie";
-import { PlayerDto } from "../types/player-dto.interface";
+import { PlayerInfo } from "../types/player-info.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version.type";
 
@@ -34,7 +34,7 @@ export interface Club {
 export interface SavedTeam {
     id?: number;
     name: string;
-    players: PlayerDto[];
+    players: PlayerInfo[];
 }
 
 export class OptiFutDexie extends Dexie {

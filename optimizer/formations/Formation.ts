@@ -5,6 +5,7 @@ import { GAConfig } from "../constants/ga-config";
 import { PlayerEntity } from "../PlayerEntity";
 import { PositionNode } from "../PositionNode";
 import { ChemistryResult } from "../types/chemistry-result.interface";
+import { FormationInfo } from "../types/formation-info";
 import { Manager } from "../types/manager.interface";
 import { PositionValue } from "../types/position-value.enum";
 
@@ -63,7 +64,7 @@ export abstract class Formation {
         };
     }
 
-    public toDto() {
+    public getInfo(): FormationInfo {
         const players = this.positionNodes.map((node) => ({
             id: node.player.id,
             name: node.player.name,
@@ -72,19 +73,17 @@ export abstract class Formation {
                 node.player.originalPosition
             ),
             newPosition: PositionValue.toString(node.player.currentPosition),
-            positionModificationCount:
+            positionModificationsCount:
                 node.player.getNumberOfPositionModifications(),
-            positionNode: node.nodeId,
+            positionNodeId: node.nodeId,
             hasLoyalty: node.player.hasLoyalty
         }));
         const teamChemistry = this.calculateChemistry().totalChemistry;
         return {
-            players,
+            formationId: this.formationId,
+            players: players,
             teamChemistry,
-            manager: {
-                nationalityId: this.manager?.nationalityId,
-                leagueId: this.manager?.leagueId
-            }
+            manager: this.manager
         };
     }
 

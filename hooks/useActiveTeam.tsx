@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { TeamPlayerCount } from "../data/constants";
-import { PlayerDto } from "../types/player-dto.interface";
-import { useLocalStorage } from "./useLocalStorage";
+import { PlayerInfo } from "../types/player-info.interface";
+import { useLocalStorage } from "./common/useLocalStorage";
 
 const TEAM_STORAGE_KEY = "OPTIFUT_CURRENT_TEAM";
 const DEFAULT_TEAM = new Array(TeamPlayerCount).fill(
     null
-) as (PlayerDto | null)[];
+) as (PlayerInfo | null)[];
 
 interface Team {
     shouldUseManager: boolean;
-    players: (PlayerDto | null)[];
+    players: (PlayerInfo | null)[];
 }
 
 export function useActiveTeam() {
@@ -28,8 +28,8 @@ export function useActiveTeam() {
 
     const setPlayers = (
         players:
-            | (PlayerDto | null)[]
-            | ((prevPlayers: (PlayerDto | null)[]) => (PlayerDto | null)[])
+            | (PlayerInfo | null)[]
+            | ((prevPlayers: (PlayerInfo | null)[]) => (PlayerInfo | null)[])
     ) => {
         const valueToStore =
             players instanceof Function ? players(team.players) : players;

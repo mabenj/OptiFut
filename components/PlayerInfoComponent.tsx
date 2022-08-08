@@ -1,15 +1,17 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
-import { PlayerDto } from "../types/player-dto.interface";
+import { PlayerInfo } from "../types/player-info.interface";
 import ClubImage from "./image-icons/ClubImage";
 import LeagueImage from "./image-icons/LeagueImage";
 import NationImage from "./image-icons/NationImage";
 import CustomTooltip from "./ui/CustomTooltip";
 
-interface PlayerInfoProps {
-    player: PlayerDto;
+interface PlayerInfoComponentProps {
+    player: PlayerInfo;
 }
 
-export default function PlayerInfo({ player }: PlayerInfoProps) {
+export default function PlayerInfoComponent({
+    player
+}: PlayerInfoComponentProps) {
     return (
         <Flex alignItems="center">
             <VStack>

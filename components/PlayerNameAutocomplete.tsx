@@ -21,7 +21,7 @@ import {
 } from "react";
 import Highlighter from "react-highlight-words";
 import { SelectImageWidth } from "../data/constants";
-import { useDebounce } from "../hooks/useDebounce";
+import { useDebounce } from "../hooks/common/useDebounce";
 import { db, Player } from "../utils/db";
 import { removeDiacritics } from "../utils/utils";
 import ClubImage from "./image-icons/ClubImage";

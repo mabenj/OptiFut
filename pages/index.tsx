@@ -1,22 +1,27 @@
 import {
+    Box,
     Button,
     Flex,
     FormControl,
     FormLabel,
+    Heading,
     Stack,
     Switch,
     Text
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useState } from "react";
-import { Pool, spawn, Worker } from "threads";
 import FormationsAccordion from "../components/FormationsAccordion";
 import PlayerList from "../components/PlayerList";
-import { DefaultSelectedFormations, TeamPlayerCount } from "../data/constants";
+import {
+    DefaultSelectedFormations,
+    FormationOptions,
+    TeamPlayerCount
+} from "../data/constants";
 import { useActiveTeam } from "../hooks/useActiveTeam";
+import { useOptimizer } from "../hooks/useOptimizer";
 import { FormationId } from "../types/formation-id";
-import { PlayerDto } from "../types/player-dto.interface";
-import { ChemistryOptimizerWorker } from "../workers/optimizer.worker";
+import { PlayerInfo } from "../types/player-info.interface";
 
 const Home: NextPage = () => {
     const { players, setPlayers, shouldUseManager, setShouldUseManager } =
@@ -24,6 +29,7 @@ const Home: NextPage = () => {
     const [selectedFormations, setSelectedFormations] = useState(
         DefaultSelectedFormations
     );
+    const { optimize, optimizedFormations } = useOptimizer();
 
     const canOptimize = () => {
         if (
@@ -36,42 +42,15 @@ const Home: NextPage = () => {
         return true;
     };
 
-    const optimize = async () => {
-        console.log("[creating thread pool]");
-        const threadPool = Pool(() =>
-            spawn<ChemistryOptimizerWorker>(
-                new Worker(
-                    // @ts-ignore
-                    new URL("../workers/optimizer.worker", import.meta.url)
-                )
-            )
+    const startOptimizing = async () => {
+        const formationsToUse = Object.keys(selectedFormations).filter(
+            (formationId) => selectedFormations[formationId as FormationId]
+        ) as FormationId[];
+        optimize(
+            players.filter((player): player is PlayerInfo => player !== null),
+            formationsToUse,
+            shouldUseManager
         );
-
-        Object.keys(selectedFormations)
-            .filter(
-                (formationId) => selectedFormations[formationId as FormationId]
-            )
-            .forEach((formationId) => {
-                threadPool.queue(async (optimizer) => {
-                    console.time(`[optimizer ${formationId}]`);
-                    const result = await optimizer.start(
-                        players as PlayerDto[],
-                        formationId as FormationId,
-                        shouldUseManager
-                    );
-                    console.timeEnd(`[optimizer ${formationId}]`);
-                    console.log("manager", result.manager);
-                    console.log("total chem", result.teamChemistry);
-                    // console.table(result.players);
-                    // alert(JSON.stringify(result));
-                });
-            });
-
-        console.time("[optimizer total]");
-        await threadPool.completed();
-        console.timeEnd("[optimizer total]");
-        console.log("[terminating thread pool]");
-        await threadPool.terminate();
     };
 
     return (
@@ -86,23 +65,56 @@ const Home: NextPage = () => {
                 setIsOn={setShouldUseManager}
             />
             <OptimizeTeamBtn
-                players={players}
-                shouldUseManager={shouldUseManager}
                 disabled={!canOptimize()}
-                onClick={optimize}
+                onClick={startOptimizing}
             />
+            {optimizedFormations.map((formation) => (
+                <Box key={formation.formationId} my={2}>
+                    <Heading as="h5" size="md">
+                        {
+                            FormationOptions.find(
+                                (f) => f.id === formation.formationId
+                            )?.displayName
+                        }
+                    </Heading>
+                    <Box>Total Chemistry: {formation.teamChemistry}</Box>
+                    {formation.manager && (
+                        <Box>
+                            Manager nationality:{" "}
+                            {formation.manager.nationalityId}
+                            <br />
+                            Manager league: {formation.manager.leagueId}
+                        </Box>
+                    )}
+                    <Box>
+                        {formation.players.map((player) => (
+                            <Box key={player.id}>
+                                <strong>{player.name}</strong>
+                                <br />
+                                Chemistry: {player.chemistry}
+                                <br />
+                                Position from {player.originalPosition} to{" "}
+                                {player.newPosition}
+                                <br />
+                                Position in squad: {player.positionNodeId}
+                                <br />
+                                Has loyalty: {player.hasLoyalty}
+                                <br />
+                                Position modifications:{" "}
+                                {player.positionModificationsCount}
+                            </Box>
+                        ))}
+                    </Box>
+                </Box>
+            ))}
         </Stack>
     );
 };
 
 const OptimizeTeamBtn = ({
-    players,
-    shouldUseManager,
     disabled,
     onClick
 }: {
-    players: (PlayerDto | null)[];
-    shouldUseManager: boolean;
     disabled: boolean;
     onClick: () => void;
 }) => {

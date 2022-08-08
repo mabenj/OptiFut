@@ -3,7 +3,7 @@ import CustomImage from "../../components/ui/CustomImage";
 import { PopularLeagueIds, SelectImageWidth } from "../../data/constants";
 import { SelectOption } from "../../types/select-option.interface";
 import { db, League, Nation } from "../../utils/db";
-import { useNextLiveQuery } from "../useNextLiveQuery";
+import { useNextLiveQuery } from "../common/useNextLiveQuery";
 
 interface LeagueOption {
     label: string;

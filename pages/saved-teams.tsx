@@ -6,15 +6,11 @@ import {
     AccordionItem,
     AccordionPanel,
     Alert,
-    AlertDescription,
     AlertIcon,
-    AlertTitle,
     Box,
     Button,
     ButtonGroup,
-    Flex,
     Heading,
-    IconButton,
     Popover,
     PopoverArrow,
     PopoverBody,
@@ -22,15 +18,13 @@ import {
     PopoverTrigger,
     Stack,
     StackDivider,
-    useToast,
-    VStack
+    useToast
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import PlayerInfo from "../components/PlayerInfo";
+import PlayerInfoComponent from "../components/PlayerInfoComponent";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useSavedTeam } from "../hooks/useSavedTeam";
-import { PlayerDto } from "../types/player-dto.interface";
 
 const SavedTeams: NextPage = () => {
     const { savedTeams, deleteSavedTeam } = useSavedTeam();
@@ -39,7 +33,7 @@ const SavedTeams: NextPage = () => {
     const router = useRouter();
     const toast = useToast();
 
-    const setActiveTeam = (players: PlayerDto[], teamName: string) => {
+    const setActiveTeam = (players: PlayerInfo[], teamName: string) => {
         setPlayers(players);
         toast({
             title: `Team '${teamName}' set as active team`,
@@ -94,13 +88,16 @@ const SavedTeams: NextPage = () => {
                         </AccordionButton>
                         <AccordionPanel>
                             <Stack
-                            mt={4}
+                                mt={4}
                                 spacing={3}
                                 divider={
                                     <StackDivider borderColor="gray.200" />
                                 }>
                                 {team.players.map((player, index) => (
-                                    <PlayerInfo key={index} player={player} />
+                                    <PlayerInfoComponent
+                                        key={index}
+                                        player={player}
+                                    />
                                 ))}
                             </Stack>
                         </AccordionPanel>
