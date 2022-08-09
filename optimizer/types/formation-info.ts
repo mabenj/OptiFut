@@ -12,6 +12,7 @@ export interface FormationInfo {
         positionModificationsCount: number;
         positionNodeId: PositionNodeId;
         hasLoyalty: boolean;
+        isOffChem: boolean;
     }[];
     teamChemistry: number;
     manager?: {

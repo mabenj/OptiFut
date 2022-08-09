@@ -76,7 +76,8 @@ export abstract class Formation {
             positionModificationsCount:
                 node.player.getNumberOfPositionModifications(),
             positionNodeId: node.nodeId,
-            hasLoyalty: node.player.hasLoyalty
+            hasLoyalty: node.player.hasLoyalty,
+            isOffChem: node.calculateChemistry(this.manager) < OFFCHEM_THRESHOLD
         }));
         const teamChemistry = this.calculateChemistry().totalChemistry;
         return {

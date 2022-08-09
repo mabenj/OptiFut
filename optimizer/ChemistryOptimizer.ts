@@ -1,7 +1,7 @@
 import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../types/formation-id";
 import { PlayerInfo } from "../types/player-info.interface";
-import { choice, compareFormations, shuffle } from "../utils/utils";
+import { choice, getFormationSortFunction, shuffle } from "../utils/utils";
 import { GAConfig } from "./constants/ga-config";
 import { Formation } from "./formations/Formation";
 import { FormationFactory } from "./formations/FormationFactory";
@@ -39,7 +39,9 @@ export class ChemistryOptimizer {
         for (let gen = 1; gen < GAConfig.generations; gen++) {
             population = this.getNextGeneration(population);
         }
-        const best = population.sort(compareFormations)[population.length - 1];
+        const best = population.sort(getFormationSortFunction(population))[
+            population.length - 1
+        ];
         return best.getInfo();
     }
 
@@ -134,12 +136,14 @@ export class ChemistryOptimizer {
         for (let i = 0; i < GAConfig.tournamentSize; i++) {
             tournament.push(choice(population));
         }
-        return tournament.sort(compareFormations)[tournament.length - 1];
+        return tournament.sort(getFormationSortFunction(tournament))[
+            tournament.length - 1
+        ];
     }
 
     private getNextGeneration(prevGen: Formation[]): Formation[] {
         const populationSize = prevGen.length;
-        prevGen.sort(compareFormations);
+        prevGen.sort(getFormationSortFunction(prevGen));
         const mostFit = prevGen[populationSize - 1];
         const secondFit = prevGen[populationSize - 2];
         const thirdFit = prevGen[populationSize - 3];

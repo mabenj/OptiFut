@@ -1,23 +1,18 @@
 import {
-    Box,
     Button,
     Flex,
     FormControl,
     FormLabel,
-    Heading,
     Stack,
     Switch,
     Text
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useState } from "react";
+import FormationResults from "../components/FormationResults";
 import FormationsAccordion from "../components/FormationsAccordion";
 import PlayerList from "../components/PlayerList";
-import {
-    DefaultSelectedFormations,
-    FormationOptions,
-    TeamPlayerCount
-} from "../data/constants";
+import { DefaultSelectedFormations, TeamPlayerCount } from "../data/constants";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useOptimizer } from "../hooks/useOptimizer";
 import { FormationId } from "../types/formation-id";
@@ -29,7 +24,13 @@ const Home: NextPage = () => {
     const [selectedFormations, setSelectedFormations] = useState(
         DefaultSelectedFormations
     );
-    const { optimize, optimizedFormations } = useOptimizer();
+    const {
+        optimize,
+        optimizedFormations,
+        resetOptimizer,
+        isOptimizing,
+        stopOptimizer
+    } = useOptimizer();
 
     const canOptimize = () => {
         if (
@@ -53,6 +54,17 @@ const Home: NextPage = () => {
         );
     };
 
+    if (isOptimizing || optimizedFormations.length) {
+        return (
+            <FormationResults
+                results={optimizedFormations}
+                isOptimizing={isOptimizing}
+                onReset={resetOptimizer}
+                onStop={stopOptimizer}
+            />
+        );
+    }
+
     return (
         <Stack spacing={5}>
             <PlayerList players={players} onChange={setPlayers} />
@@ -68,45 +80,6 @@ const Home: NextPage = () => {
                 disabled={!canOptimize()}
                 onClick={startOptimizing}
             />
-            {optimizedFormations.map((formation) => (
-                <Box key={formation.formationId} my={2}>
-                    <Heading as="h5" size="md">
-                        {
-                            FormationOptions.find(
-                                (f) => f.id === formation.formationId
-                            )?.displayName
-                        }
-                    </Heading>
-                    <Box>Total Chemistry: {formation.teamChemistry}</Box>
-                    {formation.manager && (
-                        <Box>
-                            Manager nationality:{" "}
-                            {formation.manager.nationalityId}
-                            <br />
-                            Manager league: {formation.manager.leagueId}
-                        </Box>
-                    )}
-                    <Box>
-                        {formation.players.map((player) => (
-                            <Box key={player.id}>
-                                <strong>{player.name}</strong>
-                                <br />
-                                Chemistry: {player.chemistry}
-                                <br />
-                                Position from {player.originalPosition} to{" "}
-                                {player.newPosition}
-                                <br />
-                                Position in squad: {player.positionNodeId}
-                                <br />
-                                Has loyalty: {player.hasLoyalty}
-                                <br />
-                                Position modifications:{" "}
-                                {player.positionModificationsCount}
-                            </Box>
-                        ))}
-                    </Box>
-                </Box>
-            ))}
         </Stack>
     );
 };

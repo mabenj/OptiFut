@@ -1,4 +1,6 @@
 import { Formation } from "../optimizer/formations/Formation";
+import { ChemistryResult } from "../optimizer/types/chemistry-result.interface";
+import { FormationInfo } from "../optimizer/types/formation-info";
 
 //https://stackoverflow.com/a/2450976
 export function shuffle<T>(array: T[]): T[] {
@@ -22,38 +24,67 @@ export function choice<T>(options: T[]): T {
     return shuffle(options)[0];
 }
 
+//https://stackoverflow.com/a/66885690
+export function getFormationSortFunction(formations: Formation[]) {
+    const chemistryMap = new Map(
+        formations.map((formation) => [
+            formation,
+            formation.calculateChemistry()
+        ])
+    );
+    return function formationSortFunction(a: Formation, b: Formation) {
+        return compareChemistry(chemistryMap.get(a)!, chemistryMap.get(b)!);
+    };
+}
+
 /**
  *
- * @param a First formation
- * @param b Second formation
+ * @param a First chemistry result
+ * @param b Second chemistry result
  * @returns -1 if first is worse than second, 1 if first is better than second, 0 if equal
  */
-export function compareFormations(a: Formation, b: Formation) {
-    const chemA = a.calculateChemistry();
-    const chemB = b.calculateChemistry();
-
-    if (chemA.totalChemistry < chemB.totalChemistry) {
+export function compareChemistry(a: ChemistryResult, b: ChemistryResult) {
+    if (a.totalChemistry < b.totalChemistry) {
         return -1;
     }
-    if (chemA.totalChemistry > chemB.totalChemistry) {
+    if (a.totalChemistry > b.totalChemistry) {
         return 1;
     }
 
-    if (chemA.offChemPlayersCount > chemB.offChemPlayersCount) {
+    if (a.offChemPlayersCount > b.offChemPlayersCount) {
         return -1;
     }
-    if (chemA.offChemPlayersCount < chemB.offChemPlayersCount) {
+    if (a.offChemPlayersCount < b.offChemPlayersCount) {
         return 1;
     }
 
-    if (chemA.positionModificationsCount > chemB.positionModificationsCount) {
+    if (a.positionModificationsCount > b.positionModificationsCount) {
         return -1;
     }
-    if (chemA.positionModificationsCount < chemB.positionModificationsCount) {
+    if (a.positionModificationsCount < b.positionModificationsCount) {
         return 1;
     }
 
     return 0;
+}
+
+export function compareFormationInfo(a: FormationInfo, b: FormationInfo) {
+    return compareChemistry(
+        {
+            totalChemistry: a.teamChemistry,
+            offChemPlayersCount: a.players.filter((p) => p.isOffChem).length,
+            positionModificationsCount: a.players.filter(
+                (p) => p.positionModificationsCount > 0
+            ).length
+        },
+        {
+            totalChemistry: b.teamChemistry,
+            offChemPlayersCount: b.players.filter((p) => p.isOffChem).length,
+            positionModificationsCount: b.players.filter(
+                (p) => p.positionModificationsCount > 0
+            ).length
+        }
+    );
 }
 
 export function randomIntFromInterval(min: number, max: number) {

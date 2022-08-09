@@ -1,11 +1,24 @@
+import { useBoolean } from "@chakra-ui/react";
 import { useState } from "react";
-import { Pool, spawn } from "threads";
+import { ModuleThread, Pool, spawn } from "threads";
 import { FormationInfo } from "../optimizer/types/formation-info";
 import { FormationId } from "../types/formation-id";
 import { PlayerInfo } from "../types/player-info.interface";
+import { compareFormationInfo } from "../utils/utils";
 import { ChemistryOptimizerWorker } from "../workers/optimizer.worker";
 
+let threadPool: Pool<
+    ModuleThread<{
+        start(
+            players: PlayerInfo[],
+            formationId: FormationId,
+            useManager: boolean
+        ): FormationInfo;
+    }>
+>;
+
 export function useOptimizer() {
+    const [isOptimizing, setIsOptimizing] = useBoolean(false);
     const [optimizedFormations, setOptimizedFormations] = useState<
         FormationInfo[]
     >([]);
@@ -16,8 +29,10 @@ export function useOptimizer() {
         useManager: boolean
     ) => {
         setOptimizedFormations([]);
+        setIsOptimizing.on();
 
-        const threadPool = Pool(() =>
+        console.time("[optimizer total]");
+        threadPool = Pool(() =>
             spawn<ChemistryOptimizerWorker>(
                 new Worker(
                     // @ts-ignore
@@ -26,7 +41,6 @@ export function useOptimizer() {
             )
         );
 
-        console.time("[optimizer total]");
         formations.forEach((formationId) =>
             threadPool.queue(async (optimizerWorker) => {
                 const result = await optimizerWorker.start(
@@ -34,14 +48,34 @@ export function useOptimizer() {
                     formationId,
                     useManager
                 );
-                setOptimizedFormations((prev) => [...prev, result]);
+                setOptimizedFormations((prev) => {
+                    const newFormations = [...prev, result];
+                    newFormations.sort(compareFormationInfo).reverse();
+                    return newFormations;
+                });
             })
         );
 
         await threadPool.completed();
         console.timeEnd("[optimizer total]");
-        await threadPool.terminate();
+        await stopOptimizer();
     };
 
-    return { optimize, optimizedFormations };
+    const resetOptimizer = async () => {
+        setOptimizedFormations([]);
+        await stopOptimizer();
+    };
+
+    const stopOptimizer = async () => {
+        await threadPool.terminate();
+        setIsOptimizing.off();
+    };
+
+    return {
+        optimize,
+        optimizedFormations,
+        isOptimizing,
+        resetOptimizer,
+        stopOptimizer
+    };
 }

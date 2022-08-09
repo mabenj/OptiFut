@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import PlayerInfoComponent from "../components/PlayerInfoComponent";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useSavedTeam } from "../hooks/useSavedTeam";
+import { PlayerInfo } from "../types/player-info.interface";
 
 const SavedTeams: NextPage = () => {
     const { savedTeams, deleteSavedTeam } = useSavedTeam();
