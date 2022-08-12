@@ -67,7 +67,7 @@ export function useOptimizer() {
     };
 
     const stopOptimizer = async () => {
-        await threadPool.terminate();
+        await threadPool.terminate(true);
         setIsOptimizing.off();
     };
 

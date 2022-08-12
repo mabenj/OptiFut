@@ -6,18 +6,25 @@ import { FormationInfo } from "../optimizer/types/formation-info";
 interface FormationResultsProps {
     results: FormationInfo[];
     isOptimizing: boolean;
-    onReset: () => void;
-    onStop: () => void;
+    onReset: () => Promise<void>;
+    onStop: () => Promise<void>;
 }
 
 export default function FormationResults({
     results,
     isOptimizing,
-    onReset
+    onReset,
+    onStop
 }: FormationResultsProps) {
     return (
         <Box>
-            <Button onClick={onReset} leftIcon={<ArrowBackIcon />} mb={2}>
+            <Button
+                onClick={async () => {
+                    await onStop();
+                    await onReset();
+                }}
+                leftIcon={<ArrowBackIcon />}
+                mb={2}>
                 Back
             </Button>
             <Heading as="h2" size="lg">
