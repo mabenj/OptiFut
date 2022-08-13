@@ -336,6 +336,86 @@ formations = [
         ]
     },
     {
+        "formationId": "433_3",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RW", "CM", "LW"]},
+            {"nodeId": "LW", "links": ["ST", "LCDM"]},
+            {"nodeId": "RW", "links": ["RCDM", "ST"]},
+            {"nodeId": "LCDM", "links": ["LW", "CM", "LCB", "LB"]},
+            {"nodeId": "CM", "links": ["ST", "RCDM", "LCDM"]},
+            {"nodeId": "RCDM", "links": ["RB", "RCB", "CM", "RW"]},
+            {"nodeId": "LB", "links": ["LCDM", "LCB"]},
+            {"nodeId": "LCB", "links": ["RCB", "GK", "LB", "LCDM"]},
+            {"nodeId": "RCB", "links": ["RCDM", "RB", "GK", "LCB"]},
+            {"nodeId": "RB", "links": ["RCB", "RCDM"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "433_4",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RW", "CAM", "LW"]},
+            {"nodeId": "LW", "links": ["ST", "LCM", "LB"]},
+            {"nodeId": "RW", "links": ["RB", "RCM", "ST"]},
+            {"nodeId": "CAM", "links": ["ST", "RCM", "LCM"]},
+            {"nodeId": "LCM", "links": ["LW", "CAM", "LCB", "LB"]},
+            {"nodeId": "RCM", "links": ["RB", "RCB", "CAM", "RW"]},
+            {"nodeId": "LB", "links": ["LW", "LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["RCB", "GK", "LB", "LCM"]},
+            {"nodeId": "RCB", "links": ["RCM", "RB", "GK", "LCB"]},
+            {"nodeId": "RB", "links": ["RCB", "RCM", "RW"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "433_5",
+        "nodes": [
+            {"nodeId": "LW", "links": ["CF", "LCM", "LB"]},
+            {"nodeId": "RW", "links": ["RB", "RCM", "CF"]},
+            {"nodeId": "CF", "links": ["RW", "RCM", "LCM", "LW"]},
+            {"nodeId": "LCM", "links": ["CF", "CDM", "LB", "LW"]},
+            {"nodeId": "RCM", "links": ["RW", "RB", "CDM", "CF"]},
+            {"nodeId": "CDM", "links": ["RCM", "RCB", "LCB", "LCM"]},
+            {"nodeId": "LB", "links": ["LW", "LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CDM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RB", "GK", "LCB", "CDM"]},
+            {"nodeId": "RB", "links": ["RCB", "RCM", "RW"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "4411",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RM", "CF", "LM"]},
+            {"nodeId": "CF", "links": ["ST", "RCM", "LCM"]},
+            {"nodeId": "LM", "links": ["ST", "LCM", "LB"]},
+            {"nodeId": "LCM", "links": ["CF", "RCM", "LCB", "LM"]},
+            {"nodeId": "RCM", "links": ["RM", "RCB", "LCM", "CF"]},
+            {"nodeId": "RM", "links": ["RB", "RCM", "ST"]},
+            {"nodeId": "LB", "links": ["LM", "LCB"]},
+            {"nodeId": "LCB", "links": ["LCM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RCM", "RB", "GK", "LCB"]},
+            {"nodeId": "RB", "links": ["RM", "RCB"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "4411_2",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RM", "CAM", "LM"]},
+            {"nodeId": "CAM", "links": ["ST", "RCM", "LCM"]},
+            {"nodeId": "LM", "links": ["ST", "LCM", "LB"]},
+            {"nodeId": "LCM", "links": ["CAM", "RCM", "LCB", "LM"]},
+            {"nodeId": "RCM", "links": ["RM", "RCB", "LCM", "CAM"]},
+            {"nodeId": "RM", "links": ["RB", "RCM", "ST"]},
+            {"nodeId": "LB", "links": ["LM", "LCB"]},
+            {"nodeId": "LCB", "links": ["LCM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RCM", "RB", "GK", "LCB"]},
+            {"nodeId": "RB", "links": ["RM", "RCB"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
         "formationId": "442",
         "nodes": [
             {"nodeId": "LST", "links": ["RST", "LCM", "LM"]},
@@ -350,7 +430,119 @@ formations = [
             {"nodeId": "RB", "links": ["RM", "RCB"]},
             {"nodeId": "GK", "links": ["LCB", "RCB"]}
         ]
-    }
+    },
+    {
+        "formationId": "442_2",
+        "nodes": [
+            {"nodeId": "LST", "links": ["RST", "LCDM", "LM"]},
+            {"nodeId": "RST", "links": ["RM", "RCDM", "LST"]},
+            {"nodeId": "LM", "links": ["ST", "LCDM", "LB"]},
+            {"nodeId": "LCDM", "links": ["RCDM", "LCB", "LM", "LST"]},
+            {"nodeId": "RCDM", "links": ["RST", "RM", "RCB", "LCDM"]},
+            {"nodeId": "RM", "links": ["RB", "RCDM", "RST"]},
+            {"nodeId": "LB", "links": ["LM", "LCB"]},
+            {"nodeId": "LCB", "links": ["LCDM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RB", "GK", "LCB", "RCDM"]},
+            {"nodeId": "RB", "links": ["RCB", "RM"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "451",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RCAM", "LCAM"]},
+            {"nodeId": "LCAM", "links": ["ST", "RCAM", "CM", "LM"]},
+            {"nodeId": "RCAM", "links": ["RM", "CM", "LCAM", "ST"]},
+            {"nodeId": "LM", "links": ["LCAM", "LB"]},
+            {"nodeId": "CM", "links": ["RCAM", "RCB", "LCB", "LCAM"]},
+            {"nodeId": "RM", "links": ["RB", "RCAM"]},
+            {"nodeId": "LB", "links": ["LM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RB", "GK", "LCB", "CM"]},
+            {"nodeId": "RB", "links": ["RM", "RCB"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "451_2",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RM", "CM", "LM"]},
+            {"nodeId": "LM", "links": ["ST", "LCM", "LB"]},
+            {"nodeId": "LCM", "links": ["CM", "LCB", "LB", "LM"]},
+            {"nodeId": "CM", "links": ["ST", "RCM", "RCB", "LCB", "LCM"]},
+            {"nodeId": "RCM", "links": ["RM", "RB", "RCB", "CM"]},
+            {"nodeId": "RM", "links": ["RB", "RCM", "ST"]},
+            {"nodeId": "LB", "links": ["LM", "LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["LCM", "CM", "RCB", "GK", "LB"]},
+            {"nodeId": "RCB", "links": ["RCM", "RB", "GK", "LCB", "CM"]},
+            {"nodeId": "RB", "links": ["RM", "RCB", "RCM"]},
+            {"nodeId": "GK", "links": ["LCB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "5212",
+        "nodes": [
+            {"nodeId": "LST", "links": ["RST", "CAM", "LCM"]},
+            {"nodeId": "RST", "links": ["RCM", "CAM", "LST"]},
+            {"nodeId": "CAM", "links": ["RST", "RCM", "LCM", "LST"]},
+            {"nodeId": "LCM", "links": ["LST", "CAM", "RCM", "CB", "LWB"]},
+            {"nodeId": "RCM", "links": ["RST", "RWB", "CB", "LCM", "CAM"]},
+            {"nodeId": "LWB", "links": ["LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CB", "GK", "LWB"]},
+            {"nodeId": "CB", "links": ["RCM", "RCB", "GK", "LCB", "LCM"]},
+            {"nodeId": "RCB", "links": ["RWB", "GK", "CB"]},
+            {"nodeId": "RWB", "links": ["RCB", "RCM"]},
+            {"nodeId": "GK", "links": ["LCB", "CB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "5221",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RW", "RCM", "LCM", "LW"]},
+            {"nodeId": "LW", "links": ["ST", "LCM", "LWB"]},
+            {"nodeId": "RW", "links": ["RWB", "RCM", "ST"]},
+            {"nodeId": "LCM", "links": ["ST", "RCM", "CB", "LWB", "LW"]},
+            {"nodeId": "RCM", "links": ["RW", "RWB", "CB", "LCM", "ST"]},
+            {"nodeId": "LWB", "links": ["LW", "LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CB", "GK", "LWB"]},
+            {"nodeId": "CB", "links": ["RCM", "RCB", "GK", "LCB", "LCM"]},
+            {"nodeId": "RCB", "links": ["RWB", "GK", "CB"]},
+            {"nodeId": "RWB", "links": ["RCB", "RCM", "RW"]},
+            {"nodeId": "GK", "links": ["LCB", "CB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "532",
+        "nodes": [
+            {"nodeId": "LST", "links": ["RST", "CM", "LCM"]},
+            {"nodeId": "RST", "links": ["RCM", "CM", "LST"]},
+            {"nodeId": "LCM", "links": ["LST", "CM", "LCB", "LWB"]},
+            {"nodeId": "CM", "links": ["RST", "RCM", "CB", "LCM", "LST"]},
+            {"nodeId": "RCM", "links": ["RWB", "RCB", "CM", "RST"]},
+            {"nodeId": "LWB", "links": ["LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CB", "GK", "LWB", "LCM"]},
+            {"nodeId": "CB", "links": ["CM", "RCB", "GK", "LCB"]},
+            {"nodeId": "RCB", "links": ["RCM", "RWB", "GK", "CB"]},
+            {"nodeId": "RWB", "links": ["RCB", "RCM"]},
+            {"nodeId": "GK", "links": ["LCB", "CB", "RCB"]},
+        ]
+    },
+    {
+        "formationId": "541",
+        "nodes": [
+            {"nodeId": "ST", "links": ["RM", "RCM", "LCM", "LM"]},
+            {"nodeId": "LM", "links": ["ST", "LCM", "LWB"]},
+            {"nodeId": "LCM", "links": ["ST", "RCM", "CB", "LWB", "LM"]},
+            {"nodeId": "RCM", "links": ["RM", "RWB", "CB", "LCM", "ST"]},
+            {"nodeId": "RM", "links": ["RWB", "RCM", "ST"]},
+            {"nodeId": "LWB", "links": ["LM", "LCM", "LCB"]},
+            {"nodeId": "LCB", "links": ["CB", "GK", "LWB"]},
+            {"nodeId": "CB", "links": ["RCM", "RCB", "GK", "LCB", "LCM"]},
+            {"nodeId": "RCB", "links": ["RWB", "GK", "CB"]},
+            {"nodeId": "RWB", "links": ["RCB", "RCM", "RM"]},
+            {"nodeId": "GK", "links": ["LCB", "CB", "RCB"]},
+        ]
+    },
 ]
 
 
