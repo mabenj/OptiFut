@@ -436,7 +436,7 @@ formations = [
         "nodes": [
             {"nodeId": "LST", "links": ["RST", "LCDM", "LM"]},
             {"nodeId": "RST", "links": ["RM", "RCDM", "LST"]},
-            {"nodeId": "LM", "links": ["ST", "LCDM", "LB"]},
+            {"nodeId": "LM", "links": ["LST", "LCDM", "LB"]},
             {"nodeId": "LCDM", "links": ["RCDM", "LCB", "LM", "LST"]},
             {"nodeId": "RCDM", "links": ["RST", "RM", "RCB", "LCDM"]},
             {"nodeId": "RM", "links": ["RB", "RCDM", "RST"]},

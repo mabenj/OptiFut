@@ -14,7 +14,7 @@ export class Formation442_2 extends Formation {
         const nodes = PositionNode.createForFormation(players, {
             LST: ["RST", "LCDM", "LM"],
             RST: ["RM", "RCDM", "LST"],
-            LM: ["ST", "LCDM", "LB"],
+            LM: ["LST", "LCDM", "LB"],
             LCDM: ["RCDM", "LCB", "LM", "LST"],
             RCDM: ["RST", "RM", "RCB", "LCDM"],
             RM: ["RB", "RCDM", "RST"],

@@ -32,7 +32,7 @@ export class PositionNode {
             const links = linksByNodeId[currentNode.nodeId]?.map((linkId) => {
                 const linkedNode = nodes.find((n) => n.nodeId === linkId);
                 if (!linkedNode) {
-                    throw new Error("Linked node not found");
+                    throw new Error(`Linked node not found (linkId ${linkId})`);
                 }
                 return linkedNode;
             });
