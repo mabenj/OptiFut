@@ -4,28 +4,28 @@ import { PositionValue } from "../types/position-value.enum";
 export const PositionInfos: PositionInfo[] = [
     {
         position: PositionValue.ST,
-        relatedPositions: [PositionValue.LF, PositionValue.RF],
-        unrelatedPositions: [PositionValue.CF]
+        relatedPositions: [PositionValue.CF],
+        unrelatedPositions: [PositionValue.LF, PositionValue.RF]
     },
     {
         position: PositionValue.LF,
-        relatedPositions: [
+        relatedPositions: [PositionValue.LW],
+        unrelatedPositions: [
             PositionValue.LM,
             PositionValue.CF,
             PositionValue.RF,
             PositionValue.ST
-        ],
-        unrelatedPositions: [PositionValue.LW]
+        ]
     },
     {
         position: PositionValue.RF,
-        relatedPositions: [
-            PositionValue.LM,
+        relatedPositions: [PositionValue.RW],
+        unrelatedPositions: [
+            PositionValue.RM,
             PositionValue.CF,
-            PositionValue.RF,
+            PositionValue.LF,
             PositionValue.ST
-        ],
-        unrelatedPositions: [PositionValue.LW]
+        ]
     },
     {
         position: PositionValue.CF,
