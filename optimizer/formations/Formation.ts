@@ -1,4 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
+import { IconLeagueId } from "../../data/constants";
 import { FormationId } from "../../types/formation-id";
 import { choice } from "../../utils/utils";
 import { GAConfig } from "../constants/ga-config";
@@ -164,7 +165,11 @@ export abstract class Formation {
             new Set(this.positionNodes.map((node) => node.player.nationalityId))
         );
         const leagueOptions = Array.from(
-            new Set(this.positionNodes.map((node) => node.player.leagueId))
+            new Set(
+                this.positionNodes
+                    .map((node) => node.player.leagueId)
+                    .filter((leagueId) => leagueId !== IconLeagueId)
+            )
         );
         return {
             nationalityId: choice(nationOptions),

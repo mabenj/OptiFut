@@ -9,13 +9,17 @@ import {
     Box,
     Button,
     Flex,
+    Grid,
+    GridItem,
     Heading,
-    ListItem,
     Spinner,
-    UnorderedList
+    VStack
 } from "@chakra-ui/react";
+import React from "react";
 import { FormationOptions } from "../data/constants";
 import { FormationInfo } from "../optimizer/types/formation-info";
+import LeagueImage from "./image-icons/LeagueImage";
+import NationImage from "./image-icons/NationImage";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface FormationResultsProps {
@@ -78,65 +82,136 @@ export default function FormationResults({
                                 </Flex>
                             </Heading>
                         </AccordionButton>
-                        <AccordionPanel>
-                            <Heading as="h6" size="sm">
-                                Manager
-                            </Heading>
-                            {formation.manager ? (
-                                <>
-                                    {formation.manager.nationalityId}{" "}
-                                    {formation.manager.leagueId}
-                                </>
-                            ) : (
-                                <small>No manager</small>
-                            )}
+                        <AccordionPanel px={0}>
+                            <VStack spacing={10}>
+                                <Box w="100%">
+                                    <Grid templateColumns="2fr 6fr 2fr 2fr">
+                                        <GridItem></GridItem>
+                                        <GridItem
+                                            fontWeight="medium"
+                                            color="gray.800"
+                                            fontSize="sm">
+                                            Name
+                                        </GridItem>
+                                        <GridItem
+                                            fontWeight="medium"
+                                            color="gray.800"
+                                            textAlign="center"
+                                            fontSize="sm">
+                                            Position
+                                        </GridItem>
+                                        <GridItem
+                                            fontWeight="medium"
+                                            color="gray.800"
+                                            textAlign="center"
+                                            fontSize="sm"
+                                            pl={2}>
+                                            Chemistry
+                                        </GridItem>
 
-                            <UnorderedList>
-                                {formation.players.map((player) => (
-                                    <ListItem key={player.id}>
-                                        {player.name}
-                                    </ListItem>
-                                ))}
-                            </UnorderedList>
+                                        {formation.players.map((player) => (
+                                            <React.Fragment key={player.id}>
+                                                <GridItem
+                                                    fontWeight="medium"
+                                                    color="gray.800"
+                                                    textAlign="center"
+                                                    fontSize="sm">
+                                                    {player.positionNodeId}
+                                                </GridItem>
+                                                <GridItem>
+                                                    {player.name}
+                                                </GridItem>
+                                                <GridItem textAlign="center">
+                                                    {player.newPosition}
+                                                </GridItem>
+                                                <GridItem textAlign="center">
+                                                    {player.chemistry}
+                                                </GridItem>
+                                            </React.Fragment>
+                                        ))}
+                                    </Grid>
+                                </Box>
+
+                                <Box w="100%">
+                                    <Grid
+                                        w="70%"
+                                        templateColumns="10fr 2fr"
+                                        rowGap={3}>
+                                        <GridItem
+                                            fontWeight="medium"
+                                            color="gray.800"
+                                            fontSize="sm"
+                                            textAlign="right"
+                                            mr={2}>
+                                            Team chemistry
+                                        </GridItem>
+                                        <GridItem textAlign="center">
+                                            {formation.teamChemistry}
+                                        </GridItem>
+                                        <GridItem
+                                            fontWeight="medium"
+                                            color="gray.800"
+                                            fontSize="sm"
+                                            textAlign="right"
+                                            mr={2}>
+                                            Position modifications
+                                        </GridItem>
+                                        <GridItem textAlign="center">
+                                            {formation.players.reduce(
+                                                (acc, curr) =>
+                                                    acc +
+                                                    curr.positionModificationsCount,
+                                                0
+                                            )}
+                                        </GridItem>
+                                        {formation.manager && (
+                                            <>
+                                                <GridItem
+                                                    fontWeight="medium"
+                                                    color="gray.800"
+                                                    fontSize="sm"
+                                                    textAlign="right"
+                                                    mr={2}>
+                                                    Manager nationality
+                                                </GridItem>
+                                                <GridItem
+                                                    display="flex"
+                                                    justifyContent="center">
+                                                    <NationImage
+                                                        id={
+                                                            formation.manager
+                                                                .nationalityId
+                                                        }
+                                                        sizePx={40}
+                                                    />
+                                                </GridItem>
+
+                                                <GridItem
+                                                    fontWeight="medium"
+                                                    color="gray.800"
+                                                    fontSize="sm"
+                                                    textAlign="right"
+                                                    mr={2}>
+                                                    Manager league
+                                                </GridItem>
+                                                <GridItem
+                                                    display="flex"
+                                                    justifyContent="center">
+                                                    <LeagueImage
+                                                        id={
+                                                            formation.manager
+                                                                .leagueId
+                                                        }
+                                                        sizePx={35}
+                                                    />
+                                                </GridItem>
+                                            </>
+                                        )}
+                                    </Grid>
+                                </Box>
+                            </VStack>
                         </AccordionPanel>
                     </AccordionItem>
-                    // <Box key={formation.formationId} my={4} p={2} bg="gray.300">
-                    //     <Heading as="h5" size="md">
-                    //         {
-                    //             FormationOptions.find(
-                    //                 (f) => f.id === formation.formationId
-                    //             )?.displayName
-                    //         }
-                    //     </Heading>
-                    //     <Box>Total Chemistry: {formation.teamChemistry}</Box>
-                    //     {formation.manager && (
-                    //         <Box>
-                    //             Manager nationality:{" "}
-                    //             {formation.manager.nationalityId}
-                    //             <br />
-                    //             Manager league: {formation.manager.leagueId}
-                    //         </Box>
-                    //     )}
-                    //     <Box>
-                    //         {formation.players.map((player) => (
-                    //             <Box key={player.id}>
-                    //                 <strong>{player.name}</strong>
-                    //                 <br />
-                    //                 Chemistry: {player.chemistry}
-                    //                 <br />
-                    //                 Position from {player.originalPosition} to{" "}
-                    //                 {player.newPosition}
-                    //                 <br />
-                    //                 Position in squad: {player.positionNodeId}
-                    //                 <br />
-                    //                 Has loyalty: {player.hasLoyalty ? "yes" : "no"}
-                    //                 <br />
-                    //                 Position modifications:{" "}
-                    //                 {player.positionModificationsCount}
-                    //             </Box>
-                    //         ))}
-                    //     </Box>
-                    // </Box>
                 ))}
             </Accordion>
         </Box>
