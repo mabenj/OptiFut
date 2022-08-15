@@ -15,6 +15,7 @@ import {
     Spinner,
     VStack
 } from "@chakra-ui/react";
+import React from "react";
 import { FormationOptions } from "../data/constants";
 import { FormationInfo } from "../optimizer/types/formation-info";
 import LeagueImage from "./image-icons/LeagueImage";
@@ -76,11 +77,24 @@ export default function FormationResults({
                                     }
                                     <Box>
                                         <CustomTooltip label="Total chemistry">
-                                            <ChemistryBadge
-                                                chemistry={
-                                                    formation.teamChemistry
+                                            <Badge
+                                                fontSize="lg"
+                                                variant={
+                                                    formation.teamChemistry ===
+                                                    100
+                                                        ? "solid"
+                                                        : "subtle"
                                                 }
-                                            />
+                                                colorScheme={
+                                                    formation.teamChemistry > 80
+                                                        ? "green"
+                                                        : formation.teamChemistry >
+                                                          50
+                                                        ? "yellow"
+                                                        : "red"
+                                                }>
+                                                {formation.teamChemistry}
+                                            </Badge>
                                         </CustomTooltip>
                                         <AccordionIcon />
                                     </Box>
@@ -234,8 +248,9 @@ export default function FormationResults({
     );
 }
 
-const ChemistryBadge = ({ chemistry }: { chemistry: number }) => {
-    return (
+// eslint-disable-next-line react/display-name
+const ChemistryBadge = React.forwardRef(
+    ({ chemistry }: { chemistry: number }, ref) => (
         <Badge
             fontSize="lg"
             variant={chemistry === 100 ? "solid" : "subtle"}
@@ -244,5 +259,5 @@ const ChemistryBadge = ({ chemistry }: { chemistry: number }) => {
             }>
             {chemistry}
         </Badge>
-    );
-};
+    )
+);

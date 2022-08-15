@@ -3,6 +3,7 @@ import {
     Flex,
     FormControl,
     FormLabel,
+    SlideFade,
     Stack,
     Switch,
     Text
@@ -56,12 +57,14 @@ const Home: NextPage = () => {
 
     if (isOptimizing || optimizedFormations.length) {
         return (
-            <FormationResults
-                results={optimizedFormations}
-                isOptimizing={isOptimizing}
-                onReset={resetOptimizer}
-                onStop={stopOptimizer}
-            />
+            <SlideFade in={isOptimizing || !!optimizedFormations.length}>
+                <FormationResults
+                    results={optimizedFormations}
+                    isOptimizing={isOptimizing}
+                    onReset={resetOptimizer}
+                    onStop={stopOptimizer}
+                />
+            </SlideFade>
         );
     }
 
