@@ -1,4 +1,4 @@
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, NotAllowedIcon } from "@chakra-ui/icons";
 import {
     Accordion,
     AccordionButton,
@@ -15,11 +15,11 @@ import {
     Spinner,
     VStack
 } from "@chakra-ui/react";
-import React from "react";
 import { FormationOptions } from "../data/constants";
 import { FormationInfo } from "../optimizer/types/formation-info";
 import LeagueImage from "./image-icons/LeagueImage";
 import NationImage from "./image-icons/NationImage";
+import PlayerLineup from "./PlayerLineup";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface FormationResultsProps {
@@ -37,18 +37,31 @@ export default function FormationResults({
 }: FormationResultsProps) {
     return (
         <Box>
-            <Heading as="h2" size="lg">
-                Optimized Formations {isOptimizing && <Spinner />}
-            </Heading>
-            <Button
-                onClick={async () => {
-                    await onStop();
-                    await onReset();
-                }}
-                leftIcon={<ArrowBackIcon />}
-                my={2}>
-                Back
-            </Button>
+            <Flex justifyContent="space-between">
+                <Button
+                    onClick={async () => {
+                        await onStop();
+                        await onReset();
+                    }}
+                    leftIcon={<ArrowBackIcon />}
+                    my={2}>
+                    Back
+                </Button>
+                <Button
+                    colorScheme="red"
+                    onClick={onStop}
+                    leftIcon={<NotAllowedIcon />}
+                    my={2}
+                    disabled={!isOptimizing}>
+                    Stop
+                </Button>
+            </Flex>
+            <Flex alignItems="center" gap={2} my={3}>
+                <Heading as="h2" size="lg">
+                    Optimized Formations
+                </Heading>
+                {isOptimizing && <Spinner />}
+            </Flex>
             <Accordion allowToggle>
                 {results.map((formation) => (
                     <AccordionItem key={formation.formationId}>
@@ -63,19 +76,11 @@ export default function FormationResults({
                                     }
                                     <Box>
                                         <CustomTooltip label="Total chemistry">
-                                            <Badge
-                                                colorScheme={
-                                                    formation.teamChemistry >=
-                                                    100
-                                                        ? "green"
-                                                        : formation.teamChemistry >=
-                                                          65
-                                                        ? "yellow"
-                                                        : "red"
+                                            <ChemistryBadge
+                                                chemistry={
+                                                    formation.teamChemistry
                                                 }
-                                                mr={2}>
-                                                {formation.teamChemistry}
-                                            </Badge>
+                                            />
                                         </CustomTooltip>
                                         <AccordionIcon />
                                     </Box>
@@ -85,6 +90,18 @@ export default function FormationResults({
                         <AccordionPanel px={0}>
                             <VStack spacing={10}>
                                 <Box w="100%">
+                                    <PlayerLineup
+                                        lineup={formation.players.map((p) => ({
+                                            name: p.name,
+                                            chemistry: p.chemistry,
+                                            originalPosition:
+                                                p.originalPosition,
+                                            finalPosition: p.newPosition,
+                                            positionNode: p.positionNodeId
+                                        }))}
+                                    />
+                                </Box>
+                                {/* <Box w="100%">
                                     <Grid templateColumns="2fr 6fr 2fr 2fr">
                                         <GridItem></GridItem>
                                         <GridItem
@@ -130,8 +147,7 @@ export default function FormationResults({
                                             </React.Fragment>
                                         ))}
                                     </Grid>
-                                </Box>
-
+                                </Box> */}
                                 <Box w="100%">
                                     <Grid
                                         w="70%"
@@ -143,7 +159,7 @@ export default function FormationResults({
                                             fontSize="sm"
                                             textAlign="right"
                                             mr={2}>
-                                            Team chemistry
+                                            Team Chemistry
                                         </GridItem>
                                         <GridItem textAlign="center">
                                             {formation.teamChemistry}
@@ -154,7 +170,7 @@ export default function FormationResults({
                                             fontSize="sm"
                                             textAlign="right"
                                             mr={2}>
-                                            Position modifications
+                                            Position Modifications
                                         </GridItem>
                                         <GridItem textAlign="center">
                                             {formation.players.reduce(
@@ -172,7 +188,7 @@ export default function FormationResults({
                                                     fontSize="sm"
                                                     textAlign="right"
                                                     mr={2}>
-                                                    Manager nationality
+                                                    Manager Nationality
                                                 </GridItem>
                                                 <GridItem
                                                     display="flex"
@@ -192,7 +208,7 @@ export default function FormationResults({
                                                     fontSize="sm"
                                                     textAlign="right"
                                                     mr={2}>
-                                                    Manager league
+                                                    Manager League
                                                 </GridItem>
                                                 <GridItem
                                                     display="flex"
@@ -217,3 +233,16 @@ export default function FormationResults({
         </Box>
     );
 }
+
+const ChemistryBadge = ({ chemistry }: { chemistry: number }) => {
+    return (
+        <Badge
+            fontSize="lg"
+            variant={chemistry === 100 ? "solid" : "subtle"}
+            colorScheme={
+                chemistry > 80 ? "green" : chemistry > 50 ? "yellow" : "red"
+            }>
+            {chemistry}
+        </Badge>
+    );
+};
