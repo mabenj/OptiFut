@@ -20,62 +20,70 @@ interface PlayerLineupProps {
 
 export default function PlayerLineup({ lineup }: PlayerLineupProps) {
     return (
-        <VStack bg="green.200" spacing={5} p={5} borderRadius="md">
-            {/* FORWARDS */}
-            <LineupRow narrow>
-                {getPlayerCard(lineup, "LW")}
-                {getPlayerCard(lineup, "LF")}
+        <Box bg="green.200" position="relative">
+            <PitchLines zIndex={1} />
+            <VStack
+                spacing={5}
+                p={5}
+                borderRadius="md"
+                zIndex={2}
+                position="relative">
+                {/* FORWARDS */}
+                <LineupRow narrow>
+                    {getPlayerCard(lineup, "LW")}
+                    {getPlayerCard(lineup, "LF")}
 
-                {getPlayerCard(lineup, "LST")}
-                {getPlayerCard(lineup, "ST")}
-                {getPlayerCard(lineup, "RST")}
+                    {getPlayerCard(lineup, "LST")}
+                    {getPlayerCard(lineup, "ST")}
+                    {getPlayerCard(lineup, "RST")}
 
-                {getPlayerCard(lineup, "RF")}
-                {getPlayerCard(lineup, "RW")}
-            </LineupRow>
+                    {getPlayerCard(lineup, "RF")}
+                    {getPlayerCard(lineup, "RW")}
+                </LineupRow>
 
-            {/* CF*/}
-            <LineupRow narrow>{getPlayerCard(lineup, "CF")}</LineupRow>
+                {/* CF*/}
+                <LineupRow narrow>{getPlayerCard(lineup, "CF")}</LineupRow>
 
-            {/* UPPER MIDFIELD */}
-            <LineupRow narrow>
-                {getPlayerCard(lineup, "LCAM")}
-                {getPlayerCard(lineup, "CAM")}
-                {getPlayerCard(lineup, "RCAM")}
-            </LineupRow>
+                {/* UPPER MIDFIELD */}
+                <LineupRow narrow>
+                    {getPlayerCard(lineup, "LCAM")}
+                    {getPlayerCard(lineup, "CAM")}
+                    {getPlayerCard(lineup, "RCAM")}
+                </LineupRow>
 
-            {/* MIDFIELD */}
-            <LineupRow narrow>
-                {getPlayerCard(lineup, "LM")}
-                {getPlayerCard(lineup, "LCM")}
-                {getPlayerCard(lineup, "CM")}
-                {getPlayerCard(lineup, "RCM")}
-                {getPlayerCard(lineup, "RM")}
-            </LineupRow>
+                {/* MIDFIELD */}
+                <LineupRow narrow>
+                    {getPlayerCard(lineup, "LM")}
+                    {getPlayerCard(lineup, "LCM")}
+                    {getPlayerCard(lineup, "CM")}
+                    {getPlayerCard(lineup, "RCM")}
+                    {getPlayerCard(lineup, "RM")}
+                </LineupRow>
 
-            {/* LOWER MIDFIELD */}
-            <LineupRow narrow>
-                {getPlayerCard(lineup, "LCDM")}
-                {getPlayerCard(lineup, "CDM")}
-                {getPlayerCard(lineup, "RCDM")}
-            </LineupRow>
+                {/* LOWER MIDFIELD */}
+                <LineupRow narrow>
+                    {getPlayerCard(lineup, "LCDM")}
+                    {getPlayerCard(lineup, "CDM")}
+                    {getPlayerCard(lineup, "RCDM")}
+                </LineupRow>
 
-            {/* DEFENDERS */}
-            <LineupRow narrow>
-                {getPlayerCard(lineup, "LWB")}
-                {getPlayerCard(lineup, "LB")}
+                {/* DEFENDERS */}
+                <LineupRow narrow>
+                    {getPlayerCard(lineup, "LWB")}
+                    {getPlayerCard(lineup, "LB")}
 
-                {getPlayerCard(lineup, "LCB")}
-                {getPlayerCard(lineup, "CB")}
-                {getPlayerCard(lineup, "RCB")}
+                    {getPlayerCard(lineup, "LCB")}
+                    {getPlayerCard(lineup, "CB")}
+                    {getPlayerCard(lineup, "RCB")}
 
-                {getPlayerCard(lineup, "RB")}
-                {getPlayerCard(lineup, "RWB")}
-            </LineupRow>
+                    {getPlayerCard(lineup, "RB")}
+                    {getPlayerCard(lineup, "RWB")}
+                </LineupRow>
 
-            {/* KEEPER */}
-            <LineupRow narrow>{getPlayerCard(lineup, "GK")}</LineupRow>
-        </VStack>
+                {/* KEEPER */}
+                <LineupRow narrow>{getPlayerCard(lineup, "GK")}</LineupRow>
+            </VStack>
+        </Box>
     );
 }
 
@@ -88,7 +96,7 @@ function getPlayerCard(lineup: LineupPlayer[], nodeId: PositionNodeId) {
 }
 
 const PlayerCard = ({ player }: { player: LineupPlayer }) => {
-    const NAME_MAX_LENGTH = 15;
+    const NAME_MAX_LENGTH = 20;
     const isPosModded = player.finalPosition !== player.originalPosition;
     const chemColor =
         player.chemistry === 10
@@ -97,7 +105,11 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
             ? "yellow.500"
             : "red.500";
     return (
-        <Box w={CARD_WIDTH} textAlign="center" fontSize="sm" color="gray.700">
+        <Box
+            w={CARD_WIDTH}
+            textAlign="center"
+            fontSize="x-small"
+            color="gray.700">
             <Flex
                 direction="column"
                 justifyContent="flex-end"
@@ -107,7 +119,7 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
                 borderRadius="md"
                 p={1}>
                 <CustomTooltip label={player.name} placement="top">
-                    <Text fontWeight="medium" lineHeight="3">
+                    <Text fontWeight="bold" lineHeight="3">
                         {truncate(player.name, NAME_MAX_LENGTH)}
                     </Text>
                 </CustomTooltip>
@@ -164,6 +176,116 @@ const LineupRow = ({
             _empty={{ display: "none" }}>
             {children}
         </Flex>
+    );
+};
+
+const PitchLines = ({ zIndex }: { zIndex: number }) => {
+    const LINE_COLOR = "whiteAlpha.600";
+    return (
+        <>
+            {/* OUTER LINES */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="0.7rem"
+                right="0.7rem"
+                top="0.7rem"
+                bottom="0.7rem"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+            {/* MIDDLE LINE */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="0.7rem"
+                right="0.7rem"
+                top="50%"
+                bottom="50%"
+                border="solid 1px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+            {/* CENTER CIRCLE */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                w="7rem"
+                h="7rem"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+                borderRadius="full"
+            />
+            {/* CENTER CIRCLE DOT */}
+            <Box
+                bg={LINE_COLOR}
+                position="absolute"
+                w="6px"
+                h="6px"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+                borderRadius="full"
+            />
+
+            {/* BOTTOM PENALTY BOX */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="25%"
+                right="25%"
+                top="80%"
+                bottom="0.7rem"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+            {/* BOTTOM 6 YARD BOX */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="37%"
+                right="37%"
+                top="90%"
+                bottom="0.7rem"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+
+            {/* TOP PENALTY BOX */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="25%"
+                right="25%"
+                top="0.7rem"
+                bottom="80%"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+            {/* TOP 6 YARD BOX */}
+            <Box
+                bg="transparent"
+                position="absolute"
+                left="37%"
+                right="37%"
+                top="0.7rem"
+                bottom="90%"
+                border="solid 2px"
+                borderColor={LINE_COLOR}
+                zIndex={zIndex}
+            />
+        </>
     );
 };
 
