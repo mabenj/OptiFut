@@ -1,6 +1,6 @@
-import { Formation } from "../optimizer/formations/Formation";
-import { ChemistryResult } from "../optimizer/types/chemistry-result.interface";
 import { FormationInfo } from "../optimizer/types/formation-info";
+import { Formation } from "../optimizer2/formations/Formation";
+import { ChemistryResult } from "../types/chemistry-result";
 
 //https://stackoverflow.com/a/2450976
 export function shuffle<T>(array: T[]): T[] {
@@ -44,24 +44,24 @@ export function getFormationSortFunction(formations: Formation[]) {
  * @returns -1 if first is worse than second, 1 if first is better than second, 0 if equal
  */
 export function compareChemistry(a: ChemistryResult, b: ChemistryResult) {
-    if (a.totalChemistry < b.totalChemistry) {
+    if (a.combinedChemistry < b.combinedChemistry) {
         return -1;
     }
-    if (a.totalChemistry > b.totalChemistry) {
+    if (a.combinedChemistry > b.combinedChemistry) {
         return 1;
     }
 
-    if (a.offChemPlayersCount > b.offChemPlayersCount) {
-        return -1;
-    }
-    if (a.offChemPlayersCount < b.offChemPlayersCount) {
+    if (a.chem3Count > b.chem3Count) {
         return 1;
     }
-
-    if (a.positionModificationsCount > b.positionModificationsCount) {
+    if (a.chem3Count < b.chem3Count) {
         return -1;
     }
-    if (a.positionModificationsCount < b.positionModificationsCount) {
+
+    if (a.positionModifications > b.positionModifications) {
+        return -1;
+    }
+    if (a.positionModifications < b.positionModifications) {
         return 1;
     }
 
@@ -69,22 +69,22 @@ export function compareChemistry(a: ChemistryResult, b: ChemistryResult) {
 }
 
 export function compareFormationInfo(a: FormationInfo, b: FormationInfo) {
-    return compareChemistry(
-        {
-            totalChemistry: a.teamChemistry,
-            offChemPlayersCount: a.players.filter((p) => p.isOffChem).length,
-            positionModificationsCount: a.players.filter(
-                (p) => p.positionModificationsCount > 0
-            ).length
-        },
-        {
-            totalChemistry: b.teamChemistry,
-            offChemPlayersCount: b.players.filter((p) => p.isOffChem).length,
-            positionModificationsCount: b.players.filter(
-                (p) => p.positionModificationsCount > 0
-            ).length
-        }
-    );
+    // return compareChemistry(
+    //     {
+    //         totalChemistry: a.teamChemistry,
+    //         offChemPlayersCount: a.players.filter((p) => p.isOffChem).length,
+    //         positionModificationsCount: a.players.filter(
+    //             (p) => p.positionModificationsCount > 0
+    //         ).length
+    //     },
+    //     {
+    //         totalChemistry: b.teamChemistry,
+    //         offChemPlayersCount: b.players.filter((p) => p.isOffChem).length,
+    //         positionModificationsCount: b.players.filter(
+    //             (p) => p.positionModificationsCount > 0
+    //         ).length
+    //     }
+    // );
 }
 
 export function randomIntFromInterval(min: number, max: number) {

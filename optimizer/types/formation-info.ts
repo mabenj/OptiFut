@@ -1,4 +1,6 @@
+import { ChemistryResult } from "../../types/chemistry-result";
 import { FormationId } from "../../types/formation-id";
+import { Manager } from "../../types/manager";
 import { PositionNodeId } from "./position-node-id.type";
 
 export interface FormationInfo {
@@ -14,9 +16,6 @@ export interface FormationInfo {
         hasLoyalty: boolean;
         isOffChem: boolean;
     }[];
-    teamChemistry: number;
-    manager?: {
-        nationalityId: number;
-        leagueId: number;
-    };
+    chemistry: ChemistryResult;
+    manager?: Manager;
 }

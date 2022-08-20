@@ -200,7 +200,8 @@ export default function PlayerEditorModal({
                                                     hasLoyalty:
                                                         prefillValues.hasLoyalty,
                                                     version: player.version,
-                                                    position: player.position,
+                                                    position:
+                                                        player.preferredPosition,
                                                     nationId: player.nationId,
                                                     leagueId: player.leagueId,
                                                     clubId: player.clubId

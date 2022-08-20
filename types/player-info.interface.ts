@@ -9,4 +9,5 @@ export interface PlayerInfo {
     nationId: number;
     leagueId: number;
     clubId: number;
+    alternativePositions: PlayerPosition[];
 }
