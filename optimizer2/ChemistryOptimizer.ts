@@ -1,13 +1,11 @@
 import { cloneDeep, shuffle } from "lodash";
-import { FormationInfo } from "../optimizer/types/formation-info";
 import { FormationId } from "../types/formation-id";
+import { FormationInfo } from "../types/formation-info";
 import { PlayerInfo } from "../types/player-info.interface";
-import { PlayerPosition } from "../types/player-position.type";
 import { choice, getFormationSortFunction } from "../utils/utils";
 import { Formation } from "./formations/Formation";
-import { Formation442 } from "./formations/Formation442";
 import { FormationFactory } from "./formations/FormationFactory";
-import { GAConfig } from "./ga-config";
+import { GaConfig } from "./ga-config";
 import { PlayerEntity } from "./PlayerEntity";
 
 export class ChemistryOptimizer {
@@ -37,111 +35,70 @@ export class ChemistryOptimizer {
         this.formation = formation;
     }
 
-    public optimize(): FormationInfo {
+    public optimize(onGeneration?: (currentBest: FormationInfo) => void) {
         let population = this.generateInitialPopulation();
-        for (let gen = 1; gen < GAConfig.generations; gen++) {
+        for (let gen = 1; gen < GaConfig.generations; gen++) {
+            onGeneration && onGeneration(getMostFit(population).getInfo());
             population = this.getNextGeneration(population);
         }
-        const best = population.sort(getFormationSortFunction(population))[
-            population.length - 1
-        ];
-        return {
-            formationId: this.formation,
-            chemistry: best.calculateChemistry(),
-            players: [],
-            manager: best.manager,
-        }
+        onGeneration && onGeneration(getMostFit(population).getInfo());
+        return getMostFit(population).getInfo();
     }
 
     private generateInitialPopulation(): Formation[] {
         const population: Formation[] = [];
-        const availablePositions = FormationFactory.getAvailablePositions(
-            this.formation
-        );
-        const emptyPositionSlots = availablePositions.map((position) => ({
-            position: position,
-            player: null as PlayerEntity | null
-        }));
 
-        for (let i = 0; i < GAConfig.populationSize; i++) {
+        for (let i = 0; i < GaConfig.populationSize; i++) {
             const shuffledPlayerPool = shuffle(cloneDeep(this.playerPool));
             shuffledPlayerPool.forEach((player) => player.randomizePosition());
-            const positionSlots = cloneDeep(emptyPositionSlots);
-
-            // try to fill positions with preferred players
-            positionSlots.forEach((positionSlot) => {
-                const indexOfPreferredPlayer = shuffledPlayerPool.findIndex(
-                    (player) => player.prefPosition === positionSlot.position
-                );
-                if (indexOfPreferredPlayer === -1) {
-                    return;
-                }
-                positionSlot.player =
-                    shuffledPlayerPool[indexOfPreferredPlayer];
-                shuffledPlayerPool.splice(indexOfPreferredPlayer, 1);
-            });
-
-            // fill remaining positions with random players
-            positionSlots
-                .filter((positionSlot) => positionSlot.player === null)
-                .forEach((positionSlot) => {
-                    const player = shuffledPlayerPool.pop();
-                    if (!player) {
-                        throw new Error("Player pool unexpectedly empty");
-                    }
-                    positionSlot.player = player;
-                });
-
-            const players = positionSlots.map(
-                (positionSlot) => {
-                    if(positionSlot.player === null) {
-                        throw new Error("Position slot unexpectedly empty");
-                    }
-                    return positionSlot.player
-                }
+            const formation = FormationFactory.createFormation(
+                this.formation,
+                shuffledPlayerPool,
+                this.useManager
             );
-
-            population.push(
-                FormationFactory.createFormation(
-                    this.formation,
-                    players,
-                    this.useManager
-                )
-            );
+            formation.autoAdjustPositions();
+            population.push(formation);
         }
 
-        return population
+        return population;
     }
 
     private getNextGeneration(prevGen: Formation[]): Formation[] {
         const populationSize = prevGen.length;
-        prevGen.sort(getFormationSortFunction(prevGen))
-        
-        const ELITISM_SIZE = 4;
-        const mostFit: Formation[] = []
-        for (let i = 1; i <= ELITISM_SIZE; i++) {
-            mostFit.push(prevGen[populationSize - i])
+        prevGen.sort(getFormationSortFunction(prevGen));
+
+        const elite: Formation[] = [];
+        for (let i = 0; i < GaConfig.elitismSize; i++) {
+            elite.push(prevGen[populationSize - 1 - i]);
         }
 
         const nextGen: Formation[] = [];
-        while(nextGen.length < populationSize - ELITISM_SIZE) {
-            const parent1 = this.tournament(prevGen)
-            const parent2 = this.tournament(prevGen)
-            const [child1, child2] = parent1.mateWith(parent2)
-            nextGen.push(child1, child2)
+        while (nextGen.length < populationSize - GaConfig.elitismSize) {
+            const parent1 = this.tournament(prevGen);
+            const parent2 = this.tournament(prevGen);
+            const [child1, child2] = parent1.mateWith(parent2);
+            nextGen.push(child1, child2);
         }
 
-        return nextGen.concat(mostFit)
+        return nextGen.concat(elite);
     }
 
-    private tournament(population: Formation[]){
-        const tournament: Formation[] = []
-        while(tournament.length < GAConfig.tournamentSize) {
-            const candidate = choice(population)
-            if(!tournament.includes(candidate)){
-                tournament.push(candidate)
+    private tournament(population: Formation[]) {
+        const tournament: Formation[] = [];
+        while (tournament.length < GaConfig.tournamentSize) {
+            const candidate = choice(population);
+            if (!tournament.includes(candidate)) {
+                tournament.push(candidate);
             }
         }
-        return tournament.sort(getFormationSortFunction(tournament))[tournament.length - 1]
+        return tournament.sort(getFormationSortFunction(tournament))[
+            tournament.length - 1
+        ];
     }
+}
+
+function getMostFit(population: Formation[]) {
+    return population.sort(getFormationSortFunction(population))[
+        population.length - 1
+    ];
 }

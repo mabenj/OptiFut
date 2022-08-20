@@ -1,7 +1,8 @@
-export const GAConfig = {
+export const GaConfig = {
     generations: 30,
     populationSize: 200,
     tournamentSize: 6,
     crossoverRate: 0.5,
-    mutationRate: 0.06
+    mutationRate: 0.06,
+    elitismSize: 4
 };

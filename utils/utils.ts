@@ -51,6 +51,13 @@ export function compareChemistry(a: ChemistryResult, b: ChemistryResult) {
         return 1;
     }
 
+    if (a.avgChemistry < b.avgChemistry) {
+        return -1;
+    }
+    if (a.avgChemistry > b.avgChemistry) {
+        return 1;
+    }
+
     if (a.chem3Count > b.chem3Count) {
         return 1;
     }

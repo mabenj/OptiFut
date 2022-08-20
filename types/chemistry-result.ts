@@ -6,4 +6,5 @@ export interface ChemistryResult {
     chem3Count: number;
     avgChemistry: number;
     positionModifications: number;
+    playerChemistries: { [playerId: number]: number };
 }

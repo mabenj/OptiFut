@@ -2,19 +2,20 @@ import cloneDeep from "lodash.clonedeep";
 import { HeroClubId, IconClubId, IconLeagueId } from "../../data/constants";
 import { ChemistryResult } from "../../types/chemistry-result";
 import { FormationId } from "../../types/formation-id";
+import { FormationInfo } from "../../types/formation-info";
 import { Manager } from "../../types/manager";
 import { choice } from "../../utils/utils";
-import { GAConfig } from "../ga-config";
+import { GaConfig } from "../ga-config";
 import { PlayerEntity } from "../PlayerEntity";
 import { PositionNode } from "../PositionNode";
 
 export abstract class Formation {
-    abstract readonly formationId: FormationId;
+    public abstract readonly formationId: FormationId;
 
     public manager: Manager | undefined;
     private positions: PositionNode[];
 
-    private get players(){
+    private get players() {
         return this.positions.map((position) => position.player);
     }
 
@@ -120,14 +121,15 @@ export abstract class Formation {
             playerChemistries.set(this.positions[i].player, resultPoints);
         }
 
-        let result: ChemistryResult  = {
+        let result: ChemistryResult = {
             combinedChemistry: 0,
             chem0Count: 0,
             chem1Count: 0,
             chem2Count: 0,
             chem3Count: 0,
             avgChemistry: 0,
-            positionModifications: 0
+            positionModifications: 0,
+            playerChemistries: {}
         };
         playerChemistries.forEach((chem, player) => {
             result.combinedChemistry += chem;
@@ -138,6 +140,7 @@ export abstract class Formation {
             if (player.initialPrefPosition !== player.prefPosition) {
                 result.positionModifications++;
             }
+            result.playerChemistries[player.id] = chem;
         });
         result.avgChemistry =
             result.combinedChemistry / playerChemistries.keys.length;
@@ -145,7 +148,57 @@ export abstract class Formation {
         return result;
     }
 
-    public getPlayer(id: number){
+    public autoAdjustPositions() {
+        const playerPool = [...this.players];
+        const unresolvedPositions = [...this.positions];
+
+        // first pass: try to find preferred player for each position
+        for (let i = 0; i < this.positions.length; i++) {
+            const position = unresolvedPositions.shift();
+
+            const indexOfPreferredPlayer = playerPool.findIndex(
+                (player) => player.prefPosition === position!.nodePosition
+            );
+            if (indexOfPreferredPlayer > 0) {
+                position!.player = playerPool[indexOfPreferredPlayer];
+                playerPool.splice(indexOfPreferredPlayer, 1);
+            } else {
+                unresolvedPositions.push(position!);
+            }
+        }
+
+        if (playerPool.length !== unresolvedPositions.length) {
+            throw new Error(
+                "Mismatch between the amount of players and unresolved positions"
+            );
+        }
+
+        // second pass: fill rest of unresolved positions with rest of players
+        while (unresolvedPositions.length) {
+            const position = unresolvedPositions.shift();
+            position!.player = playerPool.shift()!;
+        }
+    }
+
+    public getInfo(): FormationInfo {
+        const chemistry = this.calculateChemistry();
+        return {
+            formationId: this.formationId,
+            combinedChemistry: chemistry.combinedChemistry,
+            positionModifications: chemistry.positionModifications,
+            players: this.positions.map(({ player, nodePosition }) => ({
+                id: player.id,
+                name: player.name,
+                chemistry: chemistry.playerChemistries[player.id],
+                initialPrefPosition: player.initialPrefPosition,
+                newPrefPosition: player.prefPosition,
+                positionInFormation: nodePosition
+            })),
+            manager: this.manager
+        };
+    }
+
+    public getPlayer(id: number) {
         const player = this.players.find((player) => player.id === id);
         if (!player) {
             throw new Error(`Player with id '${id}' not found`);
@@ -196,7 +249,7 @@ export abstract class Formation {
         const playersOfChild2: PlayerEntity[] = [];
         const playerIds = this.players.map((player) => player.id);
         for (let i = 0; i < playerIds.length; i++) {
-            if (Math.random() < GAConfig.crossoverRate) {
+            if (Math.random() < GaConfig.crossoverRate) {
                 playersOfChild1.push(cloneDeep(this.getPlayer(playerIds[i])));
                 playersOfChild2.push(cloneDeep(mate.getPlayer(playerIds[i])));
             } else {
@@ -206,7 +259,7 @@ export abstract class Formation {
         }
         let manager1: Manager | undefined;
         let manager2: Manager | undefined;
-        if (Math.random() < GAConfig.crossoverRate) {
+        if (Math.random() < GaConfig.crossoverRate) {
             manager1 = cloneDeep(this.manager);
             manager2 = cloneDeep(mate.manager);
         } else {
@@ -219,11 +272,11 @@ export abstract class Formation {
     private mutate() {
         for (let i = 0; i < this.positions.length; i++) {
             const currentPosition = this.positions[i];
-            if (Math.random() < GAConfig.mutationRate) {
+            if (Math.random() < GaConfig.mutationRate) {
                 // mutate pref position
                 currentPosition.player.randomizePosition();
             }
-            if (Math.random() < GAConfig.mutationRate) {
+            if (Math.random() < GaConfig.mutationRate) {
                 // mutate player position (swap players with another node)
                 let swapTarget = choice(
                     this.positions.filter(
@@ -238,7 +291,7 @@ export abstract class Formation {
             }
         }
 
-        if(this.manager && Math.random() < GAConfig.mutationRate) {
+        if (this.manager && Math.random() < GaConfig.mutationRate) {
             this.manager = this.generateManager();
         }
     }

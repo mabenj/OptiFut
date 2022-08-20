@@ -15,7 +15,7 @@ export class PositionNode {
         positions: PlayerPosition[]
     ) {
         if (players.length !== positions.length) {
-            throw new Error("players and positions must have the same length");
+            throw new Error("Players and positions must have the same length");
         }
         const result: PositionNode[] = [];
         for (let i = 0; i < positions.length; i++) {

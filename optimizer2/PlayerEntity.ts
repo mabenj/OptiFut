@@ -1,10 +1,10 @@
 import cloneDeep from "lodash.clonedeep";
 import { PlayerPosition } from "../types/player-position.type";
-import { choice, shuffle } from "../utils/utils";
+import { shuffle } from "../utils/utils";
 
 export class PlayerEntity {
     public readonly id: number;
-    private readonly name: string;
+    public readonly name: string;
 
     public readonly nationId: number;
     public readonly leagueId: number;
@@ -36,13 +36,13 @@ export class PlayerEntity {
         this.altPositions = altPositions;
     }
 
-    public randomizePosition(){
-        this.altPositions = shuffle(this.altPositions)
+    public randomizePosition() {
+        this.altPositions = shuffle(this.altPositions);
         const newPosition = this.altPositions.pop();
-        if(!newPosition){
+        if (!newPosition) {
             return;
         }
-        this.altPositions.push(this.prefPosition)
+        this.altPositions.push(this.prefPosition);
         this.prefPosition = newPosition;
     }
 }
