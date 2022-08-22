@@ -1,5 +1,5 @@
 import { FormationInfo } from "../optimizer/types/formation-info";
-import { Formation } from "../optimizer2/formations/Formation";
+import { Formation } from "../optimizer/formations/Formation";
 import { ChemistryResult } from "../types/chemistry-result";
 
 //https://stackoverflow.com/a/2450976

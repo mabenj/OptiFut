@@ -1,42 +1,43 @@
 import { FormationId } from "../../types/formation-id";
 import { PlayerEntity } from "../PlayerEntity";
-import { Formation3142 } from "./Formation3142";
-import { Formation3412 } from "./Formation3412";
-import { Formation3421 } from "./Formation3421";
-import { Formation343 } from "./Formation343";
-import { Formation352 } from "./Formation352";
-import { Formation41212 } from "./Formation41212";
-import { Formation41212_2 } from "./Formation41212_2";
-import { Formation4132 } from "./Formation4132";
-import { Formation4141 } from "./Formation4141";
-import { Formation4222 } from "./Formation4222";
-import { Formation4231 } from "./Formation4231";
-import { Formation4231_2 } from "./Formation4231_2";
-import { Formation424 } from "./Formation424";
-import { Formation4312 } from "./Formation4312";
-import { Formation4321 } from "./Formation4321";
-import { Formation433 } from "./Formation433";
-import { Formation433_2 } from "./Formation433_2";
-import { Formation433_3 } from "./Formation433_3";
-import { Formation433_4 } from "./Formation433_4";
-import { Formation433_5 } from "./Formation433_5";
-import { Formation4411 } from "./Formation4411";
-import { Formation4411_2 } from "./Formation4411_2";
-import { Formation442 } from "./Formation442";
-import { Formation442_2 } from "./Formation442_2";
-import { Formation451 } from "./Formation451";
-import { Formation451_2 } from "./Formation451_2";
-import { Formation5212 } from "./Formation5212";
-import { Formation5221 } from "./Formation5221";
-import { Formation532 } from "./Formation532";
-import { Formation541 } from "./Formation541";
+import { Formation3142 } from "./concrete-formations/Formation3142";
+import { Formation3412 } from "./concrete-formations/Formation3412";
+import { Formation3421 } from "./concrete-formations/Formation3421";
+import { Formation343 } from "./concrete-formations/Formation343";
+import { Formation352 } from "./concrete-formations/Formation352";
+import { Formation41212 } from "./concrete-formations/Formation41212";
+import { Formation41212_2 } from "./concrete-formations/Formation41212_2";
+import { Formation4132 } from "./concrete-formations/Formation4132";
+import { Formation4141 } from "./concrete-formations/Formation4141";
+import { Formation4222 } from "./concrete-formations/Formation4222";
+import { Formation4231 } from "./concrete-formations/Formation4231";
+import { Formation4231_2 } from "./concrete-formations/Formation4231_2";
+import { Formation424 } from "./concrete-formations/Formation424";
+import { Formation4312 } from "./concrete-formations/Formation4312";
+import { Formation4321 } from "./concrete-formations/Formation4321";
+import { Formation433 } from "./concrete-formations/Formation433";
+import { Formation433_2 } from "./concrete-formations/Formation433_2";
+import { Formation433_3 } from "./concrete-formations/Formation433_3";
+import { Formation433_4 } from "./concrete-formations/Formation433_4";
+import { Formation433_5 } from "./concrete-formations/Formation433_5";
+import { Formation4411 } from "./concrete-formations/Formation4411";
+import { Formation4411_2 } from "./concrete-formations/Formation4411_2";
+import { Formation442 } from "./concrete-formations/Formation442";
+import { Formation442_2 } from "./concrete-formations/Formation442_2";
+import { Formation451 } from "./concrete-formations/Formation451";
+import { Formation451_2 } from "./concrete-formations/Formation451_2";
+import { Formation5212 } from "./concrete-formations/Formation5212";
+import { Formation5221 } from "./concrete-formations/Formation5221";
+import { Formation532 } from "./concrete-formations/Formation532";
+import { Formation541 } from "./concrete-formations/Formation541";
+import { Formation } from "./Formation";
 
 export class FormationFactory {
     public static createFormation(
         formationId: FormationId,
         players: PlayerEntity[],
         useManager: boolean
-    ) {
+    ): Formation {
         switch (formationId) {
             case "3142":
                 return new Formation3142(players, useManager);
