@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { FormationOptions } from "../data/constants";
-import { FormationInfo } from "../optimizer/types/formation-info";
+import { FormationInfo } from "../types/formation-info";
 import LeagueImage from "./image-icons/LeagueImage";
 import NationImage from "./image-icons/NationImage";
 import PlayerLineup from "./PlayerLineup";
@@ -80,20 +80,26 @@ export default function FormationResults({
                                             <Badge
                                                 fontSize="lg"
                                                 variant={
-                                                    formation.teamChemistry ===
-                                                    100
+                                                    formation.chemistry
+                                                        .combinedChemistry ===
+                                                    33
                                                         ? "solid"
                                                         : "subtle"
                                                 }
                                                 colorScheme={
-                                                    formation.teamChemistry > 80
+                                                    formation.chemistry
+                                                        .combinedChemistry > 25
                                                         ? "green"
-                                                        : formation.teamChemistry >
-                                                          50
+                                                        : formation.chemistry
+                                                              .combinedChemistry >
+                                                          15
                                                         ? "yellow"
                                                         : "red"
                                                 }>
-                                                {formation.teamChemistry}
+                                                {
+                                                    formation.chemistry
+                                                        .combinedChemistry
+                                                }
                                             </Badge>
                                         </CustomTooltip>
                                         <AccordionIcon />
@@ -109,9 +115,10 @@ export default function FormationResults({
                                             name: p.name,
                                             chemistry: p.chemistry,
                                             originalPosition:
-                                                p.originalPosition,
-                                            finalPosition: p.newPosition,
-                                            positionNode: p.positionNodeId
+                                                p.initialPrefPosition,
+                                            finalPosition: p.newPrefPosition,
+                                            positionInFormation:
+                                                p.positionInFormation
                                         }))}
                                     />
                                 </Box>
@@ -173,10 +180,13 @@ export default function FormationResults({
                                             fontSize="sm"
                                             textAlign="right"
                                             mr={2}>
-                                            Team Chemistry
+                                            Combined Chemistry
                                         </GridItem>
                                         <GridItem textAlign="center">
-                                            {formation.teamChemistry}
+                                            {
+                                                formation.chemistry
+                                                    .combinedChemistry
+                                            }
                                         </GridItem>
                                         <GridItem
                                             fontWeight="medium"
@@ -187,14 +197,12 @@ export default function FormationResults({
                                             Position Modifications
                                         </GridItem>
                                         <GridItem textAlign="center">
-                                            {formation.players.reduce(
-                                                (acc, curr) =>
-                                                    acc +
-                                                    curr.positionModificationsCount,
-                                                0
-                                            )}
+                                            {
+                                                formation.chemistry
+                                                    .positionModifications
+                                            }
                                         </GridItem>
-                                        {formation.manager && (
+                                        {!!formation.manager && (
                                             <>
                                                 <GridItem
                                                     fontWeight="medium"
@@ -210,7 +218,7 @@ export default function FormationResults({
                                                     <NationImage
                                                         id={
                                                             formation.manager
-                                                                .nationalityId
+                                                                ?.nationId
                                                         }
                                                         sizePx={40}
                                                     />
@@ -230,7 +238,7 @@ export default function FormationResults({
                                                     <LeagueImage
                                                         id={
                                                             formation.manager
-                                                                .leagueId
+                                                                ?.leagueId
                                                         }
                                                         sizePx={35}
                                                     />

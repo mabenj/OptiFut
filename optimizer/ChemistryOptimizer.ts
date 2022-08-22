@@ -1,8 +1,8 @@
-import { cloneDeep, shuffle } from "lodash";
+import cloneDeep from "lodash.clonedeep";
 import { FormationId } from "../types/formation-id";
 import { FormationInfo } from "../types/formation-info";
 import { PlayerInfo } from "../types/player-info.interface";
-import { choice, getFormationSortFunction } from "../utils/utils";
+import { choice, getFormationSortFunction, shuffle } from "../utils/utils";
 import { Formation } from "./formations/Formation";
 import { FormationFactory } from "./formations/FormationFactory";
 import { GaConfig } from "./ga-config";
@@ -26,9 +26,9 @@ export class ChemistryOptimizer {
                     player.nationId,
                     player.leagueId,
                     player.clubId,
-                    player.position,
-                    player.position,
-                    player.alternativePositions
+                    player.prefPosition,
+                    player.prefPosition,
+                    player.altPositions
                 )
         );
         this.useManager = useManager;

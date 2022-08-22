@@ -5,18 +5,9 @@ import {
     AccordionItem,
     AccordionPanel,
     Box,
-    Button,
-    Checkbox,
-    Divider,
-    Flex,
-    FormLabel,
-    Heading,
     SimpleGrid,
-    Stack,
-    Switch,
     Text
 } from "@chakra-ui/react";
-import React from "react";
 import { FormationOptions } from "../data/constants";
 import { FormationId } from "../types/formation-id";
 import CheckToken from "./ui/CheckToken";

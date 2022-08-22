@@ -1,7 +1,6 @@
 import { Box, Flex, Tag, Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import { PositionNodeId } from "../optimizer/types/position-node-id.type";
-import { PositionValue } from "../optimizer/types/position-value.enum";
+import { PositionNodeId } from "../types/position-node-id";
 import CustomTooltip from "./ui/CustomTooltip";
 
 const CARD_WIDTH = "65px";
@@ -11,7 +10,7 @@ interface LineupPlayer {
     chemistry: number;
     originalPosition: string;
     finalPosition: string;
-    positionNode: PositionNodeId;
+    positionInFormation: string;
 }
 
 interface PlayerLineupProps {
@@ -88,11 +87,11 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
 }
 
 function getPlayerCard(lineup: LineupPlayer[], nodeId: PositionNodeId) {
-    const player = lineup.find((p) => p.positionNode === nodeId);
-    if (!player) {
+    // const player = lineup.find((p) => p.positionNode === nodeId);
+    // if (!player) {
         return <></>;
-    }
-    return <PlayerCard player={player} />;
+    // }
+    // return <PlayerCard player={player} />;
 }
 
 const PlayerCard = ({ player }: { player: LineupPlayer }) => {
@@ -151,9 +150,7 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
             </Flex>
             <Flex w="100%" justifyContent="center" mt={1}>
                 <Tag bg="whiteAlpha.900">
-                    {PositionValue.toString(
-                        PositionValue.fromNodeId(player.positionNode)
-                    )}
+                    {player.finalPosition}
                 </Tag>
             </Flex>
         </Box>

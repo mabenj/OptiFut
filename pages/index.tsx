@@ -17,7 +17,7 @@ import { DefaultSelectedFormations, TeamPlayerCount } from "../data/constants";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useOptimizer } from "../hooks/useOptimizer";
 import { FormationId } from "../types/formation-id";
-import { PlayerInfo } from "../types/player-info.interface";
+import { notEmpty } from "../utils/utils";
 
 const Home: NextPage = () => {
     const { players, setPlayers, shouldUseManager, setShouldUseManager } =
@@ -48,11 +48,7 @@ const Home: NextPage = () => {
         const formationsToUse = Object.keys(selectedFormations).filter(
             (formationId) => selectedFormations[formationId as FormationId]
         ) as FormationId[];
-        optimize(
-            players.filter((player): player is PlayerInfo => player !== null),
-            formationsToUse,
-            shouldUseManager
-        );
+        optimize(players.filter(notEmpty), formationsToUse, shouldUseManager);
     };
 
     if (isOptimizing || optimizedFormations.length) {

@@ -1,6 +1,6 @@
-import { FormationInfo } from "../optimizer/types/formation-info";
 import { Formation } from "../optimizer/formations/Formation";
 import { ChemistryResult } from "../types/chemistry-result";
+import { FormationInfo } from "../types/formation-info";
 
 //https://stackoverflow.com/a/2450976
 export function shuffle<T>(array: T[]): T[] {
@@ -76,22 +76,7 @@ export function compareChemistry(a: ChemistryResult, b: ChemistryResult) {
 }
 
 export function compareFormationInfo(a: FormationInfo, b: FormationInfo) {
-    // return compareChemistry(
-    //     {
-    //         totalChemistry: a.teamChemistry,
-    //         offChemPlayersCount: a.players.filter((p) => p.isOffChem).length,
-    //         positionModificationsCount: a.players.filter(
-    //             (p) => p.positionModificationsCount > 0
-    //         ).length
-    //     },
-    //     {
-    //         totalChemistry: b.teamChemistry,
-    //         offChemPlayersCount: b.players.filter((p) => p.isOffChem).length,
-    //         positionModificationsCount: b.players.filter(
-    //             (p) => p.positionModificationsCount > 0
-    //         ).length
-    //     }
-    // );
+    return compareChemistry(a.chemistry, b.chemistry);
 }
 
 export function randomIntFromInterval(min: number, max: number) {
@@ -407,3 +392,10 @@ export function getErrorMessage(error: unknown) {
     if (error instanceof Error) return error.message;
     return String(error);
 }
+
+// https://stackoverflow.com/a/46700791
+export function notEmpty<T>(value: T | null | undefined): value is T {
+    if (value === null || value === undefined) return false;
+    const testDummy: T = value;
+    return true;
+  }

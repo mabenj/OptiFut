@@ -1,5 +1,6 @@
 import { FormationId } from "../types/formation-id";
 import { PlayerEditorValues } from "../types/player-editor-values.interface";
+import { PlayerPosition } from "../types/player-position.type";
 
 export const PopularNationIds = [
     52, // argentina
@@ -40,12 +41,12 @@ export const ClubIconRatio = 140 / 140;
 
 export const DefaultEditorValues: PlayerEditorValues = {
     name: "",
-    position: "ST",
+    prefPosition: "ST",
+    altPositions: [],
     version: "other",
     nationId: null,
     leagueId: null,
-    clubId: null,
-    hasLoyalty: true
+    clubId: null
 };
 
 export const TeamPlayerCount = 11;
@@ -90,3 +91,23 @@ export const DefaultSelectedFormations = FormationOptions.reduce(
     },
     {} as { [formationId in FormationId]: boolean }
 );
+
+export const PlayerPositions: PlayerPosition[] = [
+    "ST",
+    "CF",
+    "CAM",
+    "CM",
+    "CDM",
+    "LF",
+    "LW",
+    "LM",
+    "RF",
+    "RW",
+    "RM",
+    "LWB",
+    "LB",
+    "RWB",
+    "RB",
+    "CB",
+    "GK"
+];

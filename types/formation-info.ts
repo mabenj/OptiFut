@@ -1,9 +1,11 @@
+import { ChemistryResult } from "./chemistry-result";
 import { FormationId } from "./formation-id";
 import { Manager } from "./manager";
 import { PlayerPosition } from "./player-position.type";
 
 export interface FormationInfo {
     formationId: FormationId;
+    chemistry: ChemistryResult;
     players: {
         id: number;
         name: string;
@@ -12,7 +14,5 @@ export interface FormationInfo {
         newPrefPosition: PlayerPosition;
         positionInFormation: PlayerPosition;
     }[];
-    combinedChemistry: number;
-    positionModifications: number;
     manager?: Manager;
 }

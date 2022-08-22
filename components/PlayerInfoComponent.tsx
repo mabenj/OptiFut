@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Heading, HStack, VStack } from "@chakra-ui/react";
 import { PlayerInfo } from "../types/player-info.interface";
 import ClubImage from "./image-icons/ClubImage";
 import LeagueImage from "./image-icons/LeagueImage";
@@ -15,28 +15,29 @@ export default function PlayerInfoComponent({
     return (
         <Flex alignItems="center">
             <VStack>
-                <Heading
-                    as="h3"
-                    size="sm"
-                    color="gray.500"
-                    cursor="default"
-                    w="3rem"
-                    textAlign="center">
-                    {player.position}
-                </Heading>
+                <CustomTooltip label="Preferred position" placement="top">
+                    <Heading
+                        as="h3"
+                        size="md"
+                        color="gray.500"
+                        cursor="default"
+                        w="4rem"
+                        textAlign="center">
+                        {player.prefPosition}
+                    </Heading>
+                </CustomTooltip>
                 <CustomTooltip
-                    label={player.hasLoyalty ? "Has loyalty" : "No loyalty"}>
-                    {player.hasLoyalty ? (
-                        <Text
-                            className="bi-shield-fill-check"
-                            color="green.600"
-                        />
-                    ) : (
-                        <Text
-                            className="bi-shield-slash-fill"
-                            color="gray.600"
-                        />
-                    )}
+                    label={"Alternative positions"}
+                    placement="bottom">
+                    <Heading
+                        as="h4"
+                        size="xs"
+                        color="gray.500"
+                        cursor="default"
+                        w="4rem"
+                        textAlign="center">
+                        {player.altPositions.join(", ") || <wbr />}
+                    </Heading>
                 </CustomTooltip>
             </VStack>
             <Box ml={4}>

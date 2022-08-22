@@ -1,6 +1,7 @@
 import {
     AddIcon,
     CheckIcon,
+    DownloadIcon,
     EditIcon,
     ExternalLinkIcon,
     RepeatIcon,
@@ -43,11 +44,12 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { DefaultEditorValues, TeamPlayerCount } from "../data/constants";
 import { useSavedTeam } from "../hooks/useSavedTeam";
-import { PlayerInfo } from "../types/player-info.interface";
 import { PlayerEditorValues } from "../types/player-editor-values.interface";
+import { PlayerInfo } from "../types/player-info.interface";
+import { notEmpty } from "../utils/utils";
 import PlayerEditorModal from "./PlayerEditorModal";
-import CustomTooltip from "./ui/CustomTooltip";
 import PlayerInfoComponent from "./PlayerInfoComponent";
+import CustomTooltip from "./ui/CustomTooltip";
 
 interface PlayerListProps {
     players: (PlayerInfo | null)[];
@@ -74,15 +76,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
         }
         addSavedTeam({
             name: teamName,
-            players: players.map((player) => ({
-                name: player?.name!,
-                position: player?.position!,
-                version: player?.version!,
-                hasLoyalty: player?.hasLoyalty!,
-                nationId: player?.nationId!,
-                leagueId: player?.leagueId!,
-                clubId: player?.clubId!
-            }))
+            players: players.filter(notEmpty)
         }).then(() =>
             toast({
                 title: "Team Saved",
@@ -110,8 +104,8 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
             setEditorPrefillValues({
                 name: player.name,
                 version: player.version,
-                position: player.position,
-                hasLoyalty: player.hasLoyalty,
+                prefPosition: player.prefPosition,
+                altPositions: player.altPositions,
                 nationId: player.nationId,
                 leagueId: player.leagueId,
                 clubId: player.clubId
@@ -125,8 +119,8 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
         const {
             name,
             version,
-            position,
-            hasLoyalty,
+            prefPosition,
+            altPositions,
             nationId,
             leagueId,
             clubId
@@ -134,8 +128,8 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
         players[editIndex] = {
             name,
             version,
-            position,
-            hasLoyalty,
+            prefPosition,
+            altPositions,
             nationId: nationId!,
             leagueId: leagueId!,
             clubId: clubId!
@@ -322,7 +316,7 @@ const SaveTeamMenuItem = ({
     return (
         <>
             <MenuItem
-                icon={<Text className="bi bi-save2" />}
+                icon={<DownloadIcon />}
                 disabled={disabled}
                 pointerEvents={disabled ? "none" : undefined}
                 color={disabled ? "gray.400" : undefined}

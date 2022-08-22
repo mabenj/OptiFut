@@ -1,8 +1,8 @@
 import { useBoolean } from "@chakra-ui/react";
 import { useState } from "react";
 import { ModuleThread, Pool, spawn } from "threads";
-import { FormationInfo } from "../optimizer/types/formation-info";
 import { FormationId } from "../types/formation-id";
+import { FormationInfo } from "../types/formation-info";
 import { PlayerInfo } from "../types/player-info.interface";
 import { compareFormationInfo } from "../utils/utils";
 import { ChemistryOptimizerWorker } from "../workers/optimizer.worker";

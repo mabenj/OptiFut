@@ -1,4 +1,4 @@
-import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
@@ -7,9 +7,6 @@ import {
     Flex,
     FormControl,
     FormLabel,
-    IconButton,
-    InputGroup,
-    InputRightAddon,
     Menu,
     MenuButton,
     MenuItemOption,
@@ -24,7 +21,6 @@ import {
     ModalOverlay,
     Portal,
     Text,
-    useBoolean,
     useRadio,
     useRadioGroup,
     UseRadioProps,
@@ -42,12 +38,14 @@ import {
     DefaultEditorValues,
     HeroClubId,
     IconClubId,
-    IconLeagueId
+    IconLeagueId,
+    PlayerPositions
 } from "../data/constants";
+import { useAltPositions } from "../hooks/player-options/useAltPositions";
 import { useClub } from "../hooks/player-options/useClub";
 import { useLeague } from "../hooks/player-options/useLeague";
 import { useNationality } from "../hooks/player-options/useNationality";
-import { usePlayerPosition } from "../hooks/player-options/usePlayerPosition";
+import { usePrefPosition } from "../hooks/player-options/usePrefPosition";
 import { PlayerEditorValues } from "../types/player-editor-values.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version.type";
@@ -70,10 +68,13 @@ export default function PlayerEditorModal({
     prefillValues
 }: AddPlayerModalProps) {
     const [playerName, setPlayerName] = useState(prefillValues.name);
-    const [playerPosition, setPlayerPosition, positionOptions] =
-        usePlayerPosition(prefillValues.position);
+    const [prefPosition, setPrefPosition] = usePrefPosition(
+        prefillValues.prefPosition
+    );
+    const [altPositions, setAltPositions] = useAltPositions(
+        prefillValues.altPositions
+    );
     const [playerVersion, setPlayerVersion] = useState(prefillValues.version);
-    const [hasLoyalty, setHasLoyalty] = useBoolean(prefillValues.hasLoyalty);
     const {
         nationalityId,
         setNationalityId,
@@ -122,8 +123,8 @@ export default function PlayerEditorModal({
         onPlayerAdded({
             name: playerName,
             version: playerVersion,
-            hasLoyalty: hasLoyalty,
-            position: playerPosition,
+            prefPosition: prefPosition,
+            altPositions: altPositions,
             nationId: nationalityId!,
             leagueId: leagueId!,
             clubId: clubId!
@@ -139,25 +140,21 @@ export default function PlayerEditorModal({
     const handleReset = () => {
         setPlayerName(DefaultEditorValues.name);
         setPlayerVersion(DefaultEditorValues.version);
-        setPlayerPosition(DefaultEditorValues.position);
+        setPrefPosition(DefaultEditorValues.prefPosition);
+        setAltPositions(DefaultEditorValues.altPositions);
         setNationalityId(DefaultEditorValues.nationId);
         setLeagueId(DefaultEditorValues.leagueId);
         setClubId(DefaultEditorValues.clubId);
-        if (DefaultEditorValues.hasLoyalty) {
-            setHasLoyalty.on();
-        } else {
-            setHasLoyalty.off();
-        }
     };
 
     const populateFieldsWith = (values: PlayerEditorValues) => {
         setPlayerName(values.name);
-        setPlayerPosition(values.position);
+        setPrefPosition(values.prefPosition);
+        setAltPositions(values.altPositions);
         setPlayerVersion(values.version);
         setNationalityId(values.nationId);
         setLeagueId(values.leagueId);
         setClubId(values.clubId);
-        values.hasLoyalty ? setHasLoyalty.on() : setHasLoyalty.off();
     };
 
     return (
@@ -170,130 +167,81 @@ export default function PlayerEditorModal({
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>
-                    <Flex gap={4}>
-                        <Text className="bi bi-person-lines-fill" />
-                        {isNewPlayer ? "Add Player" : "Edit Player"}
-                    </Flex>
+                    {isNewPlayer ? "Add Player" : "Edit Player"}
                 </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody my={5}>
                     <form id="addPlayer" onSubmit={handleAddPlayer}>
                         <VStack spacing={5}>
-                            <Flex w="100%">
-                                <FormControl w="70%">
-                                    <FormLabel
-                                        htmlFor="playerName"
-                                        textAlign="center">
-                                        Player Name
-                                    </FormLabel>
-                                    <InputGroup>
-                                        <PlayerNameAutocomplete
-                                            inputRef={initialFocusRef}
-                                            id="playerName"
-                                            name="playerName"
-                                            placeholder="Enter name"
-                                            value={playerName}
-                                            onChange={setPlayerName}
-                                            onPlayerSelected={(player) =>
-                                                populateFieldsWith({
-                                                    name: player.playerName,
-                                                    hasLoyalty:
-                                                        prefillValues.hasLoyalty,
-                                                    version: player.version,
-                                                    position:
-                                                        player.preferredPosition,
-                                                    nationId: player.nationId,
-                                                    leagueId: player.leagueId,
-                                                    clubId: player.clubId
-                                                })
-                                            }
-                                        />
-                                        <InputRightAddon p={0}>
-                                            <Menu>
-                                                <CustomTooltip label="Loyalty">
-                                                    <MenuButton
-                                                        as={IconButton}
-                                                        icon={
-                                                            hasLoyalty ? (
-                                                                <Text
-                                                                    className="bi-shield-fill-check"
-                                                                    color="green.600"
-                                                                />
-                                                            ) : (
-                                                                <Text
-                                                                    className="bi-shield-slash-fill"
-                                                                    color="gray.600"
-                                                                />
-                                                            )
-                                                        }
-                                                        variant="outline"
-                                                    />
-                                                </CustomTooltip>
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerName"
+                                    textAlign="center">
+                                    Player Name
+                                </FormLabel>
+                                <PlayerNameAutocomplete
+                                    inputRef={initialFocusRef}
+                                    id="playerName"
+                                    name="playerName"
+                                    placeholder="Enter name"
+                                    value={playerName}
+                                    onChange={setPlayerName}
+                                    onPlayerSelected={(player) =>
+                                        populateFieldsWith({
+                                            name: player.playerName,
+                                            version: player.version,
+                                            prefPosition:
+                                                player.preferredPosition,
+                                            altPositions:
+                                                player.alternativePositions,
+                                            nationId: player.nationId,
+                                            leagueId: player.leagueId,
+                                            clubId: player.clubId
+                                        })
+                                    }
+                                />
+                            </FormControl>
 
-                                                <MenuList>
-                                                    <MenuOptionGroup
-                                                        value={hasLoyalty.toString()}
-                                                        type="radio">
-                                                        <MenuItemOption
-                                                            value="true"
-                                                            onClick={
-                                                                setHasLoyalty.on
-                                                            }>
-                                                            Has loyalty
-                                                        </MenuItemOption>
-                                                        <MenuItemOption
-                                                            value="false"
-                                                            onClick={
-                                                                setHasLoyalty.off
-                                                            }>
-                                                            No loyalty
-                                                        </MenuItemOption>
-                                                    </MenuOptionGroup>
-                                                </MenuList>
-                                            </Menu>
-                                        </InputRightAddon>
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl w="30%">
-                                    <FormLabel
-                                        htmlFor="playerPosition"
-                                        textAlign="center">
+                            <FormControl>
+                                <FormLabel
+                                    htmlFor="playerPosition"
+                                    textAlign="center">
+                                    <CustomTooltip
+                                        label="Current preferred position"
+                                        placement="top">
                                         Position
-                                    </FormLabel>
-                                    <Menu>
-                                        <Flex justifyContent="center">
-                                            <CustomTooltip label="Current position in card">
-                                                <MenuButton as={Button}>
-                                                    {playerPosition.toUpperCase()}{" "}
-                                                    <ChevronDownIcon />
-                                                </MenuButton>
-                                            </CustomTooltip>
-                                            <Portal>
-                                                <MenuList zIndex={"modal"}>
-                                                    <MenuOptionGroup
-                                                        type="radio"
-                                                        value={playerPosition}
-                                                        onChange={(position) =>
-                                                            setPlayerPosition(
-                                                                position as PlayerPosition
-                                                            )
-                                                        }>
-                                                        {positionOptions.map(
-                                                            (pos) => (
-                                                                <MenuItemOption
-                                                                    key={pos}
-                                                                    value={pos}>
-                                                                    {pos}
-                                                                </MenuItemOption>
-                                                            )
-                                                        )}
-                                                    </MenuOptionGroup>
-                                                </MenuList>
-                                            </Portal>
-                                        </Flex>
-                                    </Menu>
-                                </FormControl>
-                            </Flex>
+                                    </CustomTooltip>
+                                </FormLabel>
+                                <Menu>
+                                    <Flex justifyContent="center">
+                                        <MenuButton as={Button}>
+                                            {prefPosition} <ChevronDownIcon />
+                                        </MenuButton>
+                                        <Portal>
+                                            <MenuList zIndex={"modal"}>
+                                                <MenuOptionGroup
+                                                    type="radio"
+                                                    value={prefPosition}
+                                                    onChange={(position) =>
+                                                        setPrefPosition(
+                                                            position as PlayerPosition
+                                                        )
+                                                    }>
+                                                    {PlayerPositions.map(
+                                                        (pos) => (
+                                                            <MenuItemOption
+                                                                key={pos}
+                                                                value={pos}>
+                                                                {pos}
+                                                            </MenuItemOption>
+                                                        )
+                                                    )}
+                                                </MenuOptionGroup>
+                                            </MenuList>
+                                        </Portal>
+                                    </Flex>
+                                </Menu>
+                            </FormControl>
 
                             <FormControl>
                                 <FormLabel
@@ -409,7 +357,7 @@ export default function PlayerEditorModal({
                                     isNewPlayer ? (
                                         <AddIcon />
                                     ) : (
-                                        <Text className="bi bi-save2" />
+                                        <CheckIcon />
                                     )
                                 }>
                                 {isNewPlayer ? "Add Player" : "Save"}

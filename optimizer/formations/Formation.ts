@@ -181,16 +181,14 @@ export abstract class Formation {
     }
 
     public getInfo(): FormationInfo {
-        const { combinedChemistry, positionModifications, playerChemistries } =
-            this.calculateChemistry();
+        const chemistry = this.calculateChemistry();
         return {
             formationId: this.formationId,
-            combinedChemistry: combinedChemistry,
-            positionModifications: positionModifications,
+            chemistry: chemistry,
             players: this.positions.map(({ player, nodePosition }) => ({
                 id: player.id,
                 name: player.name,
-                chemistry: playerChemistries[player.id],
+                chemistry: chemistry.playerChemistries[player.id],
                 initialPrefPosition: player.initialPrefPosition,
                 newPrefPosition: player.prefPosition,
                 positionInFormation: nodePosition

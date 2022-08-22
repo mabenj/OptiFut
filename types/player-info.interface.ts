@@ -4,10 +4,9 @@ import { PlayerVersion } from "./player-version.type";
 export interface PlayerInfo {
     name: string;
     version: PlayerVersion;
-    hasLoyalty: boolean;
-    position: PlayerPosition;
+    prefPosition: PlayerPosition;
+    altPositions: PlayerPosition[];
     nationId: number;
     leagueId: number;
     clubId: number;
-    alternativePositions: PlayerPosition[];
 }
