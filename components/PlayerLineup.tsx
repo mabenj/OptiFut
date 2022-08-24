@@ -1,4 +1,4 @@
-import { Box, Flex, Tag, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, Flex, Tag, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { PositionNodeId } from "../types/position-node-id";
 import CustomTooltip from "./ui/CustomTooltip";
@@ -19,14 +19,20 @@ interface PlayerLineupProps {
 
 export default function PlayerLineup({ lineup }: PlayerLineupProps) {
     return (
-        <Box bg="green.200" position="relative">
+        <Box
+            bg="green.200"
+            position="relative"
+            display="flex"
+            justifyContent="center">
             <PitchLines zIndex={1} />
             <VStack
                 spacing={5}
-                p={5}
+                px={1}
+                py={5}
                 borderRadius="md"
                 zIndex={2}
-                position="relative">
+                position="relative"
+                w="40rem">
                 {/* FORWARDS */}
                 <LineupRow narrow>
                     {getPlayerCard(lineup, "LW")}
@@ -43,27 +49,19 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 {/* CF*/}
                 <LineupRow narrow>{getPlayerCard(lineup, "CF")}</LineupRow>
 
-                {/* UPPER MIDFIELD */}
-                <LineupRow narrow>
-                    {getPlayerCard(lineup, "LCAM")}
-                    {getPlayerCard(lineup, "CAM")}
-                    {getPlayerCard(lineup, "RCAM")}
-                </LineupRow>
-
                 {/* MIDFIELD */}
                 <LineupRow narrow>
                     {getPlayerCard(lineup, "LM")}
+                    {getPlayerCard(lineup, "LCAM")}
                     {getPlayerCard(lineup, "LCM")}
-                    {getPlayerCard(lineup, "CM")}
-                    {getPlayerCard(lineup, "RCM")}
-                    {getPlayerCard(lineup, "RM")}
-                </LineupRow>
-
-                {/* LOWER MIDFIELD */}
-                <LineupRow narrow>
                     {getPlayerCard(lineup, "LCDM")}
+                    {getPlayerCard(lineup, "CAM")}
+                    {getPlayerCard(lineup, "CM")}
                     {getPlayerCard(lineup, "CDM")}
+                    {getPlayerCard(lineup, "RCAM")}
+                    {getPlayerCard(lineup, "RCM")}
                     {getPlayerCard(lineup, "RCDM")}
+                    {getPlayerCard(lineup, "RM")}
                 </LineupRow>
 
                 {/* DEFENDERS */}
@@ -104,56 +102,51 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
             ? "yellow.500"
             : "red.500";
     return (
-        <Box
-            w={CARD_WIDTH}
-            textAlign="center"
-            fontSize="x-small"
-            color="gray.700">
+        <VStack>
             <Flex
                 direction="column"
-                justifyContent="flex-end"
-                gap={1}
-                bg="gray.100"
-                h="100%"
-                borderRadius="md"
-                p={1}>
-                <CustomTooltip label={player.name} placement="top">
-                    <Text fontWeight="bold" lineHeight="3">
-                        {truncate(player.name, NAME_MAX_LENGTH)}
-                    </Text>
-                </CustomTooltip>
-
-                <Flex
-                    justifyContent="space-between"
-                    borderTop="1px solid"
-                    borderColor="gray.300">
+                fontSize={["xs", "small"]}
+                justifyContent="center"
+                alignItems="center"
+                gap={0.5}>
+                <Flex gap={1} cursor="default" userSelect="none">
                     <CustomTooltip
                         label={
                             isPosModded
-                                ? `${player.originalPosition} → ${player.finalPosition}`
-                                : undefined
-                        }>
+                                ? `Position in card: ${player.originalPosition} → ${player.finalPosition}`
+                                : "Position in card"
+                        }
+                        placement="top">
                         <Text
-                            fontSize="xs"
                             textDecoration={
                                 isPosModded ? "underline" : undefined
-                            }
-                            fontWeight={isPosModded ? "medium" : undefined}>
+                            }>
                             {player.finalPosition}
                         </Text>
                     </CustomTooltip>
-
-                    <CustomTooltip label="Chemistry">
-                        <Text fontSize="xs">{player.chemistry}</Text>
+                    <span>|</span>
+                    <CustomTooltip label="Chemistry" placement="top">
+                        <Text>{player.chemistry}</Text>
                     </CustomTooltip>
                 </Flex>
-            </Flex>
-            <Flex w="100%" justifyContent="center" mt={1}>
-                <Tag bg="whiteAlpha.900">
-                    {player.finalPosition}
+                <Tag
+                    fontSize="inherit"
+                    textAlign="center"
+                    fontWeight="semibold"
+                    py={1}>
+                    {player.name}
                 </Tag>
             </Flex>
-        </Box>
+            <Badge
+                colorScheme="green"
+                variant="solid"
+                cursor="default"
+                userSelect="none">
+                {PositionValue.toString(
+                    PositionValue.fromNodeId(player.positionNode)
+                )}
+            </Badge>
+        </VStack>
     );
 };
 
@@ -166,10 +159,10 @@ const LineupRow = ({
 }) => {
     return (
         <Flex
-            justifyContent={narrow ? "center" : "space-between"}
+            justifyContent="space-around"
             alignItems="flex-end"
             w="100%"
-            gap={2}
+            gap={1}
             _empty={{ display: "none" }}>
             {children}
         </Flex>
