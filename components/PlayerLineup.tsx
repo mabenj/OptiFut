@@ -26,59 +26,79 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
             justifyContent="center">
             <PitchLines zIndex={1} />
             <VStack
-                spacing={5}
+                spacing={1}
                 px={1}
                 py={5}
                 borderRadius="md"
                 zIndex={2}
                 position="relative"
                 w="40rem">
-                {/* FORWARDS */}
-                <LineupRow narrow>
-                    {getPlayerCard(lineup, "LW")}
+                {/* STRIKERS */}
+                <Flex justifyContent="space-around" gap={1} w="100%">
                     {getPlayerCard(lineup, "LF")}
-
                     {getPlayerCard(lineup, "LST")}
                     {getPlayerCard(lineup, "ST")}
                     {getPlayerCard(lineup, "RST")}
-
                     {getPlayerCard(lineup, "RF")}
+                </Flex>
+
+                {/* WINGERS */}
+                <Flex justifyContent="space-between" gap={1} w="100%">
+                    {getPlayerCard(lineup, "LW")}
                     {getPlayerCard(lineup, "RW")}
-                </LineupRow>
+                </Flex>
 
-                {/* CF*/}
-                <LineupRow narrow>{getPlayerCard(lineup, "CF")}</LineupRow>
+                {/* CF */}
+                <Flex justifyContent="center" gap={1} w="100%">
+                    {getPlayerCard(lineup, "CF")}
+                </Flex>
 
-                {/* MIDFIELD */}
-                <LineupRow narrow>
+                {/* LEFT/RIGHT MIDS */}
+                <Flex justifyContent="space-between" gap={1} w="100%">
                     {getPlayerCard(lineup, "LM")}
-                    {getPlayerCard(lineup, "LCAM")}
-                    {getPlayerCard(lineup, "LCM")}
-                    {getPlayerCard(lineup, "LCDM")}
-                    {getPlayerCard(lineup, "CAM")}
-                    {getPlayerCard(lineup, "CM")}
-                    {getPlayerCard(lineup, "CDM")}
-                    {getPlayerCard(lineup, "RCAM")}
-                    {getPlayerCard(lineup, "RCM")}
-                    {getPlayerCard(lineup, "RCDM")}
                     {getPlayerCard(lineup, "RM")}
-                </LineupRow>
+                </Flex>
+
+                {/* ATTACKING MIDS */}
+                <Flex justifyContent="space-around" gap={1} w="100%">
+                    {getPlayerCard(lineup, "LCAM")}
+                    {getPlayerCard(lineup, "CAM")}
+                    {getPlayerCard(lineup, "RCAM")}
+                </Flex>
+
+                {/* CENTER MIDS */}
+                <Flex justifyContent="space-around" gap={1} w="100%">
+                    {getPlayerCard(lineup, "LCM")}
+                    {getPlayerCard(lineup, "CM")}
+                    {getPlayerCard(lineup, "RCM")}
+                </Flex>
+
+                {/* DEFENSIVE MIDS */}
+                <Flex justifyContent="space-around" gap={1} w="100%">
+                    {getPlayerCard(lineup, "LCDM")}
+                    {getPlayerCard(lineup, "CDM")}
+                    {getPlayerCard(lineup, "RCDM")}
+                </Flex>
+
+                {/* WINGBACKS */}
+                <Flex justifyContent="space-between" gap={1} w="100%">
+                    {getPlayerCard(lineup, "LWB")}
+                    {getPlayerCard(lineup, "RWB")}
+                </Flex>
 
                 {/* DEFENDERS */}
-                <LineupRow narrow>
-                    {getPlayerCard(lineup, "LWB")}
+                <Flex justifyContent="center" gap={1} w="100%">
                     {getPlayerCard(lineup, "LB")}
-
                     {getPlayerCard(lineup, "LCB")}
                     {getPlayerCard(lineup, "CB")}
                     {getPlayerCard(lineup, "RCB")}
-
                     {getPlayerCard(lineup, "RB")}
-                    {getPlayerCard(lineup, "RWB")}
-                </LineupRow>
+                </Flex>
 
                 {/* KEEPER */}
-                <LineupRow narrow>{getPlayerCard(lineup, "GK")}</LineupRow>
+                <Flex justifyContent="center" w="100%">
+                    {getPlayerCard(lineup, "GK")}
+                </Flex>
             </VStack>
         </Box>
     );
@@ -102,7 +122,7 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
             ? "yellow.500"
             : "red.500";
     return (
-        <VStack>
+        <VStack w="23%" justifyContent="flex-end">
             <Flex
                 direction="column"
                 fontSize={["xs", "small"]}
