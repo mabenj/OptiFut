@@ -35,7 +35,11 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 position="relative"
                 w="40rem">
                 {/* STRIKERS */}
-                <Flex justifyContent="space-around" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-around"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LF")}
                     {getPlayerCard(lineup, "LST")}
                     {getPlayerCard(lineup, "ST")}
@@ -44,51 +48,75 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 </Flex>
 
                 {/* WINGERS */}
-                <Flex justifyContent="space-between" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-between"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LW")}
                     {getPlayerCard(lineup, "RW")}
                 </Flex>
 
                 {/* CF */}
-                <Flex justifyContent="center" gap={1} w="100%">
+                <Flex justifyContent="center" gap={1} w="100%" minH="0.5rem">
                     {getPlayerCard(lineup, "CF")}
                 </Flex>
 
                 {/* LEFT/RIGHT MIDS */}
-                <Flex justifyContent="space-between" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-between"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LM")}
                     {getPlayerCard(lineup, "RM")}
                 </Flex>
 
                 {/* ATTACKING MIDS */}
-                <Flex justifyContent="space-around" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-around"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LCAM")}
                     {getPlayerCard(lineup, "CAM")}
                     {getPlayerCard(lineup, "RCAM")}
                 </Flex>
 
                 {/* CENTER MIDS */}
-                <Flex justifyContent="space-around" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-around"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LCM")}
                     {getPlayerCard(lineup, "CM")}
                     {getPlayerCard(lineup, "RCM")}
                 </Flex>
 
                 {/* DEFENSIVE MIDS */}
-                <Flex justifyContent="space-around" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-around"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LCDM")}
                     {getPlayerCard(lineup, "CDM")}
                     {getPlayerCard(lineup, "RCDM")}
                 </Flex>
 
                 {/* WINGBACKS */}
-                <Flex justifyContent="space-between" gap={1} w="100%">
+                <Flex
+                    justifyContent="space-between"
+                    gap={1}
+                    w="100%"
+                    minH="0.5rem">
                     {getPlayerCard(lineup, "LWB")}
                     {getPlayerCard(lineup, "RWB")}
                 </Flex>
 
                 {/* DEFENDERS */}
-                <Flex justifyContent="center" gap={1} w="100%">
+                <Flex justifyContent="center" gap={1} w="100%" minH="0.5rem">
                     {getPlayerCard(lineup, "LB")}
                     {getPlayerCard(lineup, "LCB")}
                     {getPlayerCard(lineup, "CB")}
@@ -97,7 +125,7 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 </Flex>
 
                 {/* KEEPER */}
-                <Flex justifyContent="center" w="100%">
+                <Flex justifyContent="center" w="100%" minH="0.5rem">
                     {getPlayerCard(lineup, "GK")}
                 </Flex>
             </VStack>
@@ -129,7 +157,8 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
                 fontSize={["xs", "small"]}
                 justifyContent="center"
                 alignItems="center"
-                gap={0.5}>
+                gap={0.5}
+                h="100%">
                 <Flex gap={1} cursor="default" userSelect="none">
                     <CustomTooltip
                         label={
@@ -151,6 +180,7 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
                     </CustomTooltip>
                 </Flex>
                 <Tag
+                    flexGrow={1}
                     fontSize="inherit"
                     textAlign="center"
                     fontWeight="semibold"
