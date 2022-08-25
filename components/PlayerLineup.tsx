@@ -4,8 +4,6 @@ import { PositionNodeId } from "../optimizer/types/position-node-id.type";
 import { PositionValue } from "../optimizer/types/position-value.enum";
 import CustomTooltip from "./ui/CustomTooltip";
 
-const CARD_WIDTH = "65px";
-
 interface LineupPlayer {
     name: string;
     chemistry: number;
@@ -35,99 +33,69 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 position="relative"
                 w="40rem">
                 {/* STRIKERS */}
-                <Flex
-                    justifyContent="space-around"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
-                    {getPlayerCard(lineup, "LF")}
+                <LineupRow justifyContent="space-around">
                     {getPlayerCard(lineup, "LST")}
                     {getPlayerCard(lineup, "ST")}
                     {getPlayerCard(lineup, "RST")}
-                    {getPlayerCard(lineup, "RF")}
-                </Flex>
+                </LineupRow>
 
                 {/* WINGERS */}
-                <Flex
-                    justifyContent="space-between"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
+                <LineupRow justifyContent="space-around">
                     {getPlayerCard(lineup, "LW")}
+                    {getPlayerCard(lineup, "LF")}
+                    {getPlayerCard(lineup, "RF")}
                     {getPlayerCard(lineup, "RW")}
-                </Flex>
+                </LineupRow>
 
                 {/* CF */}
-                <Flex justifyContent="center" gap={1} w="100%" minH="0.5rem">
-                    {getPlayerCard(lineup, "CF")}
-                </Flex>
-
-                {/* LEFT/RIGHT MIDS */}
-                <Flex
-                    justifyContent="space-between"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
-                    {getPlayerCard(lineup, "LM")}
-                    {getPlayerCard(lineup, "RM")}
-                </Flex>
+                <LineupRow>{getPlayerCard(lineup, "CF")}</LineupRow>
 
                 {/* ATTACKING MIDS */}
-                <Flex
-                    justifyContent="space-around"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
+                <LineupRow justifyContent="space-around">
                     {getPlayerCard(lineup, "LCAM")}
                     {getPlayerCard(lineup, "CAM")}
                     {getPlayerCard(lineup, "RCAM")}
-                </Flex>
+                </LineupRow>
+
+                {/* LEFT/RIGHT MIDS */}
+                {/* <LineupRow justifyContent="space-between">
+                    {getPlayerCard(lineup, "LM")}
+                    {getPlayerCard(lineup, "RM")}
+                </LineupRow> */}
 
                 {/* CENTER MIDS */}
-                <Flex
-                    justifyContent="space-around"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
+                <LineupRow justifyContent="space-around">
+                    {getPlayerCard(lineup, "LM")}
                     {getPlayerCard(lineup, "LCM")}
                     {getPlayerCard(lineup, "CM")}
                     {getPlayerCard(lineup, "RCM")}
-                </Flex>
+                    {getPlayerCard(lineup, "RM")}
+                </LineupRow>
 
                 {/* DEFENSIVE MIDS */}
-                <Flex
-                    justifyContent="space-around"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
+                <LineupRow justifyContent="space-around">
                     {getPlayerCard(lineup, "LCDM")}
                     {getPlayerCard(lineup, "CDM")}
                     {getPlayerCard(lineup, "RCDM")}
-                </Flex>
+                </LineupRow>
 
                 {/* WINGBACKS */}
-                <Flex
-                    justifyContent="space-between"
-                    gap={1}
-                    w="100%"
-                    minH="0.5rem">
+                <LineupRow justifyContent="space-between">
                     {getPlayerCard(lineup, "LWB")}
                     {getPlayerCard(lineup, "RWB")}
-                </Flex>
+                </LineupRow>
 
                 {/* DEFENDERS */}
-                <Flex justifyContent="center" gap={1} w="100%" minH="0.5rem">
+                <LineupRow>
                     {getPlayerCard(lineup, "LB")}
                     {getPlayerCard(lineup, "LCB")}
                     {getPlayerCard(lineup, "CB")}
                     {getPlayerCard(lineup, "RCB")}
                     {getPlayerCard(lineup, "RB")}
-                </Flex>
+                </LineupRow>
 
                 {/* KEEPER */}
-                <Flex justifyContent="center" w="100%" minH="0.5rem">
-                    {getPlayerCard(lineup, "GK")}
-                </Flex>
+                <LineupRow>{getPlayerCard(lineup, "GK")}</LineupRow>
             </VStack>
         </Box>
     );
@@ -142,14 +110,7 @@ function getPlayerCard(lineup: LineupPlayer[], nodeId: PositionNodeId) {
 }
 
 const PlayerCard = ({ player }: { player: LineupPlayer }) => {
-    const NAME_MAX_LENGTH = 20;
     const isPosModded = player.finalPosition !== player.originalPosition;
-    const chemColor =
-        player.chemistry === 10
-            ? "green.500"
-            : player.chemistry > 6
-            ? "yellow.500"
-            : "red.500";
     return (
         <VStack w="23%" justifyContent="flex-end">
             <Flex
@@ -203,18 +164,18 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
 
 const LineupRow = ({
     children,
-    narrow
+    justifyContent = "center"
 }: {
     children: React.ReactNode[] | React.ReactNode;
-    narrow?: boolean;
+    justifyContent?: "center" | "space-between" | "space-around";
 }) => {
     return (
         <Flex
-            justifyContent="space-around"
-            alignItems="flex-end"
-            w="100%"
+            justifyContent={justifyContent}
             gap={1}
-            _empty={{ display: "none" }}>
+            w="100%"
+            py={1}
+            >
             {children}
         </Flex>
     );
@@ -329,18 +290,3 @@ const PitchLines = ({ zIndex }: { zIndex: number }) => {
         </>
     );
 };
-
-function truncate(str: string, n: number, useWordBoundary: boolean = true) {
-    if (str.length <= n) {
-        return str;
-    }
-    const subString = str.slice(0, n - 1);
-    return (
-        <>
-            {useWordBoundary
-                ? subString.slice(0, subString.lastIndexOf(" "))
-                : subString}
-            &hellip;
-        </>
-    );
-}
