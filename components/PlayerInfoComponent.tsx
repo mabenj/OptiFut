@@ -27,7 +27,11 @@ export default function PlayerInfoComponent({
                     </Heading>
                 </CustomTooltip>
                 <CustomTooltip
-                    label={"Alternative positions"}
+                    label={
+                        player.altPositions.length
+                            ? "Alternative positions"
+                            : undefined
+                    }
                     placement="bottom">
                     <Heading
                         as="h4"

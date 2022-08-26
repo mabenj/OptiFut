@@ -20,12 +20,12 @@ import {
     ModalHeader,
     ModalOverlay,
     Portal,
-    Text,
     useRadio,
     useRadioGroup,
     UseRadioProps,
     VStack
 } from "@chakra-ui/react";
+import { Select } from "chakra-react-select";
 import Image from "next/image";
 import React, {
     FormEvent,
@@ -245,6 +245,32 @@ export default function PlayerEditorModal({
 
                             <FormControl>
                                 <FormLabel
+                                    htmlFor="playerAltPositions"
+                                    textAlign="center">
+                                    Alt Positions
+                                </FormLabel>
+                                <Select
+                                    useBasicStyles={true}
+                                    isMulti
+                                    blurInputOnSelect
+                                    id={"playerAltPositions"}
+                                    name="playerAltPositions"
+                                    placeholder="Select alternative positions"
+                                    options={PlayerPositions.map((pos) => ({
+                                        value: pos,
+                                        label: pos
+                                    }))}
+                                    selectedOptionColor="green"
+                                    isDisabled={false}
+                                    isClearable
+                                    minMenuHeight={300}
+                                    maxMenuHeight={400}
+                                    menuPlacement="auto"
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel
                                     htmlFor="playerVersion"
                                     textAlign="center">
                                     Version
@@ -354,11 +380,7 @@ export default function PlayerEditorModal({
                                 colorScheme="green"
                                 onClick={handleAddPlayer}
                                 leftIcon={
-                                    isNewPlayer ? (
-                                        <AddIcon />
-                                    ) : (
-                                        <CheckIcon />
-                                    )
+                                    isNewPlayer ? <AddIcon /> : <CheckIcon />
                                 }>
                                 {isNewPlayer ? "Add Player" : "Save"}
                             </Button>

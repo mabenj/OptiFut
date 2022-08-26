@@ -50,6 +50,9 @@ export default function CustomSelect({
             selectedOptionColor="green"
             isDisabled={isDisabled}
             isClearable
+            minMenuHeight={300}
+            maxMenuHeight={400}
+            menuPlacement="auto"
             filterOption={
                 filterOption
                     ? (option, inputValue) =>
@@ -65,9 +68,6 @@ export default function CustomSelect({
                     sanitize={removeDiacritics}
                 />
             )}
-            minMenuHeight={300}
-            maxMenuHeight={400}
-            menuPlacement="auto"
         />
     );
 }

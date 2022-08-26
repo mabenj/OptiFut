@@ -7,7 +7,7 @@ const TEAM_STORAGE_KEY = "OPTIFUT_CURRENT_TEAM";
 const DEFAULT_TEAM = new Array(TeamPlayerCount).fill(
     null
 ) as (PlayerInfo | null)[];
-const CURRENT_VERSION = 2;
+const CURRENT_VERSION = 3;
 
 interface Team {
     shouldUseManager: boolean;
@@ -24,12 +24,11 @@ export function useActiveTeam() {
 
     if (team.version !== CURRENT_VERSION) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        team = {
+        setTeam({
             players: DEFAULT_TEAM,
             shouldUseManager: true,
             version: CURRENT_VERSION
-        };
-        setTeam({ ...team });
+        });
     }
 
     useEffect(() => {
