@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Tag, Text, VStack } from "@chakra-ui/react";
+import { Badge, Box, Center, Flex, Tag, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { PositionNodeId } from "../optimizer/types/position-node-id.type";
 import { PositionValue } from "../optimizer/types/position-value.enum";
@@ -33,14 +33,14 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 position="relative"
                 w="40rem">
                 {/* STRIKERS */}
-                <LineupRow justifyContent="space-around">
+                <LineupRow justifyContent="center" gap={2}>
                     {getPlayerCard(lineup, "LST")}
                     {getPlayerCard(lineup, "ST")}
                     {getPlayerCard(lineup, "RST")}
                 </LineupRow>
 
                 {/* WINGERS */}
-                <LineupRow justifyContent="space-around">
+                <LineupRow justifyContent="space-between">
                     {getPlayerCard(lineup, "LW")}
                     {getPlayerCard(lineup, "LF")}
                     {getPlayerCard(lineup, "RF")}
@@ -57,23 +57,19 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                     {getPlayerCard(lineup, "RCAM")}
                 </LineupRow>
 
-                {/* LEFT/RIGHT MIDS */}
-                {/* <LineupRow justifyContent="space-between">
-                    {getPlayerCard(lineup, "LM")}
-                    {getPlayerCard(lineup, "RM")}
-                </LineupRow> */}
-
-                {/* CENTER MIDS */}
-                <LineupRow justifyContent="space-around">
-                    {getPlayerCard(lineup, "LM")}
-                    {getPlayerCard(lineup, "LCM")}
-                    {getPlayerCard(lineup, "CM")}
-                    {getPlayerCard(lineup, "RCM")}
-                    {getPlayerCard(lineup, "RM")}
+                {/* MIDS */}
+                <LineupRow justifyContent="space-between">
+                    <Center>{getPlayerCard(lineup, "LM")}</Center>
+                    <Flex justifyContent="space-around">
+                        {getPlayerCard(lineup, "LCM")}
+                        {getPlayerCard(lineup, "CM")}
+                        {getPlayerCard(lineup, "RCM")}
+                    </Flex>
+                    <Center>{getPlayerCard(lineup, "RM")}</Center>
                 </LineupRow>
 
                 {/* DEFENSIVE MIDS */}
-                <LineupRow justifyContent="space-around">
+                <LineupRow justifyContent="center" gap={4}>
                     {getPlayerCard(lineup, "LCDM")}
                     {getPlayerCard(lineup, "CDM")}
                     {getPlayerCard(lineup, "RCDM")}
@@ -86,12 +82,14 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 </LineupRow>
 
                 {/* DEFENDERS */}
-                <LineupRow>
-                    {getPlayerCard(lineup, "LB")}
-                    {getPlayerCard(lineup, "LCB")}
-                    {getPlayerCard(lineup, "CB")}
-                    {getPlayerCard(lineup, "RCB")}
-                    {getPlayerCard(lineup, "RB")}
+                <LineupRow justifyContent="space-between">
+                    <Center>{getPlayerCard(lineup, "LB")}</Center>
+                    <Flex justifyContent="space-around">
+                        {getPlayerCard(lineup, "LCB")}
+                        {getPlayerCard(lineup, "CB")}
+                        {getPlayerCard(lineup, "RCB")}
+                    </Flex>
+                    <Center>{getPlayerCard(lineup, "RB")}</Center>
                 </LineupRow>
 
                 {/* KEEPER */}
@@ -164,18 +162,15 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
 
 const LineupRow = ({
     children,
-    justifyContent = "center"
+    justifyContent = "center",
+    gap = 1
 }: {
     children: React.ReactNode[] | React.ReactNode;
     justifyContent?: "center" | "space-between" | "space-around";
+    gap?: number;
 }) => {
     return (
-        <Flex
-            justifyContent={justifyContent}
-            gap={1}
-            w="100%"
-            py={1}
-            >
+        <Flex justifyContent={justifyContent} gap={gap} w="100%" py={1}>
             {children}
         </Flex>
     );
