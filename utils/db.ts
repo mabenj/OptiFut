@@ -2,6 +2,7 @@ import Dexie, { Table } from "dexie";
 import { PlayerInfo } from "../types/player-info.interface";
 import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version.type";
+import { Log } from "./Log";
 
 export interface Player {
     id: number;
@@ -69,10 +70,10 @@ export class OptiFutDexie extends Dexie {
 function populateTablesIfEmpty(db: OptiFutDexie) {
     db.players.count((count) => {
         if (count > 0) {
-            console.log("[players table already populated]");
+            Log.info("[players table already populated]");
             return;
         }
-        console.log("[players table is empty]");
+        Log.info("[players table is empty]");
         return new Promise<Player[]>((resolve) => {
             import("../data/players.min.json").then((module) =>
                 resolve(
@@ -94,52 +95,52 @@ function populateTablesIfEmpty(db: OptiFutDexie) {
                 )
             );
         }).then((players) => {
-            console.log("[populating players table]");
+            Log.info("[populating players table]");
             db.players.bulkAdd(players);
         });
     });
     db.nations.count((count) => {
         if (count > 0) {
-            console.log("[nations table already populated]");
+            Log.info("[nations table already populated]");
             return;
         }
-        console.log("[nations table is empty]");
+        Log.info("[nations table is empty]");
         return new Promise<Nation[]>((resolve) => {
             import("../data/nations.min.json").then((module) =>
                 resolve(module.default as Nation[])
             );
         }).then((nations) => {
-            console.log("[populating nations table]");
+            Log.info("[populating nations table]");
             db.nations.bulkAdd(nations);
         });
     });
     db.leagues.count((count) => {
         if (count > 0) {
-            console.log("[leagues table already populated]");
+            Log.info("[leagues table already populated]");
             return;
         }
-        console.log("[leagues table is empty]");
+        Log.info("[leagues table is empty]");
         return new Promise<League[]>((resolve) => {
             import("../data/leagues.min.json").then((module) =>
                 resolve(module.default as League[])
             );
         }).then((leagues) => {
-            console.log("[populating leagues table]");
+            Log.info("[populating leagues table]");
             db.leagues.bulkAdd(leagues);
         });
     });
     db.clubs.count((count) => {
         if (count > 0) {
-            console.log("[clubs table already populated]");
+            Log.info("[clubs table already populated]");
             return;
         }
-        console.log("[clubs table is empty]");
+        Log.info("[clubs table is empty]");
         return new Promise<Club[]>((resolve) => {
             import("../data/clubs.min.json").then((module) =>
                 resolve(module.default as Club[])
             );
         }).then((clubs) => {
-            console.log("[populating clubs table]");
+            Log.info("[populating clubs table]");
             db.clubs.bulkAdd(clubs);
         });
     });
