@@ -11,7 +11,7 @@ export interface Player {
     nationId: number;
     clubId: number;
     preferredPosition: PlayerPosition;
-    alternativePositions: PlayerPosition[];
+    allPositions: PlayerPosition[];
     version: PlayerVersion;
     rating: number;
 }
@@ -47,7 +47,7 @@ export class OptiFutDexie extends Dexie {
 
     constructor() {
         super("optifutDb");
-        this.version(2)
+        this.version(3)
             .stores({
                 players: "&id, playerName, commonName, rating",
                 nations: "&id, displayName",
@@ -86,9 +86,7 @@ function populateTablesIfEmpty(db: OptiFutDexie) {
                                 nationId: p.nationId,
                                 clubId: p.clubId,
                                 preferredPosition: p.position,
-                                alternativePositions: getDefaultAltPositions(
-                                    p.position as PlayerPosition
-                                ),
+                                allPositions: p.allPositions,
                                 version: p.version,
                                 rating: p.rating
                             } as Player)
@@ -145,33 +143,6 @@ function populateTablesIfEmpty(db: OptiFutDexie) {
             db.clubs.bulkAdd(clubs);
         });
     });
-}
-
-function getDefaultAltPositions(position: PlayerPosition): PlayerPosition[] {
-    switch (position) {
-        case "RWB":
-            return ["RB"];
-        case "RB":
-            return ["RWB"];
-        case "LWB":
-            return ["LB"];
-        case "LB":
-            return ["LWB"];
-        case "CF":
-            return ["ST"];
-        case "ST":
-            return ["CF"];
-        case "LM":
-            return ["LW"];
-        case "RM":
-            return ["RW"];
-        case "LW":
-            return ["LM"];
-        case "RW":
-            return ["RM"];
-        default:
-            return [];
-    }
 }
 
 export const db = new OptiFutDexie();
