@@ -7,4 +7,7 @@ export interface ChemistryResult {
     avgChemistry: number;
     positionModifications: number;
     playerChemistries: { [playerId: number]: number };
+    leagueCounts: { id: number; count: number }[];
+    clubCounts: { id: number; count: number }[];
+    nationCounts: { id: number; count: number }[];
 }

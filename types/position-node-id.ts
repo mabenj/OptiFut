@@ -5,8 +5,6 @@ export type PositionNodeId =
     | "ST"
     | "RST"
     | "CF"
-    | "LF" // TODO: these are removed from FIFA 23
-    | "RF" // TODO: these are removed from FIFA 23
     | "LW"
     | "RW"
     | "LCAM"
@@ -38,10 +36,6 @@ export namespace PositionNodeId {
                 return "ST";
             case "CF":
                 return "CF";
-            case "LF":
-                return "LF";
-            case "RF":
-                return "RF";
             case "LW":
                 return "LW";
             case "RW":

@@ -18,6 +18,7 @@ import {
 import React from "react";
 import { FormationOptions } from "../data/constants";
 import { FormationInfo } from "../types/formation-info";
+import ClubImage from "./image-icons/ClubImage";
 import LeagueImage from "./image-icons/LeagueImage";
 import NationImage from "./image-icons/NationImage";
 import PlayerLineup from "./PlayerLineup";
@@ -122,53 +123,6 @@ export default function FormationResults({
                                         }))}
                                     />
                                 </Box>
-                                {/* <Box w="100%">
-                                    <Grid templateColumns="2fr 6fr 2fr 2fr">
-                                        <GridItem></GridItem>
-                                        <GridItem
-                                            fontWeight="medium"
-                                            color="gray.800"
-                                            fontSize="sm">
-                                            Name
-                                        </GridItem>
-                                        <GridItem
-                                            fontWeight="medium"
-                                            color="gray.800"
-                                            textAlign="center"
-                                            fontSize="sm">
-                                            Position
-                                        </GridItem>
-                                        <GridItem
-                                            fontWeight="medium"
-                                            color="gray.800"
-                                            textAlign="center"
-                                            fontSize="sm"
-                                            pl={2}>
-                                            Chemistry
-                                        </GridItem>
-
-                                        {formation.players.map((player) => (
-                                            <React.Fragment key={player.id}>
-                                                <GridItem
-                                                    fontWeight="medium"
-                                                    color="gray.800"
-                                                    textAlign="center"
-                                                    fontSize="sm">
-                                                    {player.positionNodeId}
-                                                </GridItem>
-                                                <GridItem>
-                                                    {player.name}
-                                                </GridItem>
-                                                <GridItem textAlign="center">
-                                                    {player.newPosition}
-                                                </GridItem>
-                                                <GridItem textAlign="center">
-                                                    {player.chemistry}
-                                                </GridItem>
-                                            </React.Fragment>
-                                        ))}
-                                    </Grid>
-                                </Box> */}
                                 <Box w="100%">
                                     <Grid
                                         w="70%"
@@ -245,6 +199,62 @@ export default function FormationResults({
                                                 </GridItem>
                                             </>
                                         )}
+                                        <ul>
+                                            {formation.chemistry.nationCounts.map(
+                                                (nationCount) => (
+                                                    <li key={nationCount.id}>
+                                                        <Flex gap={2}>
+                                                            <NationImage
+                                                                id={
+                                                                    nationCount.id
+                                                                }
+                                                                sizePx={30}
+                                                            />{" "}
+                                                            {nationCount.count}{" "}
+                                                            / 8
+                                                        </Flex>
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+
+                                        <ul>
+                                            {formation.chemistry.clubCounts.map(
+                                                (clubCount) => (
+                                                    <li key={clubCount.id}>
+                                                        <Flex gap={2}>
+                                                            <ClubImage
+                                                                id={
+                                                                    clubCount.id
+                                                                }
+                                                                sizePx={30}
+                                                            />{" "}
+                                                            {clubCount.count} /
+                                                            7
+                                                        </Flex>
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+
+                                        <ul>
+                                            {formation.chemistry.leagueCounts.map(
+                                                (leagueCount) => (
+                                                    <li key={leagueCount.id}>
+                                                        <Flex gap={2}>
+                                                            <LeagueImage
+                                                                id={
+                                                                    leagueCount.id
+                                                                }
+                                                                sizePx={30}
+                                                            />{" "}
+                                                            {leagueCount.count}{" "}
+                                                            / 8
+                                                        </Flex>
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
                                     </Grid>
                                 </Box>
                             </VStack>

@@ -1,14 +1,14 @@
 import { Badge, Box, Center, Flex, Tag, Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import { PositionNodeId } from "../types/position-node-id";
+import { PlayerPosition } from "../types/player-position.type";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface LineupPlayer {
     name: string;
     chemistry: number;
-    originalPosition: string;
-    finalPosition: string;
-    positionInFormation: string;
+    originalPosition: PlayerPosition;
+    finalPosition: PlayerPosition;
+    positionInFormation: PlayerPosition;
 }
 
 interface PlayerLineupProps {
@@ -21,7 +21,8 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
             bg="green.200"
             position="relative"
             display="flex"
-            justifyContent="center">
+            justifyContent="center"
+            minH="25rem">
             <PitchLines zIndex={1} />
             <VStack
                 spacing={1}
@@ -33,45 +34,60 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 w="40rem">
                 {/* STRIKERS */}
                 <LineupRow justifyContent="center" gap={2}>
-                    {getPlayerCard(lineup, "LST")}
-                    {getPlayerCard(lineup, "ST")}
-                    {getPlayerCard(lineup, "RST")}
+                    {/* LST */}
+                    {getPlayerCard(lineup, "ST", 1)}
+                    {/* ST */}
+                    {getPlayerCard(lineup, "ST", 2)}
+                    {/* RST */}
+                    {getPlayerCard(lineup, "ST", 3)}
                 </LineupRow>
 
                 {/* WINGERS */}
                 <LineupRow justifyContent="space-between">
                     {getPlayerCard(lineup, "LW")}
-                    {getPlayerCard(lineup, "LF")}
-                    {getPlayerCard(lineup, "RF")}
                     {getPlayerCard(lineup, "RW")}
                 </LineupRow>
 
                 {/* CF */}
-                <LineupRow>{getPlayerCard(lineup, "CF")}</LineupRow>
+                <LineupRow>
+                    {/* LCF */}
+                    {getPlayerCard(lineup, "CF", 1)}
+                    {/* RCF */}
+                    {getPlayerCard(lineup, "CF", 2)}
+                </LineupRow>
 
                 {/* ATTACKING MIDS */}
                 <LineupRow justifyContent="space-around">
-                    {getPlayerCard(lineup, "LCAM")}
-                    {getPlayerCard(lineup, "CAM")}
-                    {getPlayerCard(lineup, "RCAM")}
+                    {/* LCAM */}
+                    {getPlayerCard(lineup, "CAM", 1)}
+                    {/* CAM */}
+                    {getPlayerCard(lineup, "CAM", 2)}
+                    {/* RCAM */}
+                    {getPlayerCard(lineup, "CAM", 3)}
                 </LineupRow>
 
                 {/* MIDS */}
                 <LineupRow justifyContent="space-between">
                     <Center>{getPlayerCard(lineup, "LM")}</Center>
                     <Flex justifyContent="space-around">
-                        {getPlayerCard(lineup, "LCM")}
-                        {getPlayerCard(lineup, "CM")}
-                        {getPlayerCard(lineup, "RCM")}
+                        {/* LCM */}
+                        {getPlayerCard(lineup, "CM", 1)}
+                        {/* CM */}
+                        {getPlayerCard(lineup, "CM", 2)}
+                        {/* RCM */}
+                        {getPlayerCard(lineup, "CM", 3)}
                     </Flex>
                     <Center>{getPlayerCard(lineup, "RM")}</Center>
                 </LineupRow>
 
                 {/* DEFENSIVE MIDS */}
                 <LineupRow justifyContent="center" gap={4}>
-                    {getPlayerCard(lineup, "LCDM")}
-                    {getPlayerCard(lineup, "CDM")}
-                    {getPlayerCard(lineup, "RCDM")}
+                    {/* LCDM */}
+                    {getPlayerCard(lineup, "CDM", 1)}
+                    {/* CDM */}
+                    {getPlayerCard(lineup, "CDM", 2)}
+                    {/* RCDM */}
+                    {getPlayerCard(lineup, "CDM", 3)}
                 </LineupRow>
 
                 {/* WINGBACKS */}
@@ -84,9 +100,12 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
                 <LineupRow justifyContent="space-between">
                     <Center>{getPlayerCard(lineup, "LB")}</Center>
                     <Flex justifyContent="space-around">
-                        {getPlayerCard(lineup, "LCB")}
-                        {getPlayerCard(lineup, "CB")}
-                        {getPlayerCard(lineup, "RCB")}
+                        {/* LCB */}
+                        {getPlayerCard(lineup, "CB", 1)}
+                        {/* CB */}
+                        {getPlayerCard(lineup, "CB", 2)}
+                        {/* RCB */}
+                        {getPlayerCard(lineup, "CB", 3)}
                     </Flex>
                     <Center>{getPlayerCard(lineup, "RB")}</Center>
                 </LineupRow>
@@ -98,12 +117,17 @@ export default function PlayerLineup({ lineup }: PlayerLineupProps) {
     );
 }
 
-function getPlayerCard(lineup: LineupPlayer[], nodeId: PositionNodeId) {
-    // const player = lineup.find((p) => p.positionNode === nodeId);
-    // if (!player) {
+function getPlayerCard(
+    lineup: LineupPlayer[],
+    position: PlayerPosition,
+    nth: number = 1
+) {
+    const candidates = lineup.filter((p) => p.positionInFormation === position);
+    const player = candidates.length >= nth ? candidates[nth - 1] : null;
+    if (!player) {
         return <></>;
-    // }
-    // return <PlayerCard player={player} />;
+    }
+    return <PlayerCard player={player} />;
 }
 
 const PlayerCard = ({ player }: { player: LineupPlayer }) => {
@@ -151,9 +175,7 @@ const PlayerCard = ({ player }: { player: LineupPlayer }) => {
                 variant="solid"
                 cursor="default"
                 userSelect="none">
-                {PositionValue.toString(
-                    PositionValue.fromNodeId(player.positionNode)
-                )}
+                {player.positionInFormation}
             </Badge>
         </VStack>
     );

@@ -89,25 +89,25 @@ export abstract class Formation {
                 const clubCount = clubCounts.get(clubId) || 0;
 
                 const nationPoints =
-                    nationCount >= 10
+                    nationCount >= 8
                         ? 3
-                        : nationCount >= 6
+                        : nationCount >= 5
                         ? 2
-                        : nationCount >= 3
+                        : nationCount >= 2
                         ? 1
                         : 0;
                 const leaguePoints =
-                    leagueCount >= 10
+                    leagueCount >= 8
                         ? 3
-                        : leagueCount >= 6
+                        : leagueCount >= 5
                         ? 2
                         : leagueCount >= 3
                         ? 1
                         : 0;
                 const clubPoints =
-                    clubCount >= 9
+                    clubCount >= 7
                         ? 3
-                        : clubCount >= 5
+                        : clubCount >= 4
                         ? 2
                         : clubCount >= 2
                         ? 1
@@ -129,7 +129,17 @@ export abstract class Formation {
             chem3Count: 0,
             avgChemistry: 0,
             positionModifications: 0,
-            playerChemistries: {}
+            playerChemistries: {},
+            nationCounts: Array.from(nationCounts.entries()).map(
+                ([id, count]) => ({ id, count })
+            ),
+            leagueCounts: Array.from(leagueCounts.entries()).map(
+                ([id, count]) => ({ id, count })
+            ),
+            clubCounts: Array.from(clubCounts.entries()).map(([id, count]) => ({
+                id,
+                count
+            }))
         };
         playerChemistries.forEach((chem, player) => {
             result.combinedChemistry += chem;
