@@ -7,14 +7,14 @@ export class Formation3421 extends Formation {
 
     /**
      *
-     * @param players Order: LF, ST, RF, LM, CM, CM, RM, CB, CB, CB, GK
+     * @param players Order: CF, ST, CF, LM, CM, CM, RM, CB, CB, CB, GK
      */
     constructor(players: PlayerEntity[], useManager: boolean) {
         super(
             PositionNode.createForFormation(players, [
-                "LF",
+                "CF",
                 "ST",
-                "RF",
+                "CF",
                 "LM",
                 "CM",
                 "CM",

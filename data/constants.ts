@@ -80,7 +80,7 @@ export const FormationOptions: { id: FormationId; displayName: string }[] = [
     { id: "451_2", displayName: "4-5-1 (2)" },
     { id: "5212", displayName: "5-2-1-2" },
     { id: "5221", displayName: "5-2-2-1" },
-    { id: "532", displayName: "5-3-2" },
+    { id: "5122", displayName: "5-1-2-2" },
     { id: "541", displayName: "5-4-1" }
 ];
 
@@ -98,10 +98,8 @@ export const PlayerPositions: PlayerPosition[] = [
     "CAM",
     "CM",
     "CDM",
-    "LF",
     "LW",
     "LM",
-    "RF",
     "RW",
     "RM",
     "LWB",

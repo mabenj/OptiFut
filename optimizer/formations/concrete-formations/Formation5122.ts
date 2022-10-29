@@ -2,12 +2,12 @@ import { PlayerEntity } from "../../PlayerEntity";
 import { PositionNode } from "../../PositionNode";
 import { Formation } from "../Formation";
 
-export class Formation532 extends Formation {
-    public readonly formationId = "532";
+export class Formation5122 extends Formation {
+    public readonly formationId = "5122";
 
     /**
      *
-     * @param players Order: ST, ST, CM, CM, CM, LWB, CB, CB, CB, RWB, GK
+     * @param players Order: ST, ST, CM, CDM, CM, LWB, CB, CB, CB, RWB, GK
      */
     constructor(players: PlayerEntity[], useManager: boolean) {
         super(
@@ -15,7 +15,7 @@ export class Formation532 extends Formation {
                 "ST",
                 "ST",
                 "CM",
-                "CM",
+                "CDM",
                 "CM",
                 "LWB",
                 "CB",
@@ -29,6 +29,6 @@ export class Formation532 extends Formation {
     }
 
     createFormation(players: PlayerEntity[], useManager: boolean) {
-        return new Formation532(players, useManager);
+        return new Formation5122(players, useManager);
     }
 }

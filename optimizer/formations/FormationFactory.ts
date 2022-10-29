@@ -26,9 +26,9 @@ import { Formation442 } from "./concrete-formations/Formation442";
 import { Formation442_2 } from "./concrete-formations/Formation442_2";
 import { Formation451 } from "./concrete-formations/Formation451";
 import { Formation451_2 } from "./concrete-formations/Formation451_2";
+import { Formation5122 } from "./concrete-formations/Formation5122";
 import { Formation5212 } from "./concrete-formations/Formation5212";
 import { Formation5221 } from "./concrete-formations/Formation5221";
-import { Formation532 } from "./concrete-formations/Formation532";
 import { Formation541 } from "./concrete-formations/Formation541";
 import { Formation } from "./Formation";
 
@@ -95,8 +95,8 @@ export class FormationFactory {
                 return new Formation5212(players, useManager);
             case "5221":
                 return new Formation5221(players, useManager);
-            case "532":
-                return new Formation532(players, useManager);
+            case "5122":
+                return new Formation5122(players, useManager);
             case "541":
                 return new Formation541(players, useManager);
             default:

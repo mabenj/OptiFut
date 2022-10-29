@@ -1,6 +1,6 @@
 def main():
     for formation in formations:
-        with open(f"Formation{formation['formationId']}.ts", "w") as f:
+        with open(f"./Formation{formation['formationId']}.ts", "w") as f:
             code = f'''import {{ PlayerEntity }} from "../../PlayerEntity";
 import {{ PositionNode }} from "../../PositionNode";
 import {{ Formation }} from "../Formation";
@@ -38,7 +38,7 @@ export class Formation{formation["formationId"]} extends Formation {{
 '''
             f.write(code)
 
-    with open("../FormationFactory.ts", "w") as f:
+    with open("./../FormationFactory.ts", "w") as f:
         nl = "\n"
         code = f'''import {{ FormationId }} from "../../types/formation-id";
 import {{ PlayerEntity }} from "../PlayerEntity";
@@ -100,9 +100,9 @@ formations = [
     {
         "formationId": "3421",
         "positions": [
-            "LF",
+            "CF",
             "ST",
-            "RF",
+            "CF",
             "LM",
             "CM",
             "CM",
@@ -293,8 +293,8 @@ formations = [
         "formationId": "4321",
         "positions": [
             "ST",
-            "LF",
-            "RF",
+            "CF",
+            "CF",
             "CM",
             "CM",
             "CM",
@@ -514,12 +514,12 @@ formations = [
         ]
     },
     {
-        "formationId": "532",
+        "formationId": "5122",
         "positions": [
             "ST",
             "ST",
             "CM",
-            "CM",
+            "CDM",
             "CM",
             "LWB",
             "CB",
