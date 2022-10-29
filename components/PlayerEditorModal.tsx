@@ -25,7 +25,6 @@ import {
     UseRadioProps,
     VStack
 } from "@chakra-ui/react";
-import { Select } from "chakra-react-select";
 import Image from "next/image";
 import React, {
     FormEvent,
@@ -51,6 +50,7 @@ import { PlayerPosition } from "../types/player-position.type";
 import { PlayerVersion } from "../types/player-version.type";
 import { removeDiacritics } from "../utils/utils";
 import PlayerNameAutocomplete from "./PlayerNameAutocomplete";
+import CustomMultiSelect from "./ui/CustomMultiSelect";
 import CustomSelect from "./ui/CustomSelect";
 import CustomTooltip from "./ui/CustomTooltip";
 
@@ -193,7 +193,11 @@ export default function PlayerEditorModal({
                                             prefPosition:
                                                 player.preferredPosition,
                                             altPositions:
-                                                player.alternativePositions,
+                                                player.allPositions.filter(
+                                                    (pos) =>
+                                                        pos !==
+                                                        player.preferredPosition
+                                                ),
                                             nationId: player.nationId,
                                             leagueId: player.leagueId,
                                             clubId: player.clubId
@@ -249,23 +253,23 @@ export default function PlayerEditorModal({
                                     textAlign="center">
                                     Alt Positions
                                 </FormLabel>
-                                <Select
-                                    useBasicStyles={true}
-                                    isMulti
-                                    blurInputOnSelect
-                                    id={"playerAltPositions"}
+                                <CustomMultiSelect
+                                    id="playerAltPositions"
                                     name="playerAltPositions"
                                     placeholder="Select alternative positions"
                                     options={PlayerPositions.map((pos) => ({
                                         value: pos,
                                         label: pos
                                     }))}
-                                    selectedOptionColor="green"
-                                    isDisabled={false}
-                                    isClearable
-                                    minMenuHeight={300}
-                                    maxMenuHeight={400}
-                                    menuPlacement="auto"
+                                    value={altPositions.map((pos) => ({
+                                        value: pos,
+                                        label: pos
+                                    }))}
+                                    onChange={(newVal) =>
+                                        setAltPositions(
+                                            newVal.map((val) => val.value)
+                                        )
+                                    }
                                 />
                             </FormControl>
 

@@ -15,7 +15,7 @@ export default function PlayerInfoComponent({
     return (
         <Flex alignItems="center">
             <VStack>
-                <CustomTooltip label="Preferred position" placement="top">
+                <CustomTooltip label="Current position" placement="top">
                     <Heading
                         as="h3"
                         size="md"
