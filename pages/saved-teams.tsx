@@ -22,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import PlayerInfoComponent from "../components/PlayerInfoComponent";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useSavedTeam } from "../hooks/useSavedTeam";
 import { PlayerInfo } from "../types/player-info.interface";
@@ -94,12 +93,15 @@ const SavedTeams: NextPage = () => {
                                 divider={
                                     <StackDivider borderColor="gray.200" />
                                 }>
-                                {team.players.map((player, index) => (
-                                    <PlayerInfoComponent
-                                        key={index}
-                                        player={player}
-                                    />
-                                ))}
+                                {team.players.map(
+                                    (player, index) =>
+                                        //TODO
+                                        // <PlayerInfoComponent
+                                        //     key={index}
+                                        //     player={player}
+                                        // />
+                                        player.name
+                                )}
                             </Stack>
                         </AccordionPanel>
                     </AccordionItem>

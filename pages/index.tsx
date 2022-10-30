@@ -3,7 +3,9 @@ import {
     Flex,
     FormControl,
     FormLabel,
+    GridItem,
     Heading,
+    SimpleGrid,
     Switch,
     Tab,
     TabList,
@@ -78,19 +80,28 @@ const Home: NextPage = () => {
                 </TabList>
                 <TabPanels>
                     <TabPanel p={0}>
-                        <PlayerList players={players} onChange={setPlayers} />
-                        <FormationsAccordion
-                            selectedFormations={selectedFormations}
-                            onChange={setSelectedFormations}
-                        />
-                        <ManagerSwitch
-                            isOn={shouldUseManager}
-                            setIsOn={setShouldUseManager}
-                        />
-                        <OptimizeTeamBtn
-                            disabled={!canOptimize()}
-                            onClick={startOptimizing}
-                        />
+                        <SimpleGrid columns={[1, 1, 3]}>
+                            <GridItem colSpan={2}>
+                                <PlayerList
+                                    players={players}
+                                    onChange={setPlayers}
+                                />
+                            </GridItem>
+                            <GridItem>
+                                <FormationsAccordion
+                                    selectedFormations={selectedFormations}
+                                    onChange={setSelectedFormations}
+                                />
+                                <ManagerSwitch
+                                    isOn={shouldUseManager}
+                                    setIsOn={setShouldUseManager}
+                                />
+                                <OptimizeTeamBtn
+                                    disabled={!canOptimize()}
+                                    onClick={startOptimizing}
+                                />
+                            </GridItem>
+                        </SimpleGrid>
                     </TabPanel>
                     <TabPanel p={0}>
                         <FormationResults
