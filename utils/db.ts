@@ -48,7 +48,7 @@ export class OptiFutDexie extends Dexie {
 
     constructor() {
         super("optifutDb");
-        this.version(3)
+        this.version(4)
             .stores({
                 players: "&id, playerName, commonName, rating",
                 nations: "&id, displayName",
