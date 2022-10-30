@@ -3,7 +3,7 @@ import Highlighter from "react-highlight-words";
 import { SelectOption } from "../../types/select-option.interface";
 import { removeDiacritics } from "../../utils/utils";
 
-interface CustomMultiSelectOption{
+interface CustomMultiSelectOption {
     label: string;
     value: any;
 }
@@ -19,7 +19,7 @@ interface CustomMultiSelectProps {
     noOptionsMessage?: string;
 }
 
-let inputValue = ""
+let inputValue = "";
 
 export default function CustomMultiSelect({
     id,
@@ -27,12 +27,15 @@ export default function CustomMultiSelect({
     placeholder,
     options,
     noOptionsMessage,
-    value,onChange,isDisabled
+    value,
+    onChange,
+    isDisabled
 }: CustomMultiSelectProps) {
     return (
         <Select
             useBasicStyles={true}
             isMulti
+            hideSelectedOptions={false}
             blurInputOnSelect
             id={id}
             name={name}
@@ -44,7 +47,6 @@ export default function CustomMultiSelect({
             selectedOptionColor="green"
             isDisabled={isDisabled}
             isClearable
-            minMenuHeight={300}
             maxMenuHeight={400}
             menuPlacement="auto"
             onInputChange={(value) => (inputValue = value)}

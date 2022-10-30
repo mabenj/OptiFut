@@ -222,7 +222,10 @@ export default function PlayerEditorModal({
                                             {prefPosition} <ChevronDownIcon />
                                         </MenuButton>
                                         <Portal>
-                                            <MenuList zIndex={"modal"}>
+                                            <MenuList
+                                                zIndex={"modal"}
+                                                overflowY="scroll"
+                                                maxH="20rem">
                                                 <MenuOptionGroup
                                                     type="radio"
                                                     value={prefPosition}
@@ -256,7 +259,7 @@ export default function PlayerEditorModal({
                                 <CustomMultiSelect
                                     id="playerAltPositions"
                                     name="playerAltPositions"
-                                    placeholder="Select alternative positions"
+                                    placeholder="Select alternative positions..."
                                     options={PlayerPositions.map((pos) => ({
                                         value: pos,
                                         label: pos

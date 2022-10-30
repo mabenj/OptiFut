@@ -3,9 +3,13 @@ import {
     Flex,
     FormControl,
     FormLabel,
-    SlideFade,
-    Stack,
+    Heading,
     Switch,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
     Text
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
@@ -20,6 +24,7 @@ import { FormationId } from "../types/formation-id";
 import { notEmpty } from "../utils/utils";
 
 const Home: NextPage = () => {
+    const [tabIndex, setTabIndex] = useState(0);
     const { players, setPlayers, shouldUseManager, setShouldUseManager } =
         useActiveTeam();
     const [selectedFormations, setSelectedFormations] = useState(
@@ -51,35 +56,53 @@ const Home: NextPage = () => {
         optimize(players.filter(notEmpty), formationsToUse, shouldUseManager);
     };
 
-    if (isOptimizing || optimizedFormations.length) {
-        return (
-            <SlideFade in={isOptimizing || !!optimizedFormations.length}>
-                <FormationResults
-                    results={optimizedFormations}
-                    isOptimizing={isOptimizing}
-                    onReset={resetOptimizer}
-                    onStop={stopOptimizer}
-                />
-            </SlideFade>
-        );
-    }
-
     return (
-        <Stack spacing={5}>
-            <PlayerList players={players} onChange={setPlayers} />
-            <FormationsAccordion
-                selectedFormations={selectedFormations}
-                onChange={setSelectedFormations}
-            />
-            <ManagerSwitch
-                isOn={shouldUseManager}
-                setIsOn={setShouldUseManager}
-            />
-            <OptimizeTeamBtn
-                disabled={!canOptimize()}
-                onClick={startOptimizing}
-            />
-        </Stack>
+        <>
+            <Tabs
+                index={tabIndex}
+                onChange={setTabIndex}
+                colorScheme="green"
+                size="md"
+                isFitted>
+                <TabList color="gray.600">
+                    <Tab>
+                        <Heading size="md" as="h2">
+                            Team
+                        </Heading>
+                    </Tab>
+                    <Tab>
+                        <Heading size="md" as="h2">
+                            Results
+                        </Heading>
+                    </Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel p={0}>
+                        <PlayerList players={players} onChange={setPlayers} />
+                        <FormationsAccordion
+                            selectedFormations={selectedFormations}
+                            onChange={setSelectedFormations}
+                        />
+                        <ManagerSwitch
+                            isOn={shouldUseManager}
+                            setIsOn={setShouldUseManager}
+                        />
+                        <OptimizeTeamBtn
+                            disabled={!canOptimize()}
+                            onClick={startOptimizing}
+                        />
+                    </TabPanel>
+                    <TabPanel p={0}>
+                        <FormationResults
+                            results={optimizedFormations}
+                            isOptimizing={isOptimizing}
+                            onReset={resetOptimizer}
+                            onStop={stopOptimizer}
+                        />
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
+        </>
     );
 };
 

@@ -11,15 +11,15 @@ import {
     Box,
     Button,
     ButtonGroup,
+    Divider,
     Flex,
     FormControl,
     FormLabel,
-    Heading,
+    Grid,
     IconButton,
     Input,
     InputGroup,
     Menu,
-    MenuButton,
     MenuDivider,
     MenuItem,
     MenuList,
@@ -35,20 +35,21 @@ import {
     PopoverBody,
     PopoverContent,
     PopoverTrigger,
-    Text,
     useDisclosure,
     useToast,
     VStack
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { DefaultEditorValues, TeamPlayerCount } from "../data/constants";
 import { useSavedTeam } from "../hooks/useSavedTeam";
 import { PlayerEditorValues } from "../types/player-editor-values.interface";
 import { PlayerInfo } from "../types/player-info.interface";
 import { notEmpty } from "../utils/utils";
+import ClubImage from "./image-icons/ClubImage";
+import LeagueImage from "./image-icons/LeagueImage";
+import NationImage from "./image-icons/NationImage";
 import PlayerEditorModal from "./PlayerEditorModal";
-import PlayerInfoComponent from "./PlayerInfoComponent";
 import CustomTooltip from "./ui/CustomTooltip";
 
 interface PlayerListProps {
@@ -151,11 +152,8 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                 prefillValues={editorPrefillValues}
             />
             <Flex justifyContent="space-between">
-                <Heading as="h2" size="md" mb={5}>
-                    <Text>Active Team</Text>
-                </Heading>
                 <Menu>
-                    <MenuButton
+                    {/* <MenuButton
                         as={IconButton}
                         icon={
                             <Text
@@ -165,7 +163,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                         }
                         variant="ghost"
                         rounded="full"
-                    />
+                    /> */}
                     <MenuList>
                         <SaveTeamMenuItem
                             disabled={!canSaveTeam}
@@ -183,51 +181,23 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                     </MenuList>
                 </Menu>
             </Flex>
-            <VStack align="stretch" spacing={2}>
-                {players.map((player, i) => (
-                    <Box
-                        key={i}
-                        bg={player !== null ? "gray.100" : undefined}
-                        rounded="xl"
-                        border={player !== null ? "1px" : undefined}
-                        borderColor={player !== null ? "gray.200" : undefined}
-                        _hover={{
-                            backgroundColor:
-                                player !== null ? "gray.200" : undefined
-                        }}>
-                        <Box>
-                            {!!player ? (
-                                <Flex
-                                    alignItems="center"
-                                    justifyContent="space-between"
-                                    w="100%"
-                                    py={3}
-                                    px={4}>
-                                    <PlayerInfoComponent player={player} />
-                                    <Box>
-                                        <CustomTooltip label="Edit player">
-                                            <IconButton
-                                                rounded="full"
-                                                variant="ghost"
-                                                aria-label="Edit player"
-                                                size="lg"
-                                                icon={<EditIcon />}
-                                                onClick={() => editPlayer(i)}
-                                            />
-                                        </CustomTooltip>
-                                        <RemovePlayerBtn
-                                            playerName={player.name}
-                                            onRemove={() => removePlayer(i)}
-                                        />
-                                    </Box>
-                                </Flex>
-                            ) : (
-                                <EmptyPlayerSlot
-                                    onClick={() => editPlayer(i)}
-                                />
-                            )}
-                        </Box>
-                    </Box>
+            <VStack spacing={0}>
+                {players.map((player, index) => (
+                    <React.Fragment key={index}>
+                        {player === null ? (
+                            <EmptyPlayerSlot
+                                key={index}
+                                onClick={() => editPlayer(index)}
+                            />
+                        ) : (
+                            <PlayerItem
+                                player={player}
+                                onEdit={() => editPlayer(index)}
+                                onRemove={() => removePlayer(index)}
+                            />
+                        )}
+                        <Divider />
+                    </React.Fragment>
                 ))}
             </VStack>
         </Box>
@@ -236,17 +206,75 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
 
 const EmptyPlayerSlot = ({ onClick }: { onClick: () => any }) => {
     return (
-        <Button
-            onClick={onClick}
-            variant="outline"
-            rounded="xl"
-            leftIcon={<AddIcon />}
-            p={7}
-            m={0}
+        <Box w="100%">
+            <Button
+                onClick={onClick}
+                variant="outline"
+                rounded="xl"
+                bg="gray.50"
+                leftIcon={<AddIcon />}
+                p={5}
+                m={0}
+                my={4}
+                w="100%">
+                Add Player
+            </Button>
+        </Box>
+    );
+};
+
+const PlayerItem = ({
+    player,
+    onEdit,
+    onRemove
+}: {
+    player: PlayerInfo;
+    onEdit: () => any;
+    onRemove: () => any;
+}) => {
+    return (
+        <Grid
+            templateColumns="20fr 60fr 20fr"
+            py={2}
             w="100%"
-            h="100%">
-            Add Player
-        </Button>
+            _hover={{ backgroundColor: "gray.50" }}>
+            <VStack spacing={0} color="gray.600">
+                <CustomTooltip label="Current position" placement="top">
+                    <Box fontSize="sm" fontWeight="semibold">
+                        {player.prefPosition}
+                    </Box>
+                </CustomTooltip>
+                <CustomTooltip label="Alternative positions" placement="bottom">
+                    <Box fontSize="sm">{player.altPositions.join(", ")}</Box>
+                </CustomTooltip>
+            </VStack>
+            <Box overflow="hidden" fontSize="sm">
+                <Truncated>{player.name}</Truncated>
+                <Flex gap={2} alignItems="center" mt={2}>
+                    <NationImage id={player.nationId} sizePx={25} />
+                    <LeagueImage id={player.leagueId} sizePx={20} />
+                    <ClubImage id={player.clubId} sizePx={20} />
+                </Flex>
+            </Box>
+            <Box>
+                <Flex justifyContent="flex-end">
+                    <CustomTooltip label="Edit player">
+                        <IconButton
+                            rounded="full"
+                            variant="ghost"
+                            aria-label="Edit player"
+                            size="lg"
+                            icon={<EditIcon />}
+                            onClick={onEdit}
+                        />
+                    </CustomTooltip>
+                    <RemovePlayerBtn
+                        playerName={player.name}
+                        onRemove={onRemove}
+                    />
+                </Flex>
+            </Box>
+        </Grid>
     );
 };
 
@@ -376,5 +404,17 @@ const SaveTeamMenuItem = ({
                 </ModalContent>
             </Modal>
         </>
+    );
+};
+
+const Truncated = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <Box
+            fontWeight="bold"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="ellipsis">
+            {children}
+        </Box>
     );
 };
