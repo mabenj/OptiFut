@@ -1,5 +1,7 @@
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
     Button,
+    Divider,
     Flex,
     FormControl,
     FormLabel,
@@ -17,8 +19,8 @@ import {
 import type { NextPage } from "next";
 import { useState } from "react";
 import FormationResults from "../components/FormationResults";
-import FormationsAccordion from "../components/FormationsAccordion";
 import PlayerList from "../components/PlayerList";
+import CustomTooltip from "../components/ui/CustomTooltip";
 import { DefaultSelectedFormations, TeamPlayerCount } from "../data/constants";
 import { useActiveTeam } from "../hooks/useActiveTeam";
 import { useOptimizer } from "../hooks/useOptimizer";
@@ -64,8 +66,7 @@ const Home: NextPage = () => {
                 index={tabIndex}
                 onChange={setTabIndex}
                 colorScheme="green"
-                size="md"
-                isFitted>
+                size="md">
                 <TabList color="gray.600">
                     <Tab>
                         <Heading size="md" as="h2">
@@ -80,15 +81,54 @@ const Home: NextPage = () => {
                 </TabList>
                 <TabPanels>
                     <TabPanel p={0}>
-                        <SimpleGrid columns={[1, 1, 3]}>
+                        <SimpleGrid columns={[1, 1, 3]} spacing={3}>
                             <GridItem colSpan={2}>
                                 <PlayerList
                                     players={players}
                                     onChange={setPlayers}
                                 />
                             </GridItem>
-                            <GridItem>
-                                <FormationsAccordion
+                            <GridItem
+                                p={3}
+                                borderLeft="2px"
+                                borderColor="gray.100">
+                                <Flex
+                                    justifyContent="space-between"
+                                    alignItems="center">
+                                    <Heading size="md" as="h3">
+                                        Formations
+                                    </Heading>
+                                    <CustomTooltip
+                                        label="Select which formations to optimize. For example, 
+                                        for SBCs, you might want to optimize only one formation.
+                                        And for your FUT Rivals team, you might want to optimize
+                                        all formations and pick the one with best chemistry."
+                                        placement="top">
+                                        <QuestionOutlineIcon />
+                                    </CustomTooltip>
+                                </Flex>
+                                <Divider py={1} />
+
+                                <Flex
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                    mt={4}>
+                                    <Heading size="md" as="h3">
+                                        Manager
+                                    </Heading>
+                                    <CustomTooltip
+                                        label="Specify whether to calculate optimal managers for your teams.
+                                        You might want to turn this off for SBCs for example."
+                                        placement="top">
+                                        <QuestionOutlineIcon />
+                                    </CustomTooltip>
+                                </Flex>
+                                <Divider py={1} />
+                                <ManagerSwitch
+                                    isOn={shouldUseManager}
+                                    setIsOn={setShouldUseManager}
+                                />
+                                {/* <FormationsAccordion
                                     selectedFormations={selectedFormations}
                                     onChange={setSelectedFormations}
                                 />
@@ -99,7 +139,7 @@ const Home: NextPage = () => {
                                 <OptimizeTeamBtn
                                     disabled={!canOptimize()}
                                     onClick={startOptimizing}
-                                />
+                                /> */}
                             </GridItem>
                         </SimpleGrid>
                     </TabPanel>
@@ -144,7 +184,7 @@ const ManagerSwitch = ({
 }) => {
     return (
         <FormControl>
-            <Flex alignItems="center" justifyContent="center" gap={4}>
+            <Flex alignItems="center" justifyContent="center" gap={4} mt={4}>
                 <FormLabel m={0} cursor="pointer">
                     Use manager
                 </FormLabel>

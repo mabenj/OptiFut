@@ -196,7 +196,9 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
                                 onRemove={() => removePlayer(index)}
                             />
                         )}
-                        <Divider />
+                        {player != null || players[index + 1] != null ? (
+                            <Divider />
+                        ) : null}
                     </React.Fragment>
                 ))}
             </VStack>
