@@ -1,6 +1,6 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
     Button,
+    Center,
     Divider,
     Flex,
     FormControl,
@@ -19,6 +19,7 @@ import {
 import type { NextPage } from "next";
 import { useState } from "react";
 import FormationResults from "../components/FormationResults";
+import FormationsGrid from "../components/FormationsGrid";
 import PlayerList from "../components/PlayerList";
 import CustomTooltip from "../components/ui/CustomTooltip";
 import { DefaultSelectedFormations, TeamPlayerCount } from "../data/constants";
@@ -54,6 +55,7 @@ const Home: NextPage = () => {
     };
 
     const startOptimizing = async () => {
+        setTabIndex(1);
         const formationsToUse = Object.keys(selectedFormations).filter(
             (formationId) => selectedFormations[formationId as FormationId]
         ) as FormationId[];
@@ -104,15 +106,19 @@ const Home: NextPage = () => {
                                         And for your FUT Rivals team, you might want to optimize
                                         all formations and pick the one with best chemistry."
                                         placement="top">
-                                        <QuestionOutlineIcon />
+                                        <Text className="bi bi-info-circle" />
                                     </CustomTooltip>
                                 </Flex>
                                 <Divider py={1} />
+                                <FormationsGrid
+                                    selectedFormations={selectedFormations}
+                                    onChange={setSelectedFormations}
+                                />
 
                                 <Flex
                                     justifyContent="space-between"
                                     alignItems="center"
-                                    mt={4}>
+                                    mt={10}>
                                     <Heading size="md" as="h3">
                                         Manager
                                     </Heading>
@@ -120,7 +126,7 @@ const Home: NextPage = () => {
                                         label="Specify whether to calculate optimal managers for your teams.
                                         You might want to turn this off for SBCs for example."
                                         placement="top">
-                                        <QuestionOutlineIcon />
+                                        <Text className="bi bi-info-circle" />
                                     </CustomTooltip>
                                 </Flex>
                                 <Divider py={1} />
@@ -128,6 +134,19 @@ const Home: NextPage = () => {
                                     isOn={shouldUseManager}
                                     setIsOn={setShouldUseManager}
                                 />
+
+                                <Center minH="12rem">
+                                    <Button
+                                        size="lg"
+                                        colorScheme="green"
+                                        disabled={!canOptimize()}
+                                        leftIcon={
+                                            <Text className="bi bi-cursor" />
+                                        } // candidates: magic, stars,
+                                        onClick={startOptimizing}>
+                                        Optimize Team
+                                    </Button>
+                                </Center>
                                 {/* <FormationsAccordion
                                     selectedFormations={selectedFormations}
                                     onChange={setSelectedFormations}

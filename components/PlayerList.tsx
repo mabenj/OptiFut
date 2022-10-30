@@ -80,10 +80,7 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
             players: players.filter(notEmpty)
         }).then(() =>
             toast({
-                title: "Team Saved",
                 description: `Team '${teamName}' saved successfully`,
-                duration: 9000,
-                isClosable: true,
                 status: "success"
             })
         );
@@ -136,11 +133,19 @@ export default function PlayerList({ players, onChange }: PlayerListProps) {
             clubId: clubId!
         };
         onChange([...players]);
+        toast({
+            description: "Player Added",
+            status: "success"
+        });
     };
 
     const removePlayer = (index: number) => {
         players[index] = null;
         onChange([...players]);
+        toast({
+            description: "Player Removed",
+            status: "info"
+        });
     };
 
     return (
@@ -217,7 +222,7 @@ const EmptyPlayerSlot = ({ onClick }: { onClick: () => any }) => {
                 leftIcon={<AddIcon />}
                 p={5}
                 m={0}
-                my={4}
+                my={3}
                 w="100%">
                 Add Player
             </Button>
